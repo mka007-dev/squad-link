@@ -1,0 +1,1514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SquadLink | Gamer Community</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d12;
+        --panel: #141923;
+        --panel-2: #1b2230;
+        --line: #2a3446;
+        --text: #f5f7fb;
+        --muted: #a7b0bf;
+        --soft: #d5dce8;
+        --lime: #d9ff66;
+        --green: #3de07d;
+        --amber: #ffbd59;
+        --blue: #5aa8ff;
+        --rose: #ff6b9a;
+        --shadow: 0 22px 70px rgba(0, 0, 0, 0.35);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          linear-gradient(180deg, rgba(11, 13, 18, 0.78), #0b0d12 58%),
+          url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=80") center top/cover fixed;
+        color: var(--text);
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 22px 18px;
+        border-right: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(13, 16, 23, 0.92);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: var(--lime);
+        color: #101217;
+        font-weight: 950;
+      }
+
+      .brand-name {
+        font-size: 20px;
+        font-weight: 950;
+      }
+
+      .brand-sub {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      .nav {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-button {
+        min-height: 46px;
+        border-radius: 8px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        color: var(--muted);
+        text-align: left;
+        font-weight: 850;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        background: var(--panel-2);
+        color: var(--text);
+      }
+
+      .side-card {
+        margin-top: 24px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(27, 34, 48, 0.75);
+      }
+
+      .side-card strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+
+      .mini-stat {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 12px;
+        padding: 7px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .main {
+        min-width: 0;
+        padding: 24px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .search-wrap {
+        min-height: 50px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        background: rgba(20, 25, 35, 0.88);
+      }
+
+      .search-wrap input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+      }
+
+      .primary,
+      .ghost,
+      .icon-button,
+      .pill-button {
+        min-height: 44px;
+        border-radius: 8px;
+        font-weight: 900;
+      }
+
+      .primary {
+        padding: 0 16px;
+        background: var(--lime);
+        color: #101217;
+      }
+
+      .ghost {
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        background: rgba(20, 25, 35, 0.84);
+        color: var(--text);
+      }
+
+      .icon-button {
+        width: 44px;
+        background: var(--panel-2);
+        color: var(--text);
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .dashboard {
+        grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.8fr);
+        align-items: start;
+      }
+
+      .hero {
+        min-height: 300px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 24px;
+        background:
+          linear-gradient(180deg, rgba(9, 11, 16, 0.08), rgba(9, 11, 16, 0.78)),
+          url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1400&q=80") center/cover;
+        box-shadow: var(--shadow);
+      }
+
+      .eyebrow {
+        color: var(--lime);
+        font-size: 12px;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin-top: 10px;
+        font-size: clamp(34px, 5vw, 68px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 24px;
+        line-height: 1.18;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .game-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .game-tile {
+        min-height: 170px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 14px;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .game-tile.fifa {
+        background-image: linear-gradient(rgba(9, 11, 16, 0.18), rgba(9, 11, 16, 0.82)), url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .game-tile.gta {
+        background-image: linear-gradient(rgba(9, 11, 16, 0.18), rgba(9, 11, 16, 0.82)), url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .game-tile.warzone {
+        background-image: linear-gradient(rgba(9, 11, 16, 0.18), rgba(9, 11, 16, 0.82)), url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .tile-count {
+        color: var(--soft);
+        font-size: 13px;
+      }
+
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(20, 25, 35, 0.92);
+      }
+
+      .panel,
+      .profile-panel {
+        padding: 16px;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .filters,
+      .segmented {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill-button {
+        padding: 0 13px;
+        border: 1px solid var(--line);
+        background: var(--panel-2);
+        color: var(--muted);
+      }
+
+      .pill-button.active {
+        border-color: var(--lime);
+        color: #101217;
+        background: var(--lime);
+      }
+
+      .feed-list,
+      .squad-list,
+      .event-list,
+      .chat-list,
+      .leaderboard-list,
+      .report-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .post-card,
+      .squad-card,
+      .event-card {
+        padding: 16px;
+      }
+
+      .card-top,
+      .card-footer,
+      .event-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card-top,
+      .card-footer {
+        justify-content: space-between;
+      }
+
+      .post-body {
+        color: var(--soft);
+        line-height: 1.5;
+        margin: 8px 0 14px;
+      }
+
+      .meta,
+      .empty {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 0 10px;
+        font-size: 12px;
+        font-weight: 950;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .fifa-color {
+        color: var(--green);
+      }
+
+      .gta-color {
+        color: var(--amber);
+      }
+
+      .warzone-color {
+        color: var(--blue);
+      }
+
+      .rose-color {
+        color: var(--rose);
+      }
+
+      .stat-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .stat-box {
+        min-height: 78px;
+        border-radius: 8px;
+        padding: 12px;
+        background: var(--panel-2);
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+
+      .stat-value {
+        margin-top: 6px;
+        font-size: 18px;
+        font-weight: 950;
+      }
+
+      .squad-card {
+        display: grid;
+        grid-template-columns: 6px minmax(0, 1fr);
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .accent {
+        background: var(--blue);
+      }
+
+      .accent.fifa-bg {
+        background: var(--green);
+      }
+
+      .accent.gta-bg {
+        background: var(--amber);
+      }
+
+      .squad-content {
+        padding: 16px;
+      }
+
+      .squad-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 14px 0;
+      }
+
+      .event-card {
+        min-height: 96px;
+      }
+
+      .event-date {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        border: 1px solid currentColor;
+        background: var(--panel-2);
+        font-weight: 950;
+      }
+
+      .event-copy {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(27, 34, 48, 0.9);
+        padding: 14px;
+      }
+
+      .chat-message {
+        display: grid;
+        gap: 6px;
+      }
+
+      .message-head,
+      .leaderboard-row,
+      .report-row,
+      .github-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .message-author,
+      .leader-name {
+        font-weight: 950;
+      }
+
+      .leaderboard-row {
+        min-height: 66px;
+      }
+
+      .rank {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: var(--lime);
+        color: #101217;
+        font-weight: 950;
+      }
+
+      .github-card {
+        display: grid;
+        gap: 14px;
+      }
+
+      .code-box {
+        overflow: auto;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        padding: 12px;
+        background: #0b0d12;
+        color: var(--soft);
+        font: 13px/1.45 Consolas, "Courier New", monospace;
+        white-space: pre-wrap;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field {
+        display: grid;
+        gap: 7px;
+        margin-bottom: 12px;
+      }
+
+      .field label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-2);
+        color: var(--text);
+        padding: 10px 12px;
+        outline: 0;
+      }
+
+      .field textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        max-width: min(360px, calc(100vw - 44px));
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 14px;
+        color: var(--text);
+        background: rgba(20, 25, 35, 0.98);
+        box-shadow: var(--shadow);
+        transform: translateY(24px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      dialog {
+        width: min(620px, calc(100vw - 32px));
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0;
+        color: var(--text);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      dialog::backdrop {
+        background: rgba(4, 6, 10, 0.72);
+      }
+
+      .modal-head,
+      .modal-body,
+      .modal-footer {
+        padding: 16px;
+      }
+
+      .modal-head,
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .modal-head {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-footer {
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: fixed;
+          z-index: 5;
+          inset: auto 12px 12px;
+          height: auto;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          padding: 8px;
+        }
+
+        .brand,
+        .side-card {
+          display: none;
+        }
+
+        .nav {
+          grid-template-columns: repeat(7, 1fr);
+        }
+
+        .nav-button {
+          justify-content: center;
+          min-height: 54px;
+          padding: 0 8px;
+          font-size: 11px;
+        }
+
+        .nav-button span {
+          display: none;
+        }
+
+        .main {
+          padding: 16px 16px 92px;
+        }
+
+        .dashboard,
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .topbar {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: 360px;
+        }
+
+        .game-grid,
+        .stat-row {
+          grid-template-columns: 1fr;
+        }
+
+        .card-top,
+        .card-footer,
+        .event-card {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .event-date {
+          width: 100%;
+          height: 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SL</div>
+          <div>
+            <div class="brand-name">SquadLink</div>
+            <div class="brand-sub">FIFA. GTA. Warzone.</div>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-button active" data-section="home">H <span>Home</span></button>
+          <button class="nav-button" data-section="feed">F <span>Feed</span></button>
+          <button class="nav-button" data-section="squads">S <span>Squads</span></button>
+          <button class="nav-button" data-section="events">E <span>Events</span></button>
+          <button class="nav-button" data-section="community">C <span>Chat</span></button>
+          <button class="nav-button" data-section="github">G <span>GitHub</span></button>
+          <button class="nav-button" data-section="profile">P <span>Profile</span></button>
+        </nav>
+        <div class="side-card">
+          <strong>Community Pulse</strong>
+          <div class="mini-stat"><span>Posts</span><b id="pulsePosts">0</b></div>
+          <div class="mini-stat"><span>Open squads</span><b id="pulseSquads">0</b></div>
+          <div class="mini-stat"><span>Upcoming events</span><b id="pulseEvents">0</b></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">
+          <label class="search-wrap" aria-label="Search community">
+            <span>Search</span>
+            <input id="globalSearch" type="search" placeholder="Search posts, squads, events, tags..." />
+          </label>
+          <button class="primary" id="openComposer">+ Create Post</button>
+        </div>
+
+        <section class="section active" id="home">
+          <div class="grid dashboard">
+            <div class="grid">
+              <div class="hero">
+                <div class="eyebrow">SquadLink</div>
+                <h1>Find players, crews, sessions, and rivalries in one place.</h1>
+                <div class="hero-actions">
+                  <button class="primary" data-section-jump="squads">Find a Squad</button>
+                  <button class="ghost" data-section-jump="events">Browse Events</button>
+                </div>
+              </div>
+              <div class="grid game-grid">
+                <button class="game-tile fifa" data-game-jump="fifa">
+                  <span class="chip fifa-color">FIFA</span>
+                  <span class="tile-count" id="fifaCount">0 live posts</span>
+                </button>
+                <button class="game-tile gta" data-game-jump="gta">
+                  <span class="chip gta-color">GTA</span>
+                  <span class="tile-count" id="gtaCount">0 live posts</span>
+                </button>
+                <button class="game-tile warzone" data-game-jump="warzone">
+                  <span class="chip warzone-color">Warzone</span>
+                  <span class="tile-count" id="warzoneCount">0 live posts</span>
+                </button>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Live Feed</h2>
+                  <button class="ghost" data-section-jump="feed">View all</button>
+                </div>
+                <div class="feed-list" id="homeFeed"></div>
+              </div>
+            </div>
+            <aside class="grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Tonight</h2>
+                </div>
+                <div class="event-list" id="tonightList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Featured Squads</h2>
+                </div>
+                <div class="squad-list" id="featuredSquads"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section" id="feed">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Community Feed</h2>
+              <div class="filters" id="feedFilters"></div>
+            </div>
+            <div class="feed-list" id="feedList"></div>
+          </div>
+        </section>
+
+        <section class="section" id="squads">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Squad Finder</h2>
+              <div class="filters" id="squadFilters"></div>
+            </div>
+            <div class="squad-list" id="squadList"></div>
+          </div>
+        </section>
+
+        <section class="section" id="events">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Events</h2>
+              <div class="segmented" id="eventFilters"></div>
+            </div>
+            <div class="event-list" id="eventList"></div>
+          </div>
+        </section>
+
+        <section class="section" id="community">
+          <div class="grid dashboard">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Community Chat</h2>
+                <span class="chip rose-color">Live local room</span>
+              </div>
+              <div class="chat-list" id="chatList"></div>
+              <form id="chatForm" style="margin-top: 14px">
+                <div class="field">
+                  <label for="chatMessage">Message</label>
+                  <input id="chatMessage" name="message" maxlength="160" placeholder="Drop a squad call, result, clip note, or lobby update." required />
+                </div>
+                <button class="primary" type="submit">Send Message</button>
+              </form>
+            </div>
+            <aside class="grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Leaderboard</h2>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Mod Queue</h2>
+                </div>
+                <div class="report-list" id="reportList"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section" id="github">
+          <div class="grid dashboard">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>GitHub Connection</h2>
+                <span class="chip warzone-color" id="githubStatus">Not connected</span>
+              </div>
+              <form id="githubForm">
+                <div class="field">
+                  <label for="githubRepo">Repository URL</label>
+                  <input id="githubRepo" name="repo" placeholder="https://github.com/your-user/squadlink" />
+                </div>
+                <div class="field">
+                  <label for="githubBranch">Default branch</label>
+                  <input id="githubBranch" name="branch" placeholder="main" />
+                </div>
+                <button class="primary" type="submit">Connect Repo</button>
+              </form>
+              <div class="github-card" style="margin-top: 16px">
+                <div class="github-status">
+                  <div>
+                    <h3 id="githubRepoName">No repository saved</h3>
+                    <p class="meta" id="githubRepoMeta">Add a GitHub repository to link this web app to your project.</p>
+                  </div>
+                  <button class="ghost" id="copyIssueTemplate" type="button">Copy Issue Template</button>
+                </div>
+                <div class="code-box" id="issueTemplate"></div>
+              </div>
+            </div>
+            <aside class="grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Deploy Checklist</h2>
+                </div>
+                <div class="report-list">
+                  <div class="report-row"><span>Create or choose a repo</span><span class="chip rose-color">Needed</span></div>
+                  <div class="report-row"><span>Push this workspace</span><span class="chip rose-color">Needed</span></div>
+                  <div class="report-row"><span>Enable Pages or hosting</span><span class="chip rose-color">Next</span></div>
+                  <div class="report-row"><span>Add backend auth/storage</span><span class="chip rose-color">Later</span></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Connector</h2>
+                </div>
+                <p class="post-body">The app can remember a repository URL in your browser. Publishing the actual files requires an existing GitHub repo that Codex can access.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section" id="profile">
+          <div class="grid profile-grid">
+            <form class="profile-panel" id="profileForm">
+              <div class="panel-header">
+                <h2>Your Player Card</h2>
+              </div>
+              <div class="field">
+                <label for="displayName">Display name</label>
+                <input id="displayName" name="displayName" required />
+              </div>
+              <div class="field">
+                <label for="mainGame">Main game</label>
+                <select id="mainGame" name="mainGame">
+                  <option value="warzone">Warzone</option>
+                  <option value="fifa">FIFA</option>
+                  <option value="gta">GTA</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="platform">Platform</label>
+                <select id="platform" name="platform">
+                  <option>PS5</option>
+                  <option>Xbox</option>
+                  <option>PC</option>
+                  <option>Crossplay</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="availability">Availability</label>
+                <input id="availability" name="availability" />
+              </div>
+              <div class="field">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio"></textarea>
+              </div>
+              <button class="primary" type="submit">Save Profile</button>
+            </form>
+            <div class="profile-panel">
+              <div class="panel-header">
+                <h2>Preview</h2>
+              </div>
+              <div class="stat-row">
+                <div class="stat-box">
+                  <div class="stat-label">Main</div>
+                  <div class="stat-value" id="profileMain">Warzone</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-label">Platform</div>
+                  <div class="stat-value" id="profilePlatform">PS5</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-label">Rep</div>
+                  <div class="stat-value" id="profileRep">Fresh</div>
+                </div>
+              </div>
+              <div style="margin-top: 16px">
+                <h3 id="profileName">New Player</h3>
+                <p class="post-body" id="profileBio">Add your vibe, rank, play style, and what kind of teammates you want.</p>
+                <span class="chip rose-color" id="profileAvailability">Evenings</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="composer">
+      <form method="dialog" id="composerForm">
+        <div class="modal-head">
+          <h2>Create Post</h2>
+          <button class="icon-button" value="cancel" aria-label="Close">x</button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="postGame">Game</label>
+            <select id="postGame" name="game">
+              <option value="warzone">Warzone</option>
+              <option value="fifa">FIFA</option>
+              <option value="gta">GTA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="postTitle">Title</label>
+            <input id="postTitle" name="title" required maxlength="80" placeholder="Need two for ranked tonight" />
+          </div>
+          <div class="field">
+            <label for="postMeta">Meta</label>
+            <input id="postMeta" name="meta" required maxlength="90" placeholder="NA East - Mic required - 8 PM" />
+          </div>
+          <div class="field">
+            <label for="postBody">Post</label>
+            <textarea id="postBody" name="body" required maxlength="260" placeholder="Tell players what you are running and what kind of vibe you want."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost" value="cancel" type="button" id="cancelComposer">Cancel</button>
+          <button class="primary" value="default" type="submit">Post to Feed</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const gameInfo = {
+        fifa: { label: "FIFA", colorClass: "fifa-color" },
+        gta: { label: "GTA", colorClass: "gta-color" },
+        warzone: { label: "Warzone", colorClass: "warzone-color" }
+      };
+
+      const starterPosts = [
+        { id: "p1", game: "warzone", title: "Ranked resurgence squad tonight", body: "Need two players who communicate, rotate early, and can play after 8 PM.", meta: "NA East - Mic required - Diamond push", replies: 18, joined: false },
+        { id: "p2", game: "fifa", title: "Weekend league tactics thread", body: "Drop your formation, depth, and one adjustment that saved your weekend.", meta: "Ultimate Team - Competitive", replies: 42, joined: false },
+        { id: "p3", game: "gta", title: "Clean car meet and cruise", body: "No griefing, no rockets, just builds, photos, and a coast run.", meta: "Los Santos - Casual lobby", replies: 27, joined: false },
+        { id: "p4", game: "warzone", title: "Loadout lab for the new season", body: "Testing AR plus sniper support builds. Bring stats, clips, or hot takes.", meta: "Crossplay - Theorycraft", replies: 31, joined: false }
+      ];
+
+      const squads = [
+        { id: "s1", game: "warzone", name: "Harbor Rotate", need: "2 slayers", region: "NA East", vibe: "Competitive", tags: ["Ranked", "Mic on", "Nightly"], requested: false },
+        { id: "s2", game: "fifa", name: "Elite XI Lab", need: "Friendly grinders", region: "UK/EU", vibe: "Tactics", tags: ["Weekend League", "Clubs", "Coaching"], requested: false },
+        { id: "s3", game: "gta", name: "Midnight Motors", need: "Hosts and photographers", region: "Global", vibe: "Creative", tags: ["Car meets", "Heists", "No griefing"], requested: false },
+        { id: "s4", game: "warzone", name: "Final Circle", need: "IGL and support", region: "NA West", vibe: "Chill wins", tags: ["Resurgence", "Trios", "Crossplay"], requested: false }
+      ];
+
+      const events = [
+        { id: "e1", title: "Warzone Customs", game: "warzone", when: "Fri 9:00 PM", spots: 8, rsvp: false },
+        { id: "e2", title: "FIFA Draft Night", game: "fifa", when: "Sat 6:30 PM", spots: 12, rsvp: false },
+        { id: "e3", title: "GTA Heist Chain", game: "gta", when: "Sun 7:00 PM", spots: 16, rsvp: false },
+        { id: "e4", title: "Pro Clubs Trials", game: "fifa", when: "Thu 8:00 PM", spots: 6, rsvp: false }
+      ];
+
+      const starterMessages = [
+        { id: "m1", author: "RotateKing", game: "warzone", text: "Customs lobby opens in 20. Warm up and bring a mic.", time: "8:40 PM" },
+        { id: "m2", author: "XI Maestro", game: "fifa", text: "Anyone testing 4-2-3-1 after the patch? Drop notes.", time: "8:46 PM" },
+        { id: "m3", author: "ViceRoute", game: "gta", text: "Car meet moved to the docks. Clean builds only.", time: "8:51 PM" }
+      ];
+
+      const leaderboard = [
+        { name: "RotateKing", game: "warzone", score: 982, label: "Squad wins" },
+        { name: "XI Maestro", game: "fifa", score: 914, label: "Tactics helped" },
+        { name: "ViceRoute", game: "gta", score: 877, label: "Events hosted" },
+        { name: "ClutchNine", game: "warzone", score: 802, label: "Thread assists" }
+      ];
+
+      const state = {
+        posts: load("squadlink-posts", starterPosts),
+        squads: load("squadlink-squads", squads),
+        events: load("squadlink-events", events),
+        profile: load("squadlink-profile", {
+          displayName: "New Player",
+          mainGame: "warzone",
+          platform: "PS5",
+          availability: "Evenings",
+          bio: "Add your vibe, rank, play style, and what kind of teammates you want."
+        }),
+        messages: load("squadlink-messages", starterMessages),
+        reports: load("squadlink-reports", []),
+        github: load("squadlink-github", { repo: "", branch: "main" }),
+        activeGame: "all",
+        squadGame: "all",
+        eventGame: "all",
+        query: ""
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+      function load(key, fallback) {
+        try {
+          return JSON.parse(localStorage.getItem(key)) || fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function save(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function showToast(message) {
+        const toast = $("#toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      function gameChip(game) {
+        return `<span class="chip ${gameInfo[game].colorClass}">${gameInfo[game].label}</span>`;
+      }
+
+      function matchesSearch(item) {
+        const text = Object.values(item).join(" ").toLowerCase();
+        return text.includes(state.query.toLowerCase());
+      }
+
+      function filteredPosts(limit) {
+        const posts = state.posts.filter((post) => (state.activeGame === "all" || post.game === state.activeGame) && matchesSearch(post));
+        return typeof limit === "number" ? posts.slice(0, limit) : posts;
+      }
+
+      function postCard(post) {
+        return `
+          <article class="post-card">
+            <div class="card-top">
+              ${gameChip(post.game)}
+              <span class="meta">${post.meta}</span>
+            </div>
+            <h3 style="margin-top: 12px">${post.title}</h3>
+            <p class="post-body">${post.body}</p>
+            <div class="card-footer">
+              <span class="meta">${post.replies} replies</span>
+              <div class="filters">
+                <button class="ghost" data-report-post="${post.id}">Report</button>
+                <button class="${post.joined ? "primary" : "ghost"}" data-join-post="${post.id}">${post.joined ? "Joined" : "Join Thread"}</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      function squadCard(squad) {
+        return `
+          <article class="squad-card">
+            <div class="accent ${squad.game === "fifa" ? "fifa-bg" : squad.game === "gta" ? "gta-bg" : ""}"></div>
+            <div class="squad-content">
+              <div class="card-top">
+                <h3>${squad.name}</h3>
+                ${gameChip(squad.game)}
+              </div>
+              <div class="stat-row" style="margin-top: 14px">
+                <div class="stat-box"><div class="stat-label">Looking for</div><div class="stat-value">${squad.need}</div></div>
+                <div class="stat-box"><div class="stat-label">Region</div><div class="stat-value">${squad.region}</div></div>
+                <div class="stat-box"><div class="stat-label">Style</div><div class="stat-value">${squad.vibe}</div></div>
+              </div>
+              <div class="squad-tags">${squad.tags.map((tag) => `<span class="chip rose-color">${tag}</span>`).join("")}</div>
+              <button class="${squad.requested ? "primary" : "ghost"}" data-request-squad="${squad.id}">${squad.requested ? "Invite Requested" : "Request Invite"}</button>
+            </div>
+          </article>
+        `;
+      }
+
+      function eventCard(event) {
+        return `
+          <article class="event-card">
+            <div class="event-date ${gameInfo[event.game].colorClass}">${event.when.split(" ")[0]}</div>
+            <div class="event-copy">
+              <div class="card-top">
+                <h3>${event.title}</h3>
+                ${gameChip(event.game)}
+              </div>
+              <p class="meta" style="margin-top: 6px">${event.when} - ${event.spots} spots open</p>
+            </div>
+            <button class="${event.rsvp ? "primary" : "ghost"}" data-rsvp-event="${event.id}">${event.rsvp ? "Going" : "RSVP"}</button>
+          </article>
+        `;
+      }
+
+      function chatCard(message) {
+        return `
+          <article class="chat-message">
+            <div class="message-head">
+              <span class="message-author">${message.author}</span>
+              ${gameChip(message.game)}
+            </div>
+            <p class="post-body" style="margin: 0">${message.text}</p>
+            <span class="meta">${message.time}</span>
+          </article>
+        `;
+      }
+
+      function leaderboardCard(player, index) {
+        return `
+          <article class="leaderboard-row">
+            <span class="rank">${index + 1}</span>
+            <div style="flex: 1">
+              <div class="leader-name">${player.name}</div>
+              <div class="meta">${gameInfo[player.game].label} - ${player.label}</div>
+            </div>
+            <strong>${player.score}</strong>
+          </article>
+        `;
+      }
+
+      function reportCard(report) {
+        return `
+          <article class="report-row">
+            <div>
+              <strong>${report.title}</strong>
+              <div class="meta">${report.reason}</div>
+            </div>
+            <button class="ghost" data-clear-report="${report.id}">Clear</button>
+          </article>
+        `;
+      }
+
+      function buildIssueTemplate() {
+        const repo = state.github.repo || "https://github.com/your-user/squadlink";
+        return `# SquadLink Web App Launch
+
+Repository: ${repo}
+Branch: ${state.github.branch || "main"}
+
+## Features ready
+- Gamer community dashboard for FIFA, GTA, and Warzone
+- Feed creation, search, filters, and join state
+- Squad finder with invite requests
+- Event RSVPs
+- Community chat and leaderboard
+- Mod report queue
+- Editable player profile
+
+## Next engineering tasks
+- Add real authentication
+- Replace localStorage with a database
+- Add server-side moderation
+- Deploy to GitHub Pages, Vercel, Netlify, or Expo web`;
+      }
+
+      function renderFilters(containerId, active, attr) {
+        const labels = [["all", "All"], ["warzone", "Warzone"], ["fifa", "FIFA"], ["gta", "GTA"]];
+        $(containerId).innerHTML = labels.map(([value, label]) => `<button class="pill-button ${active === value ? "active" : ""}" data-${attr}="${value}">${label}</button>`).join("");
+      }
+
+      function render() {
+        renderFilters("#feedFilters", state.activeGame, "feed-filter");
+        renderFilters("#squadFilters", state.squadGame, "squad-filter");
+        renderFilters("#eventFilters", state.eventGame, "event-filter");
+
+        const posts = filteredPosts();
+        $("#feedList").innerHTML = posts.length ? posts.map(postCard).join("") : `<p class="empty">No posts match your search yet.</p>`;
+        $("#homeFeed").innerHTML = filteredPosts(3).map(postCard).join("");
+
+        const filteredSquads = state.squads.filter((squad) => (state.squadGame === "all" || squad.game === state.squadGame) && matchesSearch(squad));
+        $("#squadList").innerHTML = filteredSquads.length ? filteredSquads.map(squadCard).join("") : `<p class="empty">No squads match your filters.</p>`;
+        $("#featuredSquads").innerHTML = state.squads.slice(0, 2).map(squadCard).join("");
+
+        const filteredEvents = state.events.filter((event) => (state.eventGame === "all" || event.game === state.eventGame) && matchesSearch(event));
+        $("#eventList").innerHTML = filteredEvents.length ? filteredEvents.map(eventCard).join("") : `<p class="empty">No events found.</p>`;
+        $("#tonightList").innerHTML = state.events.slice(0, 3).map(eventCard).join("");
+
+        const visibleMessages = state.messages.filter(matchesSearch);
+        $("#chatList").innerHTML = visibleMessages.length ? visibleMessages.map(chatCard).join("") : `<p class="empty">No chat messages match your search.</p>`;
+        $("#leaderboardList").innerHTML = leaderboard.map(leaderboardCard).join("");
+        $("#reportList").innerHTML = state.reports.length ? state.reports.map(reportCard).join("") : `<p class="empty">No reports in the queue.</p>`;
+        renderGithub();
+
+        $("#pulsePosts").textContent = state.posts.length;
+        $("#pulseSquads").textContent = state.squads.length;
+        $("#pulseEvents").textContent = state.events.length;
+        $("#fifaCount").textContent = `${state.posts.filter((post) => post.game === "fifa").length} live posts`;
+        $("#gtaCount").textContent = `${state.posts.filter((post) => post.game === "gta").length} live posts`;
+        $("#warzoneCount").textContent = `${state.posts.filter((post) => post.game === "warzone").length} live posts`;
+
+        bindDynamicActions();
+      }
+
+      function renderGithub() {
+        const connected = Boolean(state.github.repo);
+        $("#githubStatus").textContent = connected ? "Connected" : "Not connected";
+        $("#githubStatus").className = connected ? "chip fifa-color" : "chip warzone-color";
+        $("#githubRepo").value = state.github.repo;
+        $("#githubBranch").value = state.github.branch || "main";
+        $("#githubRepoName").textContent = connected ? state.github.repo.replace(/^https?:\/\/github\.com\//, "") : "No repository saved";
+        $("#githubRepoMeta").textContent = connected ? `Tracking branch ${state.github.branch || "main"} in this browser.` : "Add a GitHub repository to link this web app to your project.";
+        $("#issueTemplate").textContent = buildIssueTemplate();
+      }
+
+      function bindDynamicActions() {
+        $$("[data-join-post]").forEach((button) => {
+          button.onclick = () => {
+            const post = state.posts.find((item) => item.id === button.dataset.joinPost);
+            post.joined = !post.joined;
+            post.replies += post.joined ? 1 : -1;
+            save("squadlink-posts", state.posts);
+            showToast(post.joined ? "You joined the thread." : "You left the thread.");
+            render();
+          };
+        });
+
+        $$("[data-request-squad]").forEach((button) => {
+          button.onclick = () => {
+            const squad = state.squads.find((item) => item.id === button.dataset.requestSquad);
+            squad.requested = !squad.requested;
+            save("squadlink-squads", state.squads);
+            showToast(squad.requested ? "Invite request sent." : "Invite request removed.");
+            render();
+          };
+        });
+
+        $$("[data-rsvp-event]").forEach((button) => {
+          button.onclick = () => {
+            const event = state.events.find((item) => item.id === button.dataset.rsvpEvent);
+            event.rsvp = !event.rsvp;
+            event.spots += event.rsvp ? -1 : 1;
+            save("squadlink-events", state.events);
+            showToast(event.rsvp ? "You are on the list." : "RSVP cancelled.");
+            render();
+          };
+        });
+
+        $$("[data-report-post]").forEach((button) => {
+          button.onclick = () => {
+            const post = state.posts.find((item) => item.id === button.dataset.reportPost);
+            if (!state.reports.some((report) => report.postId === post.id)) {
+              state.reports.unshift({ id: `r${Date.now()}`, postId: post.id, title: post.title, reason: "Community report submitted" });
+              save("squadlink-reports", state.reports);
+            }
+            showToast("Post sent to the mod queue.");
+            render();
+          };
+        });
+
+        $$("[data-clear-report]").forEach((button) => {
+          button.onclick = () => {
+            state.reports = state.reports.filter((report) => report.id !== button.dataset.clearReport);
+            save("squadlink-reports", state.reports);
+            showToast("Report cleared.");
+            render();
+          };
+        });
+
+        $$("[data-feed-filter]").forEach((button) => {
+          button.onclick = () => {
+            state.activeGame = button.dataset.feedFilter;
+            render();
+          };
+        });
+
+        $$("[data-squad-filter]").forEach((button) => {
+          button.onclick = () => {
+            state.squadGame = button.dataset.squadFilter;
+            render();
+          };
+        });
+
+        $$("[data-event-filter]").forEach((button) => {
+          button.onclick = () => {
+            state.eventGame = button.dataset.eventFilter;
+            render();
+          };
+        });
+      }
+
+      function showSection(id) {
+        $$(".section").forEach((section) => section.classList.toggle("active", section.id === id));
+        $$(".nav-button").forEach((button) => button.classList.toggle("active", button.dataset.section === id));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      $$(".nav-button").forEach((button) => {
+        button.addEventListener("click", () => showSection(button.dataset.section));
+      });
+
+      $$("[data-section-jump]").forEach((button) => {
+        button.addEventListener("click", () => showSection(button.dataset.sectionJump));
+      });
+
+      $$("[data-game-jump]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeGame = button.dataset.gameJump;
+          showSection("feed");
+          render();
+        });
+      });
+
+      $("#globalSearch").addEventListener("input", (event) => {
+        state.query = event.target.value;
+        render();
+      });
+
+      $("#openComposer").addEventListener("click", () => $("#composer").showModal());
+      $("#cancelComposer").addEventListener("click", () => $("#composer").close());
+
+      $("#composerForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        state.posts.unshift({
+          id: `p${Date.now()}`,
+          game: form.get("game"),
+          title: form.get("title").trim(),
+          meta: form.get("meta").trim(),
+          body: form.get("body").trim(),
+          replies: 0,
+          joined: false
+        });
+        save("squadlink-posts", state.posts);
+        event.currentTarget.reset();
+        $("#composer").close();
+        state.activeGame = "all";
+        showSection("feed");
+        showToast("Post added to the feed.");
+        render();
+      });
+
+      $("#chatForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const now = new Date();
+        state.messages.unshift({
+          id: `m${Date.now()}`,
+          author: state.profile.displayName || "New Player",
+          game: state.profile.mainGame || "warzone",
+          text: form.get("message").trim(),
+          time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+        });
+        save("squadlink-messages", state.messages);
+        event.currentTarget.reset();
+        showToast("Message sent.");
+        render();
+      });
+
+      $("#githubForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const repo = form.get("repo").trim();
+        if (repo && !/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/.test(repo)) {
+          showToast("Use a full GitHub repo URL.");
+          return;
+        }
+        state.github = {
+          repo,
+          branch: form.get("branch").trim() || "main"
+        };
+        save("squadlink-github", state.github);
+        renderGithub();
+        showToast(repo ? "GitHub repo connected locally." : "GitHub repo cleared.");
+      });
+
+      $("#copyIssueTemplate").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(buildIssueTemplate());
+          showToast("Issue template copied.");
+        } catch {
+          showToast("Copy unavailable in this browser.");
+        }
+      });
+
+      function renderProfile() {
+        $("#displayName").value = state.profile.displayName;
+        $("#mainGame").value = state.profile.mainGame;
+        $("#platform").value = state.profile.platform;
+        $("#availability").value = state.profile.availability;
+        $("#bio").value = state.profile.bio;
+        $("#profileName").textContent = state.profile.displayName;
+        $("#profileMain").textContent = gameInfo[state.profile.mainGame].label;
+        $("#profilePlatform").textContent = state.profile.platform;
+        $("#profileAvailability").textContent = state.profile.availability;
+        $("#profileBio").textContent = state.profile.bio;
+      }
+
+      $("#profileForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        state.profile = {
+          displayName: form.get("displayName").trim(),
+          mainGame: form.get("mainGame"),
+          platform: form.get("platform"),
+          availability: form.get("availability").trim(),
+          bio: form.get("bio").trim()
+        };
+        save("squadlink-profile", state.profile);
+        renderProfile();
+        showToast("Profile saved.");
+      });
+
+      ["displayName", "mainGame", "platform", "availability", "bio"].forEach((id) => {
+        $(`#${id}`).addEventListener("input", () => {
+          const form = new FormData($("#profileForm"));
+          state.profile = {
+            displayName: form.get("displayName").trim() || "New Player",
+            mainGame: form.get("mainGame"),
+            platform: form.get("platform"),
+            availability: form.get("availability").trim() || "Availability",
+            bio: form.get("bio").trim() || "Add your vibe, rank, play style, and what kind of teammates you want."
+          };
+          renderProfile();
+        });
+      });
+
+      renderProfile();
+      render();
+    </script>
+  </body>
+</html>
