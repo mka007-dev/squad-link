@@ -3032,7 +3032,7 @@
                   <button class="ghost" type="button" id="signOutButton">Sign Out</button>
                 </div>
               </form>
-              <p class="meta cloud-note">Enable Email/Password or Anonymous sign-in in Firebase Authentication before using cloud accounts.</p>
+              <p class="meta cloud-note">Create Account works now as a local account if Firebase Authentication is not enabled. Turn on Email/Password in Firebase to make accounts cloud synced.</p>
             </div>
             <form class="profile-panel" id="profileForm">
               <div class="panel-header">
@@ -3278,6 +3278,7 @@
         authUser: null,
         authReady: false,
         isAdmin: false,
+        localAccount: load("lobbyrush-account-session", null),
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
@@ -3294,6 +3295,7 @@
       const firebaseState = {
         connected: false,
         usingCloud: false,
+        authUnavailable: false,
         error: ""
       };
 
@@ -3314,6 +3316,80 @@
 
       function cleanText(value, fallback = "") {
         return String(value || "").trim() || fallback;
+      }
+
+      function isAuthSetupError(error) {
+        const code = error?.code || error?.message || "";
+        return code.includes("auth/configuration-not-found") || code.includes("auth/operation-not-allowed");
+      }
+
+      async function hashPassword(value) {
+        const input = new TextEncoder().encode(`lobbyrush:${value}`);
+        const digest = await crypto.subtle.digest("SHA-256", input);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      }
+
+      function localAccountRecord() {
+        return load("lobbyrush-account-record", null);
+      }
+
+      function setLocalSession(account) {
+        state.localAccount = account;
+        save("lobbyrush-account-session", account);
+        renderAuth();
+        renderProfile();
+        render();
+      }
+
+      async function createLocalAccount(email, password) {
+        const record = {
+          uid: `local-${Date.now()}`,
+          email,
+          displayName: email.split("@")[0],
+          passwordHash: await hashPassword(password),
+          isLocal: true,
+          createdAt: new Date().toISOString()
+        };
+        save("lobbyrush-account-record", record);
+        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true });
+        showToast("Local account created.");
+      }
+
+      async function signInLocalAccount(email, password) {
+        const record = localAccountRecord();
+        if (!record || record.email.toLowerCase() !== email.toLowerCase()) {
+          showToast("No local account found for that email.");
+          return false;
+        }
+
+        const passwordHash = await hashPassword(password);
+        if (record.passwordHash !== passwordHash) {
+          showToast("Local password does not match.");
+          return false;
+        }
+
+        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true });
+        showToast("Signed in locally.");
+        return true;
+      }
+
+      function signInLocalGuest() {
+        const guest = {
+          uid: `guest-${Date.now()}`,
+          email: "",
+          displayName: "Guest Player",
+          isLocal: true,
+          isAnonymous: true
+        };
+        setLocalSession(guest);
+        showToast("Guest mode ready.");
+      }
+
+      function signOutLocalAccount() {
+        state.localAccount = null;
+        localStorage.removeItem("lobbyrush-account-session");
+        renderAuth();
+        render();
       }
 
       function serializePost(form) {
@@ -3507,18 +3583,18 @@
       }
 
       async function createSharedPost(post) {
-        if (!firebaseState.usingCloud) {
-          state.posts.unshift({ id: `p${Date.now()}`, replies: 0, joined: false, ...post });
+        const account = await requireAccount("post to the feed");
+        if (!account) return false;
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.posts.unshift({ id: `p${Date.now()}`, replies: 0, joined: false, ownerUid: account.uid, ownerName: getDisplayName(), ...post });
           save("squadlink-posts", state.posts);
           return true;
         }
 
-        const user = await requireCloudUser("post to the feed");
-        if (!user) return false;
-
         await firebaseApi.addDoc(firebaseApi.collection(db, "posts"), {
           ...post,
-          ownerUid: user.uid,
+          ownerUid: currentUser.uid,
           ownerName: getDisplayName(),
           createdAt: firebaseApi.serverTimestamp()
         });
@@ -3526,36 +3602,36 @@
       }
 
       async function createSharedMessage(message) {
-        if (!firebaseState.usingCloud) {
-          state.messages.unshift({ id: `m${Date.now()}`, ...message });
+        const account = await requireAccount("send chat messages");
+        if (!account) return false;
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.messages.unshift({ id: `m${Date.now()}`, uid: account.uid, ...message });
           save("squadlink-messages", state.messages);
           return true;
         }
 
-        const user = await requireCloudUser("send chat messages");
-        if (!user) return false;
-
         await firebaseApi.addDoc(firebaseApi.collection(db, "messages"), {
           ...message,
-          uid: user.uid,
+          uid: currentUser.uid,
           createdAt: firebaseApi.serverTimestamp()
         });
         return true;
       }
 
       async function createSharedSquad(squad) {
-        if (!firebaseState.usingCloud) {
-          state.squads.unshift({ id: `s${Date.now()}`, requested: false, ...squad });
+        const account = await requireAccount("create squads");
+        if (!account) return false;
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.squads.unshift({ id: `s${Date.now()}`, requested: false, ownerUid: account.uid, ownerName: getDisplayName(), ...squad });
           save("squadlink-squads", state.squads);
           return true;
         }
 
-        const user = await requireCloudUser("create squads");
-        if (!user) return false;
-
         await firebaseApi.addDoc(firebaseApi.collection(db, "squads"), {
           ...squad,
-          ownerUid: user.uid,
+          ownerUid: currentUser.uid,
           ownerName: getDisplayName(),
           createdAt: firebaseApi.serverTimestamp()
         });
@@ -3563,19 +3639,19 @@
       }
 
       async function createSharedEvent(event) {
-        if (!firebaseState.usingCloud) {
-          state.events.unshift({ id: `e${Date.now()}`, ...event, rsvp: false });
+        const account = await requireAccount("schedule events");
+        if (!account) return false;
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.events.unshift({ id: `e${Date.now()}`, ownerUid: account.uid, ownerName: getDisplayName(), ...event, rsvp: false });
           save("squadlink-events", state.events);
           return true;
         }
 
-        const user = await requireCloudUser("schedule events");
-        if (!user) return false;
-
         const { rsvp, ...eventData } = event;
         await firebaseApi.addDoc(firebaseApi.collection(db, "events"), {
           ...eventData,
-          ownerUid: user.uid,
+          ownerUid: currentUser.uid,
           ownerName: getDisplayName(),
           createdAt: firebaseApi.serverTimestamp()
         });
@@ -3583,13 +3659,14 @@
       }
 
       function getDisplayName() {
+        if (state.localAccount?.displayName) return state.localAccount.displayName;
         if (state.profile.displayName && state.profile.displayName !== "New Player") return state.profile.displayName;
         if (currentUser?.email) return currentUser.email.split("@")[0];
         return "New Player";
       }
 
       function currentUid() {
-        return currentUser?.uid || "";
+        return currentUser?.uid || state.localAccount?.uid || "";
       }
 
       function memberDocId(targetId) {
@@ -3601,6 +3678,15 @@
         if (currentUser) return currentUser;
 
         showToast(`Sign in to ${action}.`);
+        showSection("profile");
+        return null;
+      }
+
+      async function requireAccount(action) {
+        if (currentUser) return currentUser;
+        if (state.localAccount) return state.localAccount;
+
+        showToast(`Create an account to ${action}.`);
         showSection("profile");
         return null;
       }
@@ -3642,7 +3728,9 @@
       }
 
       async function togglePostJoin(post) {
-        if (!firebaseState.usingCloud) {
+        if (!firebaseState.usingCloud || !currentUser) {
+          const account = await requireAccount("join threads");
+          if (!account) return;
           post.joined = !post.joined;
           post.replies = Math.max(0, (Number(post.replies) || 0) + (post.joined ? 1 : -1));
           save("squadlink-posts", state.posts);
@@ -3670,7 +3758,9 @@
       }
 
       async function toggleSquadRequest(squad) {
-        if (!firebaseState.usingCloud) {
+        if (!firebaseState.usingCloud || !currentUser) {
+          const account = await requireAccount("request invites");
+          if (!account) return;
           squad.requested = !squad.requested;
           save("squadlink-squads", state.squads);
           showToast(squad.requested ? "Invite request sent." : "Invite request removed.");
@@ -3697,7 +3787,9 @@
       }
 
       async function toggleEventRsvp(event) {
-        if (!firebaseState.usingCloud) {
+        if (!firebaseState.usingCloud || !currentUser) {
+          const account = await requireAccount("RSVP");
+          if (!account) return;
           event.rsvp = !event.rsvp;
           event.spots = Math.max(0, (Number(event.spots) || 0) + (event.rsvp ? -1 : 1));
           save("squadlink-events", state.events);
@@ -3727,9 +3819,11 @@
       }
 
       async function submitReport(post) {
-        if (!firebaseState.usingCloud) {
+        if (!firebaseState.usingCloud || !currentUser) {
+          const account = await requireAccount("report posts");
+          if (!account) return;
           if (!state.reports.some((report) => report.postId === post.id)) {
-            state.reports.unshift({ id: `r${Date.now()}`, postId: post.id, title: post.title, reason: "Community report submitted" });
+            state.reports.unshift({ id: `r${Date.now()}`, postId: post.id, title: post.title, reason: "Community report submitted", uid: account.uid, displayName: getDisplayName() });
             save("squadlink-reports", state.reports);
           }
           showToast("Post sent to the mod queue.");
@@ -3753,7 +3847,7 @@
       }
 
       async function clearReport(reportId) {
-        if (!firebaseState.usingCloud) {
+        if (!firebaseState.usingCloud || !currentUser) {
           state.reports = state.reports.filter((report) => report.id !== reportId);
           save("squadlink-reports", state.reports);
           showToast("Report cleared.");
@@ -3970,8 +4064,8 @@
         if (!status) return;
 
         if (firebaseState.usingCloud) {
-          status.textContent = "Firebase live";
-          status.className = "chip fifa-color";
+          status.textContent = firebaseState.authUnavailable ? "Local accounts" : "Firebase live";
+          status.className = firebaseState.authUnavailable ? "chip gta-color" : "chip fifa-color";
         } else {
           status.textContent = "Local mode";
           status.className = "chip warzone-color";
@@ -4179,7 +4273,19 @@
       $("#authForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!auth || !firebaseApi) {
-          showToast("Firebase Auth is not connected yet.");
+          const form = new FormData(event.currentTarget);
+          const email = cleanText(form.get("email"));
+          const password = cleanText(form.get("password"));
+          const action = event.submitter?.dataset.authAction || "signin";
+          if (!email || !password) {
+            showToast("Enter an email and password.");
+            return;
+          }
+          if (action === "signup") {
+            await createLocalAccount(email, password);
+          } else {
+            await signInLocalAccount(email, password);
+          }
           return;
         }
 
@@ -4203,6 +4309,16 @@
           }
           await syncProfileToCloud();
         } catch (error) {
+          if (isAuthSetupError(error)) {
+            firebaseState.authUnavailable = true;
+            if (action === "signup") {
+              await createLocalAccount(email, password);
+            } else {
+              await signInLocalAccount(email, password);
+            }
+            renderFirebaseStatus();
+            return;
+          }
           showToast(error.message.replace("Firebase: ", ""));
           console.error(error);
         }
@@ -4210,7 +4326,7 @@
 
       $("#guestSignIn").addEventListener("click", async () => {
         if (!auth || !firebaseApi) {
-          showToast("Firebase Auth is not connected yet.");
+          signInLocalGuest();
           return;
         }
 
@@ -4218,12 +4334,24 @@
           await firebaseApi.signInAnonymously(auth);
           showToast("Guest mode connected.");
         } catch (error) {
+          if (isAuthSetupError(error)) {
+            firebaseState.authUnavailable = true;
+            signInLocalGuest();
+            renderFirebaseStatus();
+            return;
+          }
           showToast(error.message.replace("Firebase: ", ""));
           console.error(error);
         }
       });
 
       $("#signOutButton").addEventListener("click", async () => {
+        if (state.localAccount) {
+          signOutLocalAccount();
+          showToast("Signed out.");
+          return;
+        }
+
         if (!auth || !currentUser) {
           showToast("No account is signed in.");
           return;
@@ -4250,7 +4378,22 @@
           chip.className = "chip warzone-color";
           name.textContent = "Local browser mode";
           summary.textContent = "Add Firebase config to sync accounts, profiles, joins, RSVPs, reports, squads, and events across devices.";
-          signOutButton.disabled = true;
+          signOutButton.disabled = !state.localAccount;
+          if (state.localAccount) {
+            chip.textContent = state.localAccount.isAnonymous ? "Guest" : "Local";
+            chip.className = "chip gta-color";
+            name.textContent = state.localAccount.displayName || state.localAccount.email || "Guest Player";
+            summary.textContent = "Local account active. Enable Firebase Authentication to sync this account across devices.";
+          }
+          return;
+        }
+
+        if (state.localAccount && !currentUser) {
+          chip.textContent = state.localAccount.isAnonymous ? "Guest" : "Local";
+          chip.className = "chip gta-color";
+          name.textContent = state.localAccount.displayName || state.localAccount.email || "Guest Player";
+          summary.textContent = "Local account active. Firebase Authentication is not enabled yet, so account data stays on this browser.";
+          signOutButton.disabled = false;
           return;
         }
 

@@ -2,6 +2,8 @@
 
 LobbyRush is wired for Firebase Auth and Cloud Firestore. With the current `firebase-config.js`, the app can connect to your `squad-link-aa29e` Firebase project after the console setup below is finished. The file exposes `LOBBYRUSH_FIREBASE_CONFIG` for the app and keeps the old `SQUADLINK_FIREBASE_CONFIG` alias for compatibility.
 
+If Firebase Authentication is not enabled yet, the app falls back to local browser accounts so the Create Account section still works. Local accounts do not sync across devices; enable Auth to make accounts cloud-backed.
+
 ## 1. Enable Authentication
 
 1. Open https://console.firebase.google.com/
