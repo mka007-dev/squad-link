@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "LobbyRush",
+    "slug": "lobbyrush",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lobbyrush.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.lobbyrush.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#111318"
+      },
+      "versionCode": 3
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c1bcc6c9-6c49-4da3-9a2e-2886cc0da8b4"
+      }
+    }
+  }
+}

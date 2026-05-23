@@ -2714,6 +2714,48 @@
           font-size: 8px;
         }
       }
+
+      .account-actions,
+      .panel-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .account-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .account-summary {
+        display: grid;
+        gap: 8px;
+      }
+
+      .account-summary strong {
+        font-size: 20px;
+      }
+
+      .cloud-note {
+        margin-top: 10px;
+      }
+
+      @media (max-width: 680px) {
+        .account-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-actions {
+          width: 100%;
+        }
+
+        .panel-actions .primary,
+        .panel-actions .ghost {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2903,8 +2945,12 @@
         <section class="section" id="squads">
           <div class="panel">
             <div class="panel-header">
-              <h2>Squad Finder</h2>
+              <div>
+                <h2>Squad Finder</h2>
+                <p class="meta">Create squads and request invites from the live community board.</p>
+              </div>
               <div class="filters" id="squadFilters"></div>
+              <button class="primary" id="openSquadDialog" type="button">Create Squad</button>
             </div>
             <div class="squad-list" id="squadList"></div>
           </div>
@@ -2913,8 +2959,12 @@
         <section class="section" id="events">
           <div class="panel">
             <div class="panel-header">
-              <h2>Events</h2>
+              <div>
+                <h2>Events</h2>
+                <p class="meta">Schedule sessions and RSVP to live events.</p>
+              </div>
               <div class="segmented" id="eventFilters"></div>
+              <button class="primary" id="openEventDialog" type="button">Create Event</button>
             </div>
             <div class="event-list" id="eventList"></div>
           </div>
@@ -2955,6 +3005,35 @@
 
         <section class="section" id="profile">
           <div class="grid profile-grid">
+            <div class="profile-panel" id="authPanel">
+              <div class="panel-header">
+                <h2>Account</h2>
+                <span class="chip warzone-color" id="authStatusChip">Guest</span>
+              </div>
+              <div class="account-summary">
+                <strong id="accountName">Not signed in</strong>
+                <p class="meta" id="accountSummary">Sign in to sync your profile, joins, RSVPs, reports, squads, and events across devices.</p>
+              </div>
+              <form id="authForm" style="margin-top: 14px">
+                <div class="account-grid">
+                  <div class="field">
+                    <label for="authEmail">Email</label>
+                    <input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+                  </div>
+                  <div class="field">
+                    <label for="authPassword">Password</label>
+                    <input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="6+ characters" />
+                  </div>
+                </div>
+                <div class="account-actions">
+                  <button class="primary" type="submit" data-auth-action="signin">Sign In</button>
+                  <button class="ghost" type="submit" data-auth-action="signup">Create Account</button>
+                  <button class="ghost" type="button" id="guestSignIn">Guest Mode</button>
+                  <button class="ghost" type="button" id="signOutButton">Sign Out</button>
+                </div>
+              </form>
+              <p class="meta cloud-note">Enable Email/Password or Anonymous sign-in in Firebase Authentication before using cloud accounts.</p>
+            </div>
             <form class="profile-panel" id="profileForm">
               <div class="panel-header">
                 <h2>Your Player Card</h2>
@@ -3054,6 +3133,88 @@
       </form>
     </dialog>
 
+    <dialog id="squadDialog">
+      <form method="dialog" id="squadForm">
+        <div class="modal-head">
+          <h2>Create Squad</h2>
+          <button class="icon-button" id="closeSquadDialog" type="button" aria-label="Close">x</button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="squadGame">Game</label>
+            <select id="squadGame" name="game">
+              <option value="warzone">Warzone</option>
+              <option value="fifa">FIFA</option>
+              <option value="gta">GTA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="squadName">Squad name</label>
+            <input id="squadName" name="name" required maxlength="48" placeholder="Final Circle Crew" />
+          </div>
+          <div class="field">
+            <label for="squadNeed">Looking for</label>
+            <input id="squadNeed" name="need" required maxlength="60" placeholder="IGL, striker, host, support..." />
+          </div>
+          <div class="account-grid">
+            <div class="field">
+              <label for="squadRegion">Region</label>
+              <input id="squadRegion" name="region" required maxlength="36" placeholder="NA East" />
+            </div>
+            <div class="field">
+              <label for="squadVibe">Style</label>
+              <input id="squadVibe" name="vibe" required maxlength="40" placeholder="Competitive but chill" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="squadTags">Tags</label>
+            <input id="squadTags" name="tags" maxlength="80" placeholder="Ranked, Mic on, Nightly" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost" value="cancel" type="button" id="cancelSquadDialog">Cancel</button>
+          <button class="primary" value="default" type="submit">Open Squad</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="eventDialog">
+      <form method="dialog" id="eventForm">
+        <div class="modal-head">
+          <h2>Create Event</h2>
+          <button class="icon-button" id="closeEventDialog" type="button" aria-label="Close">x</button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="eventGame">Game</label>
+            <select id="eventGame" name="game">
+              <option value="warzone">Warzone</option>
+              <option value="fifa">FIFA</option>
+              <option value="gta">GTA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="eventTitle">Event title</label>
+            <input id="eventTitle" name="title" required maxlength="64" placeholder="Warzone customs night" />
+          </div>
+          <div class="account-grid">
+            <div class="field">
+              <label for="eventWhen">When</label>
+              <input id="eventWhen" name="when" required maxlength="40" placeholder="Fri 9:00 PM" />
+            </div>
+            <div class="field">
+              <label for="eventSpots">Spots</label>
+              <input id="eventSpots" name="spots" required type="number" min="1" max="99" value="8" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost" value="cancel" type="button" id="cancelEventDialog">Cancel</button>
+          <button class="primary" value="default" type="submit">Schedule Event</button>
+        </div>
+      </form>
+    </dialog>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="firebase-config.js"></script>
@@ -3111,6 +3272,12 @@
         }),
         messages: load("squadlink-messages", starterMessages),
         reports: load("squadlink-reports", []),
+        postJoins: load("lobbyrush-post-joins", []),
+        squadRequests: load("lobbyrush-squad-requests", []),
+        eventRsvps: load("lobbyrush-event-rsvps", []),
+        authUser: null,
+        authReady: false,
+        isAdmin: false,
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
@@ -3119,6 +3286,11 @@
 
       let db = null;
       let firebaseApi = null;
+      let auth = null;
+      let currentUser = null;
+      let profileUnsubscribe = null;
+      let adminUnsubscribe = null;
+      let reportsUnsubscribe = null;
       const firebaseState = {
         connected: false,
         usingCloud: false,
@@ -3140,30 +3312,61 @@
         localStorage.setItem(key, JSON.stringify(value));
       }
 
+      function cleanText(value, fallback = "") {
+        return String(value || "").trim() || fallback;
+      }
+
       function serializePost(form) {
         return {
           game: form.get("game"),
-          title: form.get("title").trim(),
-          meta: form.get("meta").trim(),
-          body: form.get("body").trim(),
-          replies: 0,
-          joined: false
+          title: cleanText(form.get("title")),
+          meta: cleanText(form.get("meta")),
+          body: cleanText(form.get("body"))
         };
       }
 
       function serializeMessage(form) {
         const now = new Date();
         return {
-          author: state.profile.displayName || "New Player",
+          author: getDisplayName(),
           game: state.profile.mainGame || "warzone",
-          text: form.get("message").trim(),
+          text: cleanText(form.get("message")),
           time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
         };
       }
 
+      function serializeSquad(form) {
+        const tags = cleanText(form.get("tags"))
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .slice(0, 4);
+
+        return {
+          game: form.get("game"),
+          name: cleanText(form.get("name"), "New Squad"),
+          need: cleanText(form.get("need"), "Players"),
+          region: cleanText(form.get("region"), "Global"),
+          vibe: cleanText(form.get("vibe"), "Chill"),
+          tags: tags.length ? tags : ["Open lobby"]
+        };
+      }
+
+      function serializeEvent(form) {
+        const spots = Math.max(1, Math.min(99, Number(form.get("spots")) || 1));
+
+        return {
+          game: form.get("game"),
+          title: cleanText(form.get("title"), "Community Session"),
+          when: cleanText(form.get("when"), "Tonight"),
+          spots,
+          rsvp: false
+        };
+      }
+
       async function initFirebase() {
-        const firebaseConfig = window.SQUADLINK_FIREBASE_CONFIG;
-        const firebaseEnabled = window.SQUADLINK_FIREBASE_ENABLED;
+        const firebaseConfig = window.LOBBYRUSH_FIREBASE_CONFIG || window.SQUADLINK_FIREBASE_CONFIG;
+        const firebaseEnabled = window.LOBBYRUSH_FIREBASE_ENABLED || window.SQUADLINK_FIREBASE_ENABLED;
 
         if (!firebaseEnabled) {
           firebaseState.error = "Add Firebase config to enable shared data.";
@@ -3171,16 +3374,37 @@
         }
 
         try {
-          const [{ initializeApp }, firestore] = await Promise.all([
+          const [{ initializeApp }, firestore, authSdk] = await Promise.all([
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"),
-            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js")
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js"),
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js")
           ]);
-          firebaseApi = firestore;
+          firebaseApi = { ...firestore, ...authSdk };
           const app = initializeApp(firebaseConfig);
           db = firestore.getFirestore(app);
+          auth = authSdk.getAuth(app);
           firebaseState.connected = true;
           firebaseState.usingCloud = true;
           subscribeToSharedData();
+          authSdk.onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            state.authUser = user ? { uid: user.uid, email: user.email || "", isAnonymous: user.isAnonymous } : null;
+            state.authReady = true;
+
+            if (user) {
+              subscribeToProfile(user.uid);
+              subscribeToAdmin(user.uid);
+              await syncProfileToCloud();
+            } else {
+              unsubscribeCloudIdentity();
+              state.isAdmin = false;
+              state.reports = load("squadlink-reports", []);
+            }
+
+            renderAuth();
+            renderProfile();
+            render();
+          });
           showToast("Firebase connected.");
           render();
         } catch (error) {
@@ -3191,51 +3415,359 @@
       }
 
       function subscribeToSharedData() {
-        const postsQuery = firebaseApi.query(firebaseApi.collection(db, "posts"), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(50));
-        firebaseApi.onSnapshot(postsQuery, (snapshot) => {
-          state.posts = snapshot.docs.map((doc) => ({ id: doc.id, joined: false, replies: 0, ...doc.data() }));
-          render();
-        }, (error) => {
-          firebaseState.error = error.message;
-          showToast("Firebase posts could not load.");
-          render();
-        });
+        subscribeCollection("posts", "posts", { joined: false, replies: 0 });
+        subscribeCollection("messages", "messages", {});
+        subscribeCollection("squads", "squads", { requested: false });
+        subscribeCollection("events", "events", { rsvp: false });
+        subscribeCollection("postJoins", "postJoins", {});
+        subscribeCollection("squadRequests", "squadRequests", {});
+        subscribeCollection("eventRsvps", "eventRsvps", {});
+      }
 
-        const messagesQuery = firebaseApi.query(firebaseApi.collection(db, "messages"), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(50));
-        firebaseApi.onSnapshot(messagesQuery, (snapshot) => {
-          state.messages = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      function subscribeCollection(name, stateKey, defaults) {
+        const query = firebaseApi.query(firebaseApi.collection(db, name), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(100));
+        firebaseApi.onSnapshot(query, (snapshot) => {
+          state[stateKey] = snapshot.docs.map((doc) => ({ id: doc.id, ...defaults, ...doc.data() }));
           render();
         }, (error) => {
           firebaseState.error = error.message;
-          showToast("Firebase chat could not load.");
+          showToast(`${name} could not load from Firebase.`);
           render();
         });
       }
 
+      function unsubscribeCloudIdentity() {
+        if (profileUnsubscribe) profileUnsubscribe();
+        if (adminUnsubscribe) adminUnsubscribe();
+        if (reportsUnsubscribe) reportsUnsubscribe();
+        profileUnsubscribe = null;
+        adminUnsubscribe = null;
+        reportsUnsubscribe = null;
+      }
+
+      function subscribeToProfile(uid) {
+        if (profileUnsubscribe) profileUnsubscribe();
+
+        profileUnsubscribe = firebaseApi.onSnapshot(firebaseApi.doc(db, "profiles", uid), (snapshot) => {
+          if (!snapshot.exists()) return;
+          state.profile = { ...state.profile, ...snapshot.data() };
+          save("squadlink-profile", state.profile);
+          renderProfile();
+          renderAuth();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
+      }
+
+      function subscribeToAdmin(uid) {
+        if (adminUnsubscribe) adminUnsubscribe();
+
+        adminUnsubscribe = firebaseApi.onSnapshot(firebaseApi.doc(db, "admins", uid), (snapshot) => {
+          state.isAdmin = snapshot.exists();
+          if (state.isAdmin) {
+            subscribeToReports();
+          } else {
+            if (reportsUnsubscribe) reportsUnsubscribe();
+            reportsUnsubscribe = null;
+            state.reports = [];
+          }
+          renderAuth();
+          render();
+        }, () => {
+          state.isAdmin = false;
+          state.reports = [];
+          renderAuth();
+          render();
+        });
+      }
+
+      function subscribeToReports() {
+        if (reportsUnsubscribe) reportsUnsubscribe();
+
+        const query = firebaseApi.query(firebaseApi.collection(db, "reports"), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(100));
+        reportsUnsubscribe = firebaseApi.onSnapshot(query, (snapshot) => {
+          state.reports = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+          showToast("Reports could not load.");
+        });
+      }
+
+      async function syncProfileToCloud() {
+        if (!firebaseState.usingCloud || !currentUser) return;
+
+        await firebaseApi.setDoc(firebaseApi.doc(db, "profiles", currentUser.uid), {
+          ...state.profile,
+          uid: currentUser.uid,
+          email: currentUser.email || "",
+          isAnonymous: currentUser.isAnonymous,
+          updatedAt: firebaseApi.serverTimestamp()
+        }, { merge: true });
+      }
+
       async function createSharedPost(post) {
         if (!firebaseState.usingCloud) {
-          state.posts.unshift({ id: `p${Date.now()}`, ...post });
+          state.posts.unshift({ id: `p${Date.now()}`, replies: 0, joined: false, ...post });
           save("squadlink-posts", state.posts);
-          return;
+          return true;
         }
+
+        const user = await requireCloudUser("post to the feed");
+        if (!user) return false;
 
         await firebaseApi.addDoc(firebaseApi.collection(db, "posts"), {
           ...post,
+          ownerUid: user.uid,
+          ownerName: getDisplayName(),
           createdAt: firebaseApi.serverTimestamp()
         });
+        return true;
       }
 
       async function createSharedMessage(message) {
         if (!firebaseState.usingCloud) {
           state.messages.unshift({ id: `m${Date.now()}`, ...message });
           save("squadlink-messages", state.messages);
-          return;
+          return true;
         }
+
+        const user = await requireCloudUser("send chat messages");
+        if (!user) return false;
 
         await firebaseApi.addDoc(firebaseApi.collection(db, "messages"), {
           ...message,
+          uid: user.uid,
           createdAt: firebaseApi.serverTimestamp()
         });
+        return true;
+      }
+
+      async function createSharedSquad(squad) {
+        if (!firebaseState.usingCloud) {
+          state.squads.unshift({ id: `s${Date.now()}`, requested: false, ...squad });
+          save("squadlink-squads", state.squads);
+          return true;
+        }
+
+        const user = await requireCloudUser("create squads");
+        if (!user) return false;
+
+        await firebaseApi.addDoc(firebaseApi.collection(db, "squads"), {
+          ...squad,
+          ownerUid: user.uid,
+          ownerName: getDisplayName(),
+          createdAt: firebaseApi.serverTimestamp()
+        });
+        return true;
+      }
+
+      async function createSharedEvent(event) {
+        if (!firebaseState.usingCloud) {
+          state.events.unshift({ id: `e${Date.now()}`, ...event, rsvp: false });
+          save("squadlink-events", state.events);
+          return true;
+        }
+
+        const user = await requireCloudUser("schedule events");
+        if (!user) return false;
+
+        const { rsvp, ...eventData } = event;
+        await firebaseApi.addDoc(firebaseApi.collection(db, "events"), {
+          ...eventData,
+          ownerUid: user.uid,
+          ownerName: getDisplayName(),
+          createdAt: firebaseApi.serverTimestamp()
+        });
+        return true;
+      }
+
+      function getDisplayName() {
+        if (state.profile.displayName && state.profile.displayName !== "New Player") return state.profile.displayName;
+        if (currentUser?.email) return currentUser.email.split("@")[0];
+        return "New Player";
+      }
+
+      function currentUid() {
+        return currentUser?.uid || "";
+      }
+
+      function memberDocId(targetId) {
+        return `${targetId}_${currentUid()}`;
+      }
+
+      async function requireCloudUser(action) {
+        if (!firebaseState.usingCloud) return null;
+        if (currentUser) return currentUser;
+
+        showToast(`Sign in to ${action}.`);
+        showSection("profile");
+        return null;
+      }
+
+      function isPostJoined(post) {
+        if (!firebaseState.usingCloud) return Boolean(post.joined);
+        return state.postJoins.some((join) => join.postId === post.id && join.uid === currentUid());
+      }
+
+      function postJoinCount(post) {
+        if (!firebaseState.usingCloud) return Math.max(0, Number(post.replies) || 0);
+        const liveJoins = state.postJoins.filter((join) => join.postId === post.id).length;
+        return Math.max(0, (Number(post.replies) || 0) + liveJoins);
+      }
+
+      function isSquadRequested(squad) {
+        if (!firebaseState.usingCloud) return Boolean(squad.requested);
+        return state.squadRequests.some((request) => request.squadId === squad.id && request.uid === currentUid());
+      }
+
+      function squadRequestCount(squad) {
+        if (!firebaseState.usingCloud) return squad.requested ? 1 : 0;
+        return state.squadRequests.filter((request) => request.squadId === squad.id).length;
+      }
+
+      function isEventRsvped(event) {
+        if (!firebaseState.usingCloud) return Boolean(event.rsvp);
+        return state.eventRsvps.some((rsvp) => rsvp.eventId === event.id && rsvp.uid === currentUid());
+      }
+
+      function eventRsvpCount(event) {
+        if (!firebaseState.usingCloud) return event.rsvp ? 1 : 0;
+        return state.eventRsvps.filter((rsvp) => rsvp.eventId === event.id).length;
+      }
+
+      function eventOpenSpots(event) {
+        if (!firebaseState.usingCloud) return Math.max(0, Number(event.spots) || 0);
+        return Math.max(0, (Number(event.spots) || 0) - eventRsvpCount(event));
+      }
+
+      async function togglePostJoin(post) {
+        if (!firebaseState.usingCloud) {
+          post.joined = !post.joined;
+          post.replies = Math.max(0, (Number(post.replies) || 0) + (post.joined ? 1 : -1));
+          save("squadlink-posts", state.posts);
+          showToast(post.joined ? "You joined the thread." : "You left the thread.");
+          render();
+          return;
+        }
+
+        const user = await requireCloudUser("join threads");
+        if (!user) return;
+
+        const ref = firebaseApi.doc(db, "postJoins", memberDocId(post.id));
+        if (isPostJoined(post)) {
+          await firebaseApi.deleteDoc(ref);
+          showToast("You left the thread.");
+        } else {
+          await firebaseApi.setDoc(ref, {
+            postId: post.id,
+            uid: user.uid,
+            displayName: getDisplayName(),
+            createdAt: firebaseApi.serverTimestamp()
+          });
+          showToast("You joined the thread.");
+        }
+      }
+
+      async function toggleSquadRequest(squad) {
+        if (!firebaseState.usingCloud) {
+          squad.requested = !squad.requested;
+          save("squadlink-squads", state.squads);
+          showToast(squad.requested ? "Invite request sent." : "Invite request removed.");
+          render();
+          return;
+        }
+
+        const user = await requireCloudUser("request invites");
+        if (!user) return;
+
+        const ref = firebaseApi.doc(db, "squadRequests", memberDocId(squad.id));
+        if (isSquadRequested(squad)) {
+          await firebaseApi.deleteDoc(ref);
+          showToast("Invite request removed.");
+        } else {
+          await firebaseApi.setDoc(ref, {
+            squadId: squad.id,
+            uid: user.uid,
+            displayName: getDisplayName(),
+            createdAt: firebaseApi.serverTimestamp()
+          });
+          showToast("Invite request sent.");
+        }
+      }
+
+      async function toggleEventRsvp(event) {
+        if (!firebaseState.usingCloud) {
+          event.rsvp = !event.rsvp;
+          event.spots = Math.max(0, (Number(event.spots) || 0) + (event.rsvp ? -1 : 1));
+          save("squadlink-events", state.events);
+          showToast(event.rsvp ? "You are on the list." : "RSVP cancelled.");
+          render();
+          return;
+        }
+
+        const user = await requireCloudUser("RSVP");
+        if (!user) return;
+
+        const ref = firebaseApi.doc(db, "eventRsvps", memberDocId(event.id));
+        if (isEventRsvped(event)) {
+          await firebaseApi.deleteDoc(ref);
+          showToast("RSVP cancelled.");
+        } else if (eventOpenSpots(event) < 1) {
+          showToast("That event is full.");
+        } else {
+          await firebaseApi.setDoc(ref, {
+            eventId: event.id,
+            uid: user.uid,
+            displayName: getDisplayName(),
+            createdAt: firebaseApi.serverTimestamp()
+          });
+          showToast("You are on the list.");
+        }
+      }
+
+      async function submitReport(post) {
+        if (!firebaseState.usingCloud) {
+          if (!state.reports.some((report) => report.postId === post.id)) {
+            state.reports.unshift({ id: `r${Date.now()}`, postId: post.id, title: post.title, reason: "Community report submitted" });
+            save("squadlink-reports", state.reports);
+          }
+          showToast("Post sent to the mod queue.");
+          render();
+          return;
+        }
+
+        const user = await requireCloudUser("report posts");
+        if (!user) return;
+
+        await firebaseApi.setDoc(firebaseApi.doc(db, "reports", memberDocId(post.id)), {
+          postId: post.id,
+          title: post.title,
+          reason: "Community report submitted",
+          uid: user.uid,
+          displayName: getDisplayName(),
+          status: "open",
+          createdAt: firebaseApi.serverTimestamp()
+        });
+        showToast("Post sent to the mod queue.");
+      }
+
+      async function clearReport(reportId) {
+        if (!firebaseState.usingCloud) {
+          state.reports = state.reports.filter((report) => report.id !== reportId);
+          save("squadlink-reports", state.reports);
+          showToast("Report cleared.");
+          render();
+          return;
+        }
+
+        if (!state.isAdmin) {
+          showToast("Only admins can clear reports.");
+          return;
+        }
+
+        await firebaseApi.deleteDoc(firebaseApi.doc(db, "reports", reportId));
+        showToast("Report cleared.");
       }
 
       function showToast(message) {
@@ -3246,8 +3778,22 @@
         showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
       }
 
+      function safeGame(game) {
+        return gameInfo[game] ? game : "warzone";
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
       function gameChip(game) {
-        return `<span class="chip ${gameInfo[game].colorClass}">${gameInfo[game].label}</span>`;
+        const gameKey = safeGame(game);
+        return `<span class="chip ${gameInfo[gameKey].colorClass}">${gameInfo[gameKey].label}</span>`;
       }
 
       function matchesSearch(item) {
@@ -3261,19 +3807,23 @@
       }
 
       function postCard(post) {
+        const game = safeGame(post.game);
+        const joined = isPostJoined(post);
+        const replies = postJoinCount(post);
+
         return `
-          <article class="post-card ${post.game}-card">
+          <article class="post-card ${game}-card">
             <div class="card-top">
-              ${gameChip(post.game)}
-              <span class="meta">${post.meta}</span>
+              ${gameChip(game)}
+              <span class="meta">${escapeHtml(post.meta)}</span>
             </div>
-            <h3 style="margin-top: 12px">${post.title}</h3>
-            <p class="post-body">${post.body}</p>
+            <h3 style="margin-top: 12px">${escapeHtml(post.title)}</h3>
+            <p class="post-body">${escapeHtml(post.body)}</p>
             <div class="card-footer">
-              <span class="meta">${post.replies} replies</span>
+              <span class="meta">${replies} ${replies === 1 ? "player" : "players"} joined</span>
               <div class="filters">
                 <button class="ghost" data-report-post="${post.id}">Report</button>
-                <button class="${post.joined ? "primary" : "ghost"}" data-join-post="${post.id}">${post.joined ? "Joined" : "Join Thread"}</button>
+                <button class="${joined ? "primary" : "ghost"}" data-join-post="${post.id}">${joined ? "Joined" : "Join Thread"}</button>
               </div>
             </div>
           </article>
@@ -3281,51 +3831,66 @@
       }
 
       function squadCard(squad) {
+        const game = safeGame(squad.game);
+        const requested = isSquadRequested(squad);
+        const requests = squadRequestCount(squad);
+        const tags = Array.isArray(squad.tags) ? squad.tags : [];
+
         return `
-          <article class="squad-card ${squad.game}-card">
-            <div class="accent ${squad.game === "fifa" ? "fifa-bg" : squad.game === "gta" ? "gta-bg" : ""}"></div>
+          <article class="squad-card ${game}-card">
+            <div class="accent ${game === "fifa" ? "fifa-bg" : game === "gta" ? "gta-bg" : ""}"></div>
             <div class="squad-content">
               <div class="card-top">
-                <h3>${squad.name}</h3>
-                ${gameChip(squad.game)}
+                <h3>${escapeHtml(squad.name)}</h3>
+                ${gameChip(game)}
               </div>
               <div class="stat-row" style="margin-top: 14px">
-                <div class="stat-box"><div class="stat-label">Looking for</div><div class="stat-value">${squad.need}</div></div>
-                <div class="stat-box"><div class="stat-label">Region</div><div class="stat-value">${squad.region}</div></div>
-                <div class="stat-box"><div class="stat-label">Style</div><div class="stat-value">${squad.vibe}</div></div>
+                <div class="stat-box"><div class="stat-label">Looking for</div><div class="stat-value">${escapeHtml(squad.need)}</div></div>
+                <div class="stat-box"><div class="stat-label">Region</div><div class="stat-value">${escapeHtml(squad.region)}</div></div>
+                <div class="stat-box"><div class="stat-label">Style</div><div class="stat-value">${escapeHtml(squad.vibe)}</div></div>
               </div>
-              <div class="squad-tags">${squad.tags.map((tag) => `<span class="chip rose-color">${tag}</span>`).join("")}</div>
-              <button class="${squad.requested ? "primary" : "ghost"}" data-request-squad="${squad.id}">${squad.requested ? "Invite Requested" : "Request Invite"}</button>
+              <div class="squad-tags">${tags.map((tag) => `<span class="chip rose-color">${escapeHtml(tag)}</span>`).join("")}</div>
+              <div class="card-footer">
+                <span class="meta">${requests} ${requests === 1 ? "request" : "requests"}</span>
+                <button class="${requested ? "primary" : "ghost"}" data-request-squad="${squad.id}">${requested ? "Invite Requested" : "Request Invite"}</button>
+              </div>
             </div>
           </article>
         `;
       }
 
       function eventCard(event) {
+        const game = safeGame(event.game);
+        const rsvp = isEventRsvped(event);
+        const openSpots = eventOpenSpots(event);
+        const day = cleanText(event.when, "Live").split(" ")[0];
+
         return `
-          <article class="event-card ${event.game}-card">
-            <div class="event-date ${gameInfo[event.game].colorClass}">${event.when.split(" ")[0]}</div>
+          <article class="event-card ${game}-card">
+            <div class="event-date ${gameInfo[game].colorClass}">${escapeHtml(day)}</div>
             <div class="event-copy">
               <div class="card-top">
-                <h3>${event.title}</h3>
-                ${gameChip(event.game)}
+                <h3>${escapeHtml(event.title)}</h3>
+                ${gameChip(game)}
               </div>
-              <p class="meta" style="margin-top: 6px">${event.when} - ${event.spots} spots open</p>
+              <p class="meta" style="margin-top: 6px">${escapeHtml(event.when)} - ${openSpots} ${openSpots === 1 ? "spot" : "spots"} open</p>
             </div>
-            <button class="${event.rsvp ? "primary" : "ghost"}" data-rsvp-event="${event.id}">${event.rsvp ? "Going" : "RSVP"}</button>
+            <button class="${rsvp ? "primary" : "ghost"}" data-rsvp-event="${event.id}">${rsvp ? "Going" : "RSVP"}</button>
           </article>
         `;
       }
 
       function chatCard(message) {
+        const game = safeGame(message.game);
+
         return `
-          <article class="chat-message ${message.game}-card">
+          <article class="chat-message ${game}-card">
             <div class="message-head">
-              <span class="message-author">${message.author}</span>
-              ${gameChip(message.game)}
+              <span class="message-author">${escapeHtml(message.author)}</span>
+              ${gameChip(game)}
             </div>
-            <p class="post-body" style="margin: 0">${message.text}</p>
-            <span class="meta">${message.time}</span>
+            <p class="post-body" style="margin: 0">${escapeHtml(message.text)}</p>
+            <span class="meta">${escapeHtml(message.time)}</span>
           </article>
         `;
       }
@@ -3335,8 +3900,8 @@
           <article class="leaderboard-row ${player.game}-card">
             <span class="rank">${index + 1}</span>
             <div style="flex: 1">
-              <div class="leader-name">${player.name}</div>
-              <div class="meta">${gameInfo[player.game].label} - ${player.label}</div>
+              <div class="leader-name">${escapeHtml(player.name)}</div>
+              <div class="meta">${gameInfo[player.game].label} - ${escapeHtml(player.label)}</div>
             </div>
             <strong>${player.score}</strong>
           </article>
@@ -3347,10 +3912,10 @@
         return `
           <article class="report-row">
             <div>
-              <strong>${report.title}</strong>
-              <div class="meta">${report.reason}</div>
+              <strong>${escapeHtml(report.title)}</strong>
+              <div class="meta">${escapeHtml(report.reason)}</div>
             </div>
-            <button class="ghost" data-clear-report="${report.id}">Clear</button>
+            <button class="ghost" data-clear-report="${report.id}" ${firebaseState.usingCloud && !state.isAdmin ? "disabled" : ""}>Clear</button>
           </article>
         `;
       }
@@ -3381,8 +3946,11 @@
         const visibleMessages = state.messages.filter(matchesSearch);
         $("#chatList").innerHTML = visibleMessages.length ? visibleMessages.map(chatCard).join("") : `<p class="empty">No chat messages match your search.</p>`;
         $("#leaderboardList").innerHTML = leaderboard.map(leaderboardCard).join("");
-        $("#reportList").innerHTML = state.reports.length ? state.reports.map(reportCard).join("") : `<p class="empty">No reports in the queue.</p>`;
+        $("#reportList").innerHTML = state.isAdmin || !firebaseState.usingCloud
+          ? (state.reports.length ? state.reports.map(reportCard).join("") : `<p class="empty">No reports in the queue.</p>`)
+          : `<p class="empty">Admin account required to view the report queue.</p>`;
         renderFirebaseStatus();
+        renderAuth();
 
         $("#pulsePosts").textContent = state.posts.length;
         $("#pulseSquads").textContent = state.squads.length;
@@ -3412,55 +3980,65 @@
 
       function bindDynamicActions() {
         $$("[data-join-post]").forEach((button) => {
-          button.onclick = () => {
+          button.onclick = async () => {
             const post = state.posts.find((item) => item.id === button.dataset.joinPost);
-            post.joined = !post.joined;
-            post.replies += post.joined ? 1 : -1;
-            save("squadlink-posts", state.posts);
-            showToast(post.joined ? "You joined the thread." : "You left the thread.");
-            render();
+            if (!post) return;
+            try {
+              await togglePostJoin(post);
+            } catch (error) {
+              showToast("Thread join could not be updated.");
+              console.error(error);
+            }
           };
         });
 
         $$("[data-request-squad]").forEach((button) => {
-          button.onclick = () => {
+          button.onclick = async () => {
             const squad = state.squads.find((item) => item.id === button.dataset.requestSquad);
-            squad.requested = !squad.requested;
-            save("squadlink-squads", state.squads);
-            showToast(squad.requested ? "Invite request sent." : "Invite request removed.");
-            render();
+            if (!squad) return;
+            try {
+              await toggleSquadRequest(squad);
+            } catch (error) {
+              showToast("Invite request could not be updated.");
+              console.error(error);
+            }
           };
         });
 
         $$("[data-rsvp-event]").forEach((button) => {
-          button.onclick = () => {
+          button.onclick = async () => {
             const event = state.events.find((item) => item.id === button.dataset.rsvpEvent);
-            event.rsvp = !event.rsvp;
-            event.spots += event.rsvp ? -1 : 1;
-            save("squadlink-events", state.events);
-            showToast(event.rsvp ? "You are on the list." : "RSVP cancelled.");
-            render();
+            if (!event) return;
+            try {
+              await toggleEventRsvp(event);
+            } catch (error) {
+              showToast("RSVP could not be updated.");
+              console.error(error);
+            }
           };
         });
 
         $$("[data-report-post]").forEach((button) => {
-          button.onclick = () => {
+          button.onclick = async () => {
             const post = state.posts.find((item) => item.id === button.dataset.reportPost);
-            if (!state.reports.some((report) => report.postId === post.id)) {
-              state.reports.unshift({ id: `r${Date.now()}`, postId: post.id, title: post.title, reason: "Community report submitted" });
-              save("squadlink-reports", state.reports);
+            if (!post) return;
+            try {
+              await submitReport(post);
+            } catch (error) {
+              showToast("Report could not be sent.");
+              console.error(error);
             }
-            showToast("Post sent to the mod queue.");
-            render();
           };
         });
 
         $$("[data-clear-report]").forEach((button) => {
-          button.onclick = () => {
-            state.reports = state.reports.filter((report) => report.id !== button.dataset.clearReport);
-            save("squadlink-reports", state.reports);
-            showToast("Report cleared.");
-            render();
+          button.onclick = async () => {
+            try {
+              await clearReport(button.dataset.clearReport);
+            } catch (error) {
+              showToast("Report could not be cleared.");
+              console.error(error);
+            }
           };
         });
 
@@ -3517,13 +4095,20 @@
       $("#mobileComposer").addEventListener("click", () => $("#composer").showModal());
       $("#closeComposer").addEventListener("click", () => $("#composer").close());
       $("#cancelComposer").addEventListener("click", () => $("#composer").close());
+      $("#openSquadDialog").addEventListener("click", () => $("#squadDialog").showModal());
+      $("#closeSquadDialog").addEventListener("click", () => $("#squadDialog").close());
+      $("#cancelSquadDialog").addEventListener("click", () => $("#squadDialog").close());
+      $("#openEventDialog").addEventListener("click", () => $("#eventDialog").showModal());
+      $("#closeEventDialog").addEventListener("click", () => $("#eventDialog").close());
+      $("#cancelEventDialog").addEventListener("click", () => $("#eventDialog").close());
 
       $("#composerForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         const post = serializePost(form);
         try {
-          await createSharedPost(post);
+          const saved = await createSharedPost(post);
+          if (!saved) return;
           event.currentTarget.reset();
           $("#composer").close();
           state.activeGame = "all";
@@ -3536,12 +4121,52 @@
         }
       });
 
+      $("#squadForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const squad = serializeSquad(form);
+        try {
+          const saved = await createSharedSquad(squad);
+          if (!saved) return;
+          event.currentTarget.reset();
+          $("#squadDialog").close();
+          state.squadGame = "all";
+          showSection("squads");
+          showToast(firebaseState.usingCloud ? "Squad opened for everyone." : "Squad saved locally.");
+          render();
+        } catch (error) {
+          showToast("Squad could not be saved.");
+          console.error(error);
+        }
+      });
+
+      $("#eventForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const session = serializeEvent(form);
+        try {
+          const saved = await createSharedEvent(session);
+          if (!saved) return;
+          event.currentTarget.reset();
+          $("#eventSpots").value = 8;
+          $("#eventDialog").close();
+          state.eventGame = "all";
+          showSection("events");
+          showToast(firebaseState.usingCloud ? "Event scheduled for everyone." : "Event saved locally.");
+          render();
+        } catch (error) {
+          showToast("Event could not be saved.");
+          console.error(error);
+        }
+      });
+
       $("#chatForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         const message = serializeMessage(form);
         try {
-          await createSharedMessage(message);
+          const saved = await createSharedMessage(message);
+          if (!saved) return;
           event.currentTarget.reset();
           showToast(firebaseState.usingCloud ? "Message shared with everyone." : "Message saved locally.");
           render();
@@ -3551,32 +4176,144 @@
         }
       });
 
-      function renderProfile() {
-        $("#displayName").value = state.profile.displayName;
-        $("#mainGame").value = state.profile.mainGame;
-        $("#platform").value = state.profile.platform;
-        $("#availability").value = state.profile.availability;
-        $("#bio").value = state.profile.bio;
-        $("#profileName").textContent = state.profile.displayName;
-        $("#profileMain").textContent = gameInfo[state.profile.mainGame].label;
-        $("#profilePlatform").textContent = state.profile.platform;
-        $("#profileAvailability").textContent = state.profile.availability;
-        $("#profileBio").textContent = state.profile.bio;
+      $("#authForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!auth || !firebaseApi) {
+          showToast("Firebase Auth is not connected yet.");
+          return;
+        }
+
+        const action = event.submitter?.dataset.authAction || "signin";
+        const form = new FormData(event.currentTarget);
+        const email = cleanText(form.get("email"));
+        const password = cleanText(form.get("password"));
+
+        if (!email || !password) {
+          showToast("Enter an email and password.");
+          return;
+        }
+
+        try {
+          if (action === "signup") {
+            await firebaseApi.createUserWithEmailAndPassword(auth, email, password);
+            showToast("Account created.");
+          } else {
+            await firebaseApi.signInWithEmailAndPassword(auth, email, password);
+            showToast("Signed in.");
+          }
+          await syncProfileToCloud();
+        } catch (error) {
+          showToast(error.message.replace("Firebase: ", ""));
+          console.error(error);
+        }
+      });
+
+      $("#guestSignIn").addEventListener("click", async () => {
+        if (!auth || !firebaseApi) {
+          showToast("Firebase Auth is not connected yet.");
+          return;
+        }
+
+        try {
+          await firebaseApi.signInAnonymously(auth);
+          showToast("Guest mode connected.");
+        } catch (error) {
+          showToast(error.message.replace("Firebase: ", ""));
+          console.error(error);
+        }
+      });
+
+      $("#signOutButton").addEventListener("click", async () => {
+        if (!auth || !currentUser) {
+          showToast("No account is signed in.");
+          return;
+        }
+
+        try {
+          await firebaseApi.signOut(auth);
+          showToast("Signed out.");
+        } catch (error) {
+          showToast("Sign out failed.");
+          console.error(error);
+        }
+      });
+
+      function renderAuth() {
+        const chip = $("#authStatusChip");
+        const name = $("#accountName");
+        const summary = $("#accountSummary");
+        const signOutButton = $("#signOutButton");
+        if (!chip || !name || !summary || !signOutButton) return;
+
+        if (!firebaseState.usingCloud) {
+          chip.textContent = "Local";
+          chip.className = "chip warzone-color";
+          name.textContent = "Local browser mode";
+          summary.textContent = "Add Firebase config to sync accounts, profiles, joins, RSVPs, reports, squads, and events across devices.";
+          signOutButton.disabled = true;
+          return;
+        }
+
+        if (!currentUser) {
+          chip.textContent = "Signed out";
+          chip.className = "chip warzone-color";
+          name.textContent = "Not signed in";
+          summary.textContent = "Sign in or use guest mode to make your community actions visible to everyone.";
+          signOutButton.disabled = true;
+          return;
+        }
+
+        signOutButton.disabled = false;
+        chip.textContent = state.isAdmin ? "Admin" : (currentUser.isAnonymous ? "Guest" : "Live");
+        chip.className = `chip ${state.isAdmin ? "fifa-color" : currentUser.isAnonymous ? "gta-color" : "rose-color"}`;
+        name.textContent = currentUser.isAnonymous ? "Guest player" : (currentUser.email || getDisplayName());
+        summary.textContent = state.isAdmin
+          ? "Admin tools are active. You can view and clear reports."
+          : "Your profile, joins, invite requests, RSVPs, posts, squads, events, reports, and chat can now sync through Firebase.";
       }
 
-      $("#profileForm").addEventListener("submit", (event) => {
+      function renderProfile() {
+        const profile = {
+          displayName: cleanText(state.profile.displayName, "New Player"),
+          mainGame: safeGame(state.profile.mainGame),
+          platform: cleanText(state.profile.platform, "PS5"),
+          availability: cleanText(state.profile.availability, "Evenings"),
+          bio: cleanText(state.profile.bio, "Add your vibe, rank, play style, and what kind of teammates you want.")
+        };
+        state.profile = { ...state.profile, ...profile };
+
+        $("#displayName").value = profile.displayName;
+        $("#mainGame").value = profile.mainGame;
+        $("#platform").value = profile.platform;
+        $("#availability").value = profile.availability;
+        $("#bio").value = profile.bio;
+        $("#profileName").textContent = profile.displayName;
+        $("#profileMain").textContent = gameInfo[profile.mainGame].label;
+        $("#profilePlatform").textContent = profile.platform;
+        $("#profileAvailability").textContent = profile.availability;
+        $("#profileBio").textContent = profile.bio;
+      }
+
+      $("#profileForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         state.profile = {
-          displayName: form.get("displayName").trim(),
+          displayName: cleanText(form.get("displayName"), "New Player"),
           mainGame: form.get("mainGame"),
           platform: form.get("platform"),
-          availability: form.get("availability").trim(),
-          bio: form.get("bio").trim()
+          availability: cleanText(form.get("availability"), "Evenings"),
+          bio: cleanText(form.get("bio"), "Add your vibe, rank, play style, and what kind of teammates you want.")
         };
         save("squadlink-profile", state.profile);
-        renderProfile();
-        showToast("Profile saved.");
+        try {
+          await syncProfileToCloud();
+          renderProfile();
+          renderAuth();
+          showToast(firebaseState.usingCloud && currentUser ? "Profile synced." : "Profile saved.");
+        } catch (error) {
+          showToast("Profile saved locally, but cloud sync failed.");
+          console.error(error);
+        }
       });
 
       ["displayName", "mainGame", "platform", "availability", "bio"].forEach((id) => {
@@ -3595,7 +4332,16 @@
 
       initFirebase();
       renderProfile();
+      renderAuth();
       render();
+
+      if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("service-worker.js").catch((error) => {
+            console.warn("Service worker registration failed", error);
+          });
+        });
+      }
     </script>
   </body>
 </html>

@@ -3,6 +3,7 @@
 LobbyRush is a cross-platform React Native Expo app for gaming communities focused on FIFA, GTA, and Call of Duty: Warzone.
 
 The deploy-ready web app is in `preview.html` and can run on GitHub Pages as a static site.
+It includes Firebase Auth, Firestore-backed posts/chat/squads/events, profile sync, joins, invite requests, RSVPs, reports, admin moderation, and a mobile installable shell.
 
 ## Deploy the web app
 

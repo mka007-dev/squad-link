@@ -1,4 +1,4 @@
-window.SQUADLINK_FIREBASE_CONFIG = {
+window.LOBBYRUSH_FIREBASE_CONFIG = {
   apiKey: "AIzaSyBhF1IPaH9VtYIiifV9RmHSN54ZQMn5RKY",
   authDomain: "squad-link-aa29e.firebaseapp.com",
   projectId: "squad-link-aa29e",
@@ -8,4 +8,6 @@ window.SQUADLINK_FIREBASE_CONFIG = {
   measurementId: "G-ED46XLGYS3"
 };
 
-window.SQUADLINK_FIREBASE_ENABLED = true;
+window.LOBBYRUSH_FIREBASE_ENABLED = true;
+window.SQUADLINK_FIREBASE_CONFIG = window.LOBBYRUSH_FIREBASE_CONFIG;
+window.SQUADLINK_FIREBASE_ENABLED = window.LOBBYRUSH_FIREBASE_ENABLED;

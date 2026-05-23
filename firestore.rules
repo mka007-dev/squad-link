@@ -2,67 +2,192 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isOwner(uid) {
+      return signedIn() && uid == request.auth.uid;
+    }
+
+    function validGame(game) {
+      return game in ['fifa', 'gta', 'warzone'];
+    }
+
+    function safeProfile() {
+      return request.resource.data.keys().hasOnly([
+        'displayName', 'mainGame', 'platform', 'availability', 'bio',
+        'uid', 'email', 'isAnonymous', 'updatedAt'
+      ])
+      && request.resource.data.displayName is string
+      && request.resource.data.displayName.size() <= 40
+      && validGame(request.resource.data.mainGame)
+      && request.resource.data.platform is string
+      && request.resource.data.platform.size() <= 24
+      && request.resource.data.availability is string
+      && request.resource.data.availability.size() <= 60
+      && request.resource.data.bio is string
+      && request.resource.data.bio.size() <= 220
+      && request.resource.data.uid == request.auth.uid
+      && request.resource.data.email is string
+      && request.resource.data.email.size() <= 120
+      && request.resource.data.isAnonymous is bool;
+    }
+
+    match /profiles/{uid} {
+      allow read: if true;
+      allow create, update: if isOwner(uid) && safeProfile();
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
     match /posts/{postId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly([
-        'game', 'title', 'body', 'meta', 'replies', 'joined', 'createdAt'
-      ])
-      && request.resource.data.game in ['fifa', 'gta', 'warzone']
-      && request.resource.data.title is string
-      && request.resource.data.title.size() <= 80
-      && request.resource.data.body is string
-      && request.resource.data.body.size() <= 260
-      && request.resource.data.meta is string
-      && request.resource.data.meta.size() <= 90;
-      allow update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'game', 'title', 'body', 'meta', 'ownerUid', 'ownerName', 'createdAt'
+        ])
+        && request.resource.data.ownerUid == request.auth.uid
+        && validGame(request.resource.data.game)
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 80
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 260
+        && request.resource.data.meta is string
+        && request.resource.data.meta.size() <= 90
+        && request.resource.data.ownerName is string
+        && request.resource.data.ownerName.size() <= 40;
+      allow update, delete: if isAdmin();
     }
 
     match /messages/{messageId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly([
-        'author', 'game', 'text', 'time', 'createdAt'
-      ])
-      && request.resource.data.game in ['fifa', 'gta', 'warzone']
-      && request.resource.data.author is string
-      && request.resource.data.author.size() <= 40
-      && request.resource.data.text is string
-      && request.resource.data.text.size() <= 160;
-      allow update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'author', 'game', 'text', 'time', 'uid', 'createdAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && validGame(request.resource.data.game)
+        && request.resource.data.author is string
+        && request.resource.data.author.size() <= 40
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 160
+        && request.resource.data.time is string
+        && request.resource.data.time.size() <= 20;
+      allow update, delete: if isAdmin();
     }
 
     match /squads/{squadId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly([
-        'game', 'name', 'need', 'region', 'vibe', 'tags', 'requested', 'createdAt'
-      ])
-      && request.resource.data.game in ['fifa', 'gta', 'warzone']
-      && request.resource.data.name is string
-      && request.resource.data.name.size() <= 48
-      && request.resource.data.need is string
-      && request.resource.data.need.size() <= 60
-      && request.resource.data.region is string
-      && request.resource.data.region.size() <= 36
-      && request.resource.data.vibe is string
-      && request.resource.data.vibe.size() <= 40
-      && request.resource.data.tags is list
-      && request.resource.data.tags.size() <= 4;
-      allow update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'game', 'name', 'need', 'region', 'vibe', 'tags',
+          'ownerUid', 'ownerName', 'createdAt'
+        ])
+        && request.resource.data.ownerUid == request.auth.uid
+        && validGame(request.resource.data.game)
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 48
+        && request.resource.data.need is string
+        && request.resource.data.need.size() <= 60
+        && request.resource.data.region is string
+        && request.resource.data.region.size() <= 36
+        && request.resource.data.vibe is string
+        && request.resource.data.vibe.size() <= 40
+        && request.resource.data.tags is list
+        && request.resource.data.tags.size() <= 4
+        && request.resource.data.ownerName is string
+        && request.resource.data.ownerName.size() <= 40;
+      allow update, delete: if isAdmin();
     }
 
     match /events/{eventId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly([
-        'game', 'title', 'when', 'spots', 'rsvp', 'createdAt'
-      ])
-      && request.resource.data.game in ['fifa', 'gta', 'warzone']
-      && request.resource.data.title is string
-      && request.resource.data.title.size() <= 64
-      && request.resource.data.when is string
-      && request.resource.data.when.size() <= 40
-      && request.resource.data.spots is number
-      && request.resource.data.spots >= 1
-      && request.resource.data.spots <= 99;
-      allow update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'game', 'title', 'when', 'spots', 'ownerUid', 'ownerName', 'createdAt'
+        ])
+        && request.resource.data.ownerUid == request.auth.uid
+        && validGame(request.resource.data.game)
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 64
+        && request.resource.data.when is string
+        && request.resource.data.when.size() <= 40
+        && request.resource.data.spots is number
+        && request.resource.data.spots >= 1
+        && request.resource.data.spots <= 99
+        && request.resource.data.ownerName is string
+        && request.resource.data.ownerName.size() <= 40;
+      allow update, delete: if isAdmin();
+    }
+
+    match /postJoins/{joinId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'postId', 'uid', 'displayName', 'createdAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.postId is string
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 40;
+      allow update: if false;
+      allow delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    match /squadRequests/{requestId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'squadId', 'uid', 'displayName', 'createdAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.squadId is string
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 40;
+      allow update: if false;
+      allow delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    match /eventRsvps/{rsvpId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'eventId', 'uid', 'displayName', 'createdAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.eventId is string
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 40;
+      allow update: if false;
+      allow delete: if isOwner(resource.data.uid) || isAdmin();
+    }
+
+    match /reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'postId', 'title', 'reason', 'uid', 'displayName', 'status', 'createdAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.postId is string
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 80
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() <= 120
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 40
+        && request.resource.data.status == 'open';
+      allow update, delete: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
     }
 
     match /{document=**} {
