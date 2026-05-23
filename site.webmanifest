@@ -1,0 +1,18 @@
+{
+  "name": "LobbyRush",
+  "short_name": "LobbyRush",
+  "description": "A gamer community web app for FIFA, GTA, and Call of Duty Warzone.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff5e8",
+  "theme_color": "#ff5a2b",
+  "icons": [
+    {
+      "src": "assets/lobbyrush-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

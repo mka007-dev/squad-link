@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ff5a2b" />
+    <link rel="icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+    <title>LobbyRush</title>
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #fff5e8;
+        color: #171221;
+        font-family: Outfit, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      a {
+        color: #ff5a2b;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Opening LobbyRush</h1>
+      <p><a href="preview.html">Open LobbyRush manually</a></p>
+    </main>
+    <script>
+      const pathParts = window.location.pathname.split("/");
+      const repoIndex = pathParts.indexOf("squad-link");
+      const basePath = repoIndex >= 0 ? `/${pathParts.slice(1, repoIndex + 1).join("/")}/` : "/";
+      window.location.replace(basePath + "preview.html" + window.location.search + window.location.hash);
+    </script>
+  </body>
+</html>

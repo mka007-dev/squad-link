@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">LobbyRush logo</title>
+  <desc id="desc">A bright LR monogram with a rush bolt for a gaming community app.</desc>
+  <defs>
+    <linearGradient id="bg" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB800"/>
+      <stop offset="0.48" stop-color="#FF5A2B"/>
+      <stop offset="1" stop-color="#6A35FF"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="176" y1="118" x2="336" y2="394" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFE9B8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="126" fill="#151220"/>
+  <rect x="32" y="32" width="448" height="448" rx="106" fill="url(#bg)"/>
+  <path d="M168 128h72v206h116v58H168V128Z" fill="#151220"/>
+  <path d="M294 120h84c48 0 80 29 80 73 0 31-15 53-41 65l53 108h-76l-42-94h-23v94h-35V120Zm72 96c16 0 26-8 26-22 0-15-10-23-26-23h-37v45h37Z" fill="#151220"/>
+  <path d="M248 108 146 284h84l-30 120 150-190h-88l50-106h-64Z" fill="url(#bolt)" opacity="0.96"/>
+  <path d="M75 407c67 43 138 61 212 54 54-5 102-24 150-58" fill="none" stroke="#151220" stroke-width="18" stroke-linecap="round" opacity="0.22"/>
+</svg>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mka007-dev.github.io/squad-link/sitemap.xml

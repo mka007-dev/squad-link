@@ -2,11 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=preview.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SquadLink</title>
+    <meta name="theme-color" content="#ff5a2b" />
+    <meta name="description" content="LobbyRush is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
+    <meta http-equiv="refresh" content="0; url=preview.html" />
+    <link rel="canonical" href="preview.html" />
+    <link rel="icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="apple-touch-icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+    <title>LobbyRush | Gamer Community</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #fff5e8;
+        color: #171221;
+      }
+
+      main {
+        width: min(92vw, 440px);
+        text-align: center;
+      }
+
+      img {
+        width: 92px;
+        height: 92px;
+        object-fit: contain;
+      }
+
+      a {
+        color: #ff5a2b;
+      }
+    </style>
   </head>
   <body>
-    <p><a href="preview.html">Open SquadLink</a></p>
+    <main>
+      <img src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
+      <h1>Opening LobbyRush</h1>
+      <p><a href="preview.html">Open LobbyRush manually</a></p>
+    </main>
+    <script>
+      window.location.replace("preview.html" + window.location.search + window.location.hash);
+    </script>
   </body>
 </html>

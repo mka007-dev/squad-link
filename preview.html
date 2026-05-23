@@ -3,7 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SquadLink | Gamer Community</title>
+    <meta name="theme-color" content="#ff5a2b" />
+    <meta name="description" content="LobbyRush is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
+    <meta property="og:title" content="LobbyRush | Gamer Community" />
+    <meta property="og:description" content="Find squads, post clips, join events, and chat with FIFA, GTA, and Warzone players." />
+    <meta property="og:image" content="assets/lobbyrush-logo.svg" />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="apple-touch-icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+    <title>LobbyRush | Gamer Community</title>
     <style>
       :root {
         color-scheme: dark;
@@ -944,6 +956,651 @@
         }
       }
 
+      /* LobbyRush redesign layer */
+      :root {
+        --bg: #07090d;
+        --panel: rgba(15, 20, 30, 0.94);
+        --panel-2: rgba(26, 33, 47, 0.94);
+        --panel-3: rgba(9, 12, 19, 0.82);
+        --line: rgba(255, 255, 255, 0.13);
+        --text: #f7f9ff;
+        --muted: #a9b3c5;
+        --soft: #d7deea;
+        --lime: #d9ff66;
+        --green: #55e68a;
+        --amber: #ffb84d;
+        --blue: #5db7ff;
+        --rose: #ff6f9f;
+        --mint: #67f7d4;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.46);
+      }
+
+      body {
+        background:
+          linear-gradient(180deg, rgba(7, 9, 13, 0.52), rgba(7, 9, 13, 0.96) 64%, #07090d),
+          linear-gradient(115deg, rgba(217, 255, 102, 0.08), rgba(93, 183, 255, 0.07) 38%, rgba(255, 111, 159, 0.05) 72%),
+          url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=2200&q=82") center top/cover fixed;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 86px 86px;
+        opacity: 0.14;
+      }
+
+      .app {
+        position: relative;
+        z-index: 1;
+        grid-template-columns: 286px minmax(0, 1fr);
+      }
+
+      .sidebar {
+        height: calc(100vh - 32px);
+        margin: 16px 0 16px 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, rgba(18, 24, 35, 0.96), rgba(9, 12, 19, 0.94)),
+          rgba(9, 12, 19, 0.92);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        min-height: 64px;
+        margin-bottom: 18px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand-mark,
+      .mobile-logo {
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 0 0 1px rgba(217, 255, 102, 0.28), 0 18px 40px rgba(217, 255, 102, 0.14);
+      }
+
+      .brand-name {
+        letter-spacing: 0;
+      }
+
+      .nav {
+        gap: 10px;
+      }
+
+      .nav-button {
+        min-height: 52px;
+        padding: 0 12px 0 10px;
+        border: 1px solid transparent;
+        color: var(--soft);
+        background: rgba(255, 255, 255, 0.035);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-button::after {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: var(--lime);
+        opacity: 0;
+        transition: opacity 160ms ease;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        border-color: rgba(217, 255, 102, 0.24);
+        background: linear-gradient(90deg, rgba(217, 255, 102, 0.14), rgba(93, 183, 255, 0.06));
+        transform: translateX(2px);
+      }
+
+      .nav-button.active::after,
+      .nav-button:hover::after {
+        opacity: 1;
+      }
+
+      .nav-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: var(--lime);
+        background: rgba(217, 255, 102, 0.08);
+        border: 1px solid rgba(217, 255, 102, 0.18);
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .nav-icon svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+        margin: auto;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon {
+        color: #090b10;
+        background: var(--lime);
+        border-color: var(--lime);
+      }
+
+      .side-card {
+        border-color: var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.035));
+      }
+
+      .main {
+        padding: 28px clamp(20px, 3vw, 38px) 36px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 4;
+        margin: -8px 0 12px;
+        padding: 8px 0;
+        backdrop-filter: blur(18px);
+      }
+
+      .search-wrap {
+        min-height: 56px;
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(9, 12, 19, 0.74);
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.18);
+      }
+
+      .search-icon {
+        min-width: 44px;
+        color: var(--lime);
+        font-weight: 950;
+        text-transform: uppercase;
+        font-size: 11px;
+      }
+
+      .primary,
+      .ghost,
+      .icon-button,
+      .pill-button {
+        border-radius: 8px;
+      }
+
+      .primary {
+        min-width: 124px;
+        background: var(--lime);
+        color: #090b10;
+        box-shadow: 0 14px 34px rgba(217, 255, 102, 0.2);
+      }
+
+      .ghost,
+      .pill-button {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .command-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .command-stat {
+        min-height: 58px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: rgba(9, 12, 19, 0.62);
+      }
+
+      .command-stat span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .command-stat strong {
+        color: var(--lime);
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .compact-action {
+        min-width: 132px;
+      }
+
+      .grid {
+        gap: 18px;
+      }
+
+      .dashboard {
+        grid-template-columns: minmax(0, 1.42fr) minmax(310px, 0.72fr);
+        gap: 18px;
+      }
+
+      .hero {
+        min-height: 430px;
+        justify-content: space-between;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        padding: clamp(20px, 3.5vw, 34px);
+        background:
+          linear-gradient(180deg, rgba(4, 6, 10, 0.08), rgba(4, 6, 10, 0.58) 54%, rgba(4, 6, 10, 0.86)),
+          linear-gradient(110deg, rgba(217, 255, 102, 0.16), transparent 36%, rgba(93, 183, 255, 0.16)),
+          url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=82") center/cover;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        opacity: 0.26;
+        transform: skewX(-12deg) translateX(-32%);
+      }
+
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+      }
+
+      .hero-logo {
+        width: min(178px, 42vw);
+        margin-bottom: 14px;
+      }
+
+      .eyebrow {
+        color: var(--mint);
+        letter-spacing: 0.08em;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: clamp(42px, 5.5vw, 78px);
+      }
+
+      .hero-subtitle {
+        max-width: 600px;
+        margin-top: 14px;
+        color: var(--soft);
+        font-size: clamp(15px, 1.8vw, 18px);
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        margin-top: 24px;
+      }
+
+      .hero-status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-status span {
+        min-height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+        color: var(--soft);
+        background: rgba(7, 9, 13, 0.62);
+        backdrop-filter: blur(10px);
+      }
+
+      .hero-status b {
+        color: var(--lime);
+      }
+
+      .game-grid {
+        gap: 14px;
+      }
+
+      .game-tile {
+        min-height: 198px;
+        border-color: rgba(255, 255, 255, 0.15);
+        padding: 16px;
+        text-align: left;
+        box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+      }
+
+      .game-tile-copy {
+        display: grid;
+        gap: 4px;
+        color: var(--text);
+      }
+
+      .game-tile-copy strong {
+        font-size: 24px;
+        line-height: 1.05;
+      }
+
+      .game-tile-copy small {
+        color: var(--soft);
+        font-size: 13px;
+      }
+
+      .tile-count {
+        min-height: 30px;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        padding: 0 10px;
+        border-radius: 8px;
+        background: rgba(9, 12, 19, 0.64);
+      }
+
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card {
+        border-color: var(--line);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.035)),
+          rgba(12, 16, 25, 0.9);
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22);
+      }
+
+      .panel,
+      .profile-panel {
+        padding: 18px;
+      }
+
+      .panel-header {
+        min-height: 44px;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .post-card,
+      .chat-message,
+      .leaderboard-row {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .post-card::before,
+      .chat-message::before,
+      .leaderboard-row::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: var(--blue);
+      }
+
+      .post-card.fifa-card::before,
+      .chat-message.fifa-card::before,
+      .leaderboard-row.fifa-card::before {
+        background: var(--green);
+      }
+
+      .post-card.gta-card::before,
+      .chat-message.gta-card::before,
+      .leaderboard-row.gta-card::before {
+        background: var(--amber);
+      }
+
+      .post-card.warzone-card::before,
+      .chat-message.warzone-card::before,
+      .leaderboard-row.warzone-card::before {
+        background: var(--blue);
+      }
+
+      .post-card:hover,
+      .squad-card:hover,
+      .event-card:hover,
+      .chat-message:hover,
+      .leaderboard-row:hover,
+      .report-row:hover,
+      .github-card:hover {
+        border-color: rgba(217, 255, 102, 0.34);
+        background:
+          linear-gradient(180deg, rgba(217, 255, 102, 0.08), rgba(93, 183, 255, 0.035)),
+          rgba(15, 20, 30, 0.95);
+      }
+
+      .chip {
+        min-height: 30px;
+        border-radius: 8px;
+        border-color: rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .stat-box,
+      .event-date,
+      .rank,
+      .code-box {
+        border-radius: 8px;
+      }
+
+      .stat-box {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .event-card {
+        align-items: stretch;
+      }
+
+      .event-date {
+        min-width: 68px;
+        height: auto;
+        color: #090b10;
+        background: var(--lime);
+        border-color: transparent;
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        border-color: rgba(255, 255, 255, 0.13);
+        background: rgba(5, 8, 14, 0.52);
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--lime);
+        box-shadow: 0 0 0 3px rgba(217, 255, 102, 0.12);
+      }
+
+      .toast,
+      dialog {
+        border-color: rgba(217, 255, 102, 0.22);
+        background: rgba(10, 14, 22, 0.98);
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .main {
+          padding: 16px 16px 112px;
+        }
+
+        .dashboard,
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          position: relative;
+          top: auto;
+          margin: 0 0 12px;
+          padding: 0;
+        }
+
+        .mobile-header {
+          background: rgba(9, 12, 19, 0.88);
+          backdrop-filter: blur(18px);
+          border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar {
+          inset: auto 12px max(12px, env(safe-area-inset-bottom));
+          height: auto;
+          margin: 0;
+          border-radius: 8px;
+          background: rgba(9, 12, 19, 0.94);
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+          display: none;
+        }
+
+        .nav {
+          display: flex;
+          gap: 6px;
+          min-width: max-content;
+        }
+
+        .nav-button {
+          min-height: 62px;
+          min-width: 68px;
+          flex: 0 0 68px;
+          padding: 6px 4px;
+          font-size: 10px;
+        }
+
+        .nav-button::after {
+          inset: auto 10px 4px;
+          width: auto;
+          height: 2px;
+        }
+
+        .nav-icon {
+          width: 28px;
+          height: 28px;
+          font-size: 10px;
+        }
+
+        .command-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .compact-action {
+          grid-column: 1 / -1;
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 680px) {
+        body {
+          background-attachment: scroll;
+        }
+
+        .command-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .command-stat {
+          min-height: 50px;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: 18px;
+        }
+
+        .hero-logo {
+          width: 94px;
+        }
+
+        h1 {
+          font-size: clamp(34px, 11vw, 48px);
+        }
+
+        .hero-status {
+          margin-top: 22px;
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .game-tile {
+          min-height: 156px;
+        }
+
+        .game-tile-copy strong {
+          font-size: 22px;
+        }
+
+        .panel-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .event-card {
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .main {
+          padding: 12px 12px 108px;
+        }
+
+        .mobile-header {
+          margin: -12px -12px 12px;
+        }
+
+        .nav-button {
+          min-height: 58px;
+          min-width: 60px;
+          flex-basis: 60px;
+        }
+
+        .nav-icon {
+          width: 25px;
+          height: 25px;
+          font-size: 9px;
+        }
+
+        .hero-logo {
+          display: none;
+        }
+
+        .nav-button span:last-child {
+          font-size: 8px;
+          overflow: visible;
+          text-overflow: clip;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -1028,29 +1685,1087 @@
           transform: translateY(0) scale(1);
         }
       }
+
+      /* Fresh app reference redesign */
+      :root {
+        color-scheme: light;
+        --bg: #fff3e2;
+        --panel: #fffaf3;
+        --panel-2: #fff0d7;
+        --panel-3: #ffffff;
+        --line: #ecd7bb;
+        --text: #202331;
+        --muted: #7d705e;
+        --soft: #51483d;
+        --lime: #ff9d28;
+        --green: #41b978;
+        --amber: #ffbd4a;
+        --blue: #4c8ef7;
+        --rose: #ef5f7a;
+        --mint: #2ebf91;
+        --shadow: 0 24px 60px rgba(132, 73, 15, 0.14);
+      }
+
+      html,
+      body {
+        background: var(--bg);
+      }
+
+      body {
+        color: var(--text);
+        background:
+          linear-gradient(180deg, rgba(255, 243, 226, 0.92), #fff8ee 42%, #fff3e2),
+          url("https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=2200&q=78") center top/cover fixed;
+        animation: none;
+      }
+
+      body::before {
+        background:
+          linear-gradient(90deg, rgba(255, 157, 40, 0.07) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(255, 157, 40, 0.06) 1px, transparent 1px);
+        background-size: 74px 74px;
+        opacity: 0.42;
+      }
+
+      .app {
+        grid-template-columns: 292px minmax(0, 1fr);
+      }
+
+      .sidebar {
+        background: rgba(255, 250, 243, 0.94);
+        border-color: rgba(236, 215, 187, 0.95);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        border-bottom-color: rgba(236, 215, 187, 0.85);
+      }
+
+      .brand-mark,
+      .mobile-logo {
+        background: #fff;
+        box-shadow: 0 0 0 1px rgba(255, 157, 40, 0.26), 0 16px 34px rgba(255, 157, 40, 0.16);
+      }
+
+      .brand-sub,
+      .mobile-subtitle,
+      .meta,
+      .empty,
+      .field label,
+      .stat-label {
+        color: var(--muted);
+      }
+
+      .nav-button {
+        color: var(--soft);
+        background: #fff6e7;
+        border-color: rgba(236, 215, 187, 0.58);
+      }
+
+      .nav-button::after {
+        background: var(--lime);
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        color: var(--text);
+        background: #ffffff;
+        border-color: rgba(255, 157, 40, 0.55);
+        box-shadow: 0 14px 30px rgba(255, 157, 40, 0.13);
+      }
+
+      .nav-icon {
+        color: #c36904;
+        background: #ffedd1;
+        border-color: rgba(255, 157, 40, 0.32);
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon {
+        color: #fff;
+        background: var(--lime);
+        border-color: var(--lime);
+      }
+
+      .side-card {
+        background: #ffffff;
+        border-color: rgba(236, 215, 187, 0.95);
+        box-shadow: 0 16px 30px rgba(132, 73, 15, 0.08);
+      }
+
+      .mini-stat {
+        border-top-color: rgba(236, 215, 187, 0.9);
+      }
+
+      .main {
+        padding-top: 26px;
+      }
+
+      .mobile-header,
+      .topbar {
+        background: rgba(255, 243, 226, 0.72);
+      }
+
+      .search-wrap {
+        min-height: 58px;
+        background: #ffffff;
+        border-color: rgba(236, 215, 187, 0.95);
+        box-shadow: 0 18px 36px rgba(132, 73, 15, 0.09);
+      }
+
+      .search-wrap input {
+        color: var(--text);
+      }
+
+      .search-icon {
+        color: #c36904;
+      }
+
+      .primary {
+        background: var(--lime);
+        color: #25160a;
+        box-shadow: 0 16px 34px rgba(255, 157, 40, 0.24);
+      }
+
+      .ghost,
+      .pill-button,
+      .icon-button {
+        color: var(--text);
+        background: #ffffff;
+        border-color: rgba(236, 215, 187, 0.95);
+      }
+
+      .pill-button.active {
+        background: var(--text);
+        color: #ffffff;
+        border-color: var(--text);
+      }
+
+      .command-strip {
+        grid-template-columns: repeat(3, minmax(132px, 1fr)) auto;
+      }
+
+      .command-stat {
+        min-height: 64px;
+        background: #ffffff;
+        border-color: rgba(236, 215, 187, 0.95);
+        box-shadow: 0 18px 34px rgba(132, 73, 15, 0.08);
+      }
+
+      .command-stat span {
+        color: var(--muted);
+      }
+
+      .command-stat strong {
+        color: var(--lime);
+      }
+
+      .hero {
+        min-height: 438px;
+        display: grid;
+        grid-template-columns: minmax(0, 0.96fr) minmax(310px, 0.74fr);
+        align-items: center;
+        gap: clamp(18px, 4vw, 44px);
+        padding: clamp(22px, 4vw, 42px);
+        border: 0;
+        background:
+          linear-gradient(135deg, rgba(255, 246, 231, 0.88), rgba(255, 199, 96, 0.92) 42%, rgba(255, 151, 47, 0.96)),
+          #ffc461;
+        box-shadow: 0 28px 70px rgba(187, 91, 10, 0.22);
+      }
+
+      .hero::before {
+        display: none;
+      }
+
+      .hero::after {
+        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.36) 48%, transparent 62%);
+        opacity: 0.65;
+      }
+
+      .hero-copy {
+        max-width: 620px;
+      }
+
+      .hero-logo {
+        width: 104px;
+        padding: 8px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 16px 32px rgba(106, 53, 5, 0.13);
+      }
+
+      .eyebrow {
+        color: #7e4802;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 620px;
+        color: #20160e;
+        font-size: clamp(42px, 5.2vw, 76px);
+      }
+
+      h2,
+      h3,
+      .stat-value {
+        color: var(--text);
+      }
+
+      .hero-subtitle {
+        color: #5d3b12;
+      }
+
+      .hero .ghost {
+        background: rgba(255, 255, 255, 0.82);
+        border-color: rgba(255, 255, 255, 0.88);
+      }
+
+      .hero-art {
+        min-height: 344px;
+        position: relative;
+        display: grid;
+        place-items: center;
+      }
+
+      .phone-mockup {
+        width: 182px;
+        min-height: 330px;
+        border-radius: 28px;
+        border: 8px solid #ffffff;
+        background: linear-gradient(180deg, #fff8ef, #ffffff);
+        box-shadow: 0 28px 48px rgba(126, 72, 2, 0.25);
+        padding: 20px 14px 16px;
+      }
+
+      .phone-main {
+        transform: translateX(-28px) rotate(-3deg);
+        z-index: 2;
+      }
+
+      .phone-back {
+        position: absolute;
+        right: 2%;
+        top: 6%;
+        min-height: 300px;
+        transform: rotate(4deg);
+        background: linear-gradient(180deg, #ffd27c, #ff9d28);
+      }
+
+      .phone-speaker {
+        width: 48px;
+        height: 8px;
+        border-radius: 999px;
+        margin: 0 auto 18px;
+        background: rgba(32, 35, 49, 0.18);
+      }
+
+      .mock-title {
+        margin-bottom: 12px;
+        color: #20160e;
+        font-size: 12px;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .mock-card,
+      .mock-list-row {
+        border: 1px solid rgba(236, 215, 187, 0.85);
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 12px 26px rgba(126, 72, 2, 0.1);
+      }
+
+      .mock-card {
+        display: grid;
+        gap: 4px;
+        padding: 12px;
+      }
+
+      .mock-card-large {
+        min-height: 104px;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #fff, #fff1d7);
+      }
+
+      .mock-card span,
+      .mock-card small {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .mock-card strong {
+        color: var(--text);
+      }
+
+      .mock-list-row {
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 8px;
+        padding: 0 10px;
+        color: var(--soft);
+        font-size: 12px;
+      }
+
+      .mock-list-row b {
+        color: var(--lime);
+      }
+
+      .mock-avatar-row {
+        display: flex;
+        gap: 8px;
+        margin: 12px 0;
+      }
+
+      .mock-avatar-row span {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: inset 0 0 0 7px rgba(255, 157, 40, 0.3);
+      }
+
+      .floating-pill {
+        position: absolute;
+        z-index: 3;
+        min-height: 42px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 14px;
+        color: #20160e;
+        background: #ffffff;
+        box-shadow: 0 18px 34px rgba(126, 72, 2, 0.18);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .pill-one {
+        left: 4%;
+        top: 24%;
+      }
+
+      .pill-two {
+        right: 4%;
+        bottom: 16%;
+      }
+
+      .game-tile {
+        min-height: 184px;
+        border-color: rgba(236, 215, 187, 0.95);
+        background-color: #ffffff;
+        box-shadow: 0 18px 34px rgba(132, 73, 15, 0.1);
+      }
+
+      .game-tile.fifa {
+        background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 250, 243, 0.94)), url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .game-tile.gta {
+        background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 250, 243, 0.94)), url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .game-tile.warzone {
+        background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 250, 243, 0.94)), url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80");
+      }
+
+      .game-tile-copy strong,
+      .game-tile-copy small,
+      .tile-count {
+        color: var(--text);
+      }
+
+      .tile-count {
+        background: #ffffff;
+        box-shadow: 0 10px 20px rgba(132, 73, 15, 0.08);
+      }
+
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card {
+        background: rgba(255, 250, 243, 0.96);
+        border-color: rgba(236, 215, 187, 0.95);
+        box-shadow: 0 18px 38px rgba(132, 73, 15, 0.09);
+      }
+
+      .panel-header {
+        border-bottom-color: rgba(236, 215, 187, 0.88);
+      }
+
+      .post-card::before,
+      .chat-message::before,
+      .leaderboard-row::before {
+        width: 5px;
+        background: var(--lime);
+      }
+
+      .post-card:hover,
+      .squad-card:hover,
+      .event-card:hover,
+      .chat-message:hover,
+      .leaderboard-row:hover,
+      .report-row:hover,
+      .github-card:hover {
+        border-color: rgba(255, 157, 40, 0.64);
+        background: #ffffff;
+      }
+
+      .post-body {
+        color: var(--soft);
+      }
+
+      .chip {
+        border-color: rgba(236, 215, 187, 0.95);
+        background: #ffffff;
+      }
+
+      .stat-box,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card {
+        background: #ffffff;
+      }
+
+      .event-date,
+      .rank {
+        color: #ffffff;
+        background: var(--text);
+      }
+
+      .field input,
+      .field select,
+      .field textarea,
+      .code-box {
+        color: var(--text);
+        background: #ffffff;
+        border-color: rgba(236, 215, 187, 0.95);
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--lime);
+        box-shadow: 0 0 0 3px rgba(255, 157, 40, 0.16);
+      }
+
+      .toast,
+      dialog {
+        color: var(--text);
+        background: #fffaf3;
+        border-color: rgba(236, 215, 187, 0.95);
+      }
+
+      dialog::backdrop {
+        background: rgba(51, 30, 5, 0.38);
+      }
+
+      @media (max-width: 1180px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-art {
+          min-height: 320px;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .main {
+          width: 100%;
+        }
+
+        .mobile-header {
+          background: rgba(255, 250, 243, 0.92);
+        }
+
+        .sidebar {
+          background: rgba(255, 250, 243, 0.96);
+        }
+
+        .command-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        body {
+          background-attachment: scroll;
+        }
+
+        .command-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .command-stat {
+          min-height: 58px;
+          padding: 8px;
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .command-stat span {
+          font-size: 10px;
+        }
+
+        .command-stat strong {
+          font-size: 22px;
+        }
+
+        .compact-action {
+          display: none;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 18px;
+          min-height: auto;
+        }
+
+        .hero-logo {
+          display: block;
+          width: 78px;
+        }
+
+        .hero-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .hero-actions .primary,
+        .hero-actions .ghost {
+          width: auto;
+          min-width: 0;
+        }
+
+        .hero-art {
+          min-height: 244px;
+        }
+
+        .phone-mockup {
+          width: 144px;
+          min-height: 244px;
+          border-width: 6px;
+          padding: 14px 10px 12px;
+        }
+
+        .phone-back {
+          right: 0;
+          top: 10%;
+          min-height: 224px;
+        }
+
+        .phone-main {
+          transform: translateX(-18px) rotate(-3deg);
+        }
+
+        .mock-card-large {
+          min-height: 76px;
+        }
+
+        .mock-list-row {
+          min-height: 32px;
+          font-size: 10px;
+        }
+
+        .floating-pill {
+          min-height: 34px;
+          font-size: 10px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .hero-logo {
+          display: none;
+        }
+
+        .hero-art {
+          min-height: 224px;
+          overflow: hidden;
+        }
+
+        .phone-mockup {
+          width: 132px;
+          min-height: 220px;
+        }
+
+        .phone-back {
+          right: -6px;
+        }
+
+        .floating-pill {
+          display: none;
+        }
+
+        .game-tile {
+          min-height: 148px;
+        }
+      }
+
+      /* LobbyRush high-energy polish */
+      :root {
+        --bg: #fff5e8;
+        --panel: #fffdf8;
+        --panel-2: #fff0d4;
+        --panel-3: #ffffff;
+        --line: #ead1ad;
+        --text: #171221;
+        --muted: #73634f;
+        --soft: #43392f;
+        --lime: #ff5a2b;
+        --green: #00b86b;
+        --amber: #ffb000;
+        --blue: #2962ff;
+        --rose: #ff2d75;
+        --mint: #08c7a3;
+        --shadow: 0 28px 70px rgba(118, 63, 5, 0.16);
+        font-family: "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        background:
+          linear-gradient(180deg, rgba(255, 245, 232, 0.96), rgba(255, 253, 248, 0.9) 42%, #fff5e8),
+          linear-gradient(135deg, #fff5e8 0%, #fff0ca 34%, #ffe2e7 66%, #eee9ff 100%);
+      }
+
+      body::before {
+        background:
+          repeating-linear-gradient(135deg, rgba(255, 90, 43, 0.07) 0 1px, transparent 1px 18px),
+          linear-gradient(90deg, rgba(41, 98, 255, 0.04), rgba(255, 45, 117, 0.04));
+        background-size: auto;
+        opacity: 0.72;
+      }
+
+      h1,
+      h2,
+      h3,
+      .brand-name,
+      .mobile-title,
+      .nav-button,
+      .primary,
+      .ghost,
+      .pill-button,
+      .command-stat,
+      .stat-value,
+      .leader-name,
+      .message-author {
+        font-family: "Space Grotesk", "Outfit", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .brand-name,
+      .mobile-title {
+        color: transparent;
+        background: linear-gradient(90deg, #ff5a2b, #6a35ff);
+        background-clip: text;
+      }
+
+      .brand-mark,
+      .mobile-logo,
+      .hero-logo {
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 16px 36px rgba(255, 90, 43, 0.22);
+      }
+
+      .hero-logo {
+        border-radius: 24px;
+      }
+
+      .sidebar,
+      .mobile-header,
+      .search-wrap,
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card,
+      .command-stat {
+        border-color: rgba(234, 209, 173, 0.88);
+        box-shadow: 0 20px 44px rgba(118, 63, 5, 0.1);
+      }
+
+      .nav-button {
+        background: #fff8eb;
+        border-color: rgba(234, 209, 173, 0.76);
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        background: #ffffff;
+        border-color: rgba(255, 90, 43, 0.48);
+        box-shadow: 0 16px 28px rgba(255, 90, 43, 0.15);
+      }
+
+      .nav-icon {
+        color: #ff5a2b;
+        background: #fff0d6;
+        border-color: rgba(255, 90, 43, 0.24);
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon {
+        color: #ffffff;
+        background: linear-gradient(135deg, #ff5a2b, #6a35ff);
+      }
+
+      .primary {
+        color: #ffffff;
+        background: linear-gradient(135deg, #ff5a2b, #ff2d75 48%, #6a35ff);
+        box-shadow: 0 18px 34px rgba(255, 90, 43, 0.26);
+      }
+
+      .ghost {
+        color: #171221;
+      }
+
+      .search-icon,
+      .command-stat strong {
+        color: #ff5a2b;
+      }
+
+      .hero {
+        background:
+          linear-gradient(130deg, rgba(255, 248, 231, 0.92) 0%, rgba(255, 184, 0, 0.95) 35%, rgba(255, 90, 43, 0.98) 62%, rgba(106, 53, 255, 0.98) 100%),
+          #ff7a2f;
+        box-shadow: 0 32px 80px rgba(255, 90, 43, 0.28);
+      }
+
+      .hero::after {
+        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.45) 48%, transparent 62%);
+      }
+
+      .eyebrow {
+        color: #fff9e8;
+        text-shadow: 0 1px 10px rgba(69, 29, 0, 0.24);
+      }
+
+      .hero h1,
+      .hero-subtitle {
+        color: #ffffff;
+        text-shadow: 0 2px 18px rgba(35, 13, 0, 0.26);
+      }
+
+      .hero .ghost {
+        color: #171221;
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .phone-mockup {
+        border-radius: 30px;
+        box-shadow: 0 30px 60px rgba(41, 17, 3, 0.28);
+      }
+
+      .phone-back {
+        background: linear-gradient(180deg, #7c4dff, #ff5a2b);
+      }
+
+      .floating-pill {
+        color: #171221;
+        box-shadow: 0 18px 34px rgba(36, 18, 2, 0.18);
+      }
+
+      .game-tile {
+        position: relative;
+        min-height: 210px;
+        color: #ffffff;
+        border: 0;
+        box-shadow: 0 24px 48px rgba(20, 16, 10, 0.18);
+      }
+
+      .game-tile.fifa {
+        background-image: linear-gradient(180deg, rgba(13, 20, 10, 0.08), rgba(4, 10, 8, 0.82)), url("https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile.gta {
+        background-image: linear-gradient(180deg, rgba(26, 8, 39, 0.04), rgba(13, 9, 28, 0.84)), url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile.warzone {
+        background-image: linear-gradient(180deg, rgba(5, 13, 31, 0.04), rgba(2, 8, 24, 0.86)), url("https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile:hover {
+        transform: translateY(-6px) scale(1.01);
+        filter: saturate(1.16) contrast(1.04);
+      }
+
+      .game-tile .chip {
+        color: #171221;
+        background: rgba(255, 255, 255, 0.92);
+        border-color: rgba(255, 255, 255, 0.7);
+      }
+
+      .game-tile-copy strong {
+        color: #ffffff;
+        font-size: 28px;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42);
+      }
+
+      .game-tile-copy small {
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .tile-count {
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.32);
+        backdrop-filter: blur(12px);
+      }
+
+      .panel-header h2 {
+        font-size: 26px;
+      }
+
+      .post-card::before,
+      .chat-message::before,
+      .leaderboard-row::before {
+        background: linear-gradient(180deg, #ff5a2b, #6a35ff);
+      }
+
+      .event-date,
+      .rank {
+        background: linear-gradient(135deg, #171221, #6a35ff);
+      }
+
+      @media (max-width: 680px) {
+        .game-tile {
+          min-height: 170px;
+        }
+
+        .game-tile-copy strong {
+          font-size: 24px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .game-tile {
+          min-height: 156px;
+        }
+      }
+
+      /* Bottom tab dock redesign */
+      @media (max-width: 980px) {
+        .main {
+          padding-bottom: calc(124px + env(safe-area-inset-bottom));
+        }
+
+        .sidebar {
+          left: 10px;
+          right: 10px;
+          bottom: max(10px, env(safe-area-inset-bottom));
+          inset: auto 10px max(10px, env(safe-area-inset-bottom));
+          overflow: hidden;
+          padding: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 30px;
+          background:
+            linear-gradient(135deg, rgba(23, 18, 33, 0.96), rgba(68, 28, 82, 0.94)),
+            #171221;
+          box-shadow: 0 28px 64px rgba(23, 18, 33, 0.38);
+        }
+
+        .sidebar::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: linear-gradient(90deg, rgba(255, 90, 43, 0.22), transparent 42%, rgba(106, 53, 255, 0.22));
+          opacity: 0.78;
+        }
+
+        .nav {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          gap: 6px;
+          min-width: 0;
+        }
+
+        .nav-button {
+          min-width: 0;
+          min-height: 72px;
+          flex: none;
+          padding: 7px 4px;
+          border: 1px solid transparent;
+          border-radius: 22px;
+          color: rgba(255, 255, 255, 0.68);
+          background: transparent;
+          box-shadow: none;
+          gap: 5px;
+          transform: none;
+        }
+
+        .nav-button::after {
+          inset: auto 50% 6px auto;
+          width: 28px;
+          height: 4px;
+          border-radius: 999px;
+          background: #ffffff;
+          opacity: 0;
+          transform: translateX(50%) scaleX(0.45);
+          transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .nav-button:hover,
+        .nav-button.active {
+          color: #ffffff;
+          border-color: rgba(255, 255, 255, 0.16);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07));
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 14px 26px rgba(0, 0, 0, 0.2);
+          transform: translateY(-3px);
+        }
+
+        .nav-button.active::after {
+          opacity: 0.92;
+          transform: translateX(50%) scaleX(1);
+        }
+
+        .nav-icon {
+          width: 34px;
+          height: 34px;
+          border-radius: 16px;
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255, 255, 255, 0.86);
+          background: rgba(255, 255, 255, 0.11);
+          border-color: rgba(255, 255, 255, 0.13);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          font-size: 10px;
+        }
+
+        .nav-icon svg {
+          width: 18px;
+          height: 18px;
+          margin: 0 !important;
+          flex: 0 0 auto;
+          stroke-width: 2.2;
+        }
+
+        .nav-button:hover .nav-icon,
+        .nav-button.active .nav-icon {
+          color: #ffffff;
+          background: linear-gradient(135deg, #ff5a2b, #ff2d75 48%, #6a35ff);
+          border-color: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 12px 22px rgba(255, 45, 117, 0.28);
+        }
+
+        .nav-button span:last-child {
+          color: inherit;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .sidebar {
+          inset: auto 6px max(8px, env(safe-area-inset-bottom));
+          padding: 6px;
+          border-radius: 24px;
+        }
+
+        .nav {
+          gap: 4px;
+        }
+
+        .nav-button {
+          min-height: 66px;
+          border-radius: 18px;
+          padding: 6px 2px;
+        }
+
+        .nav-icon {
+          width: 30px;
+          height: 30px;
+          border-radius: 14px;
+          font-size: 9px;
+        }
+
+        .nav-icon svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .nav-button span:last-child {
+          font-size: 8px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="app">
       <aside class="sidebar">
         <div class="brand">
-          <img class="brand-mark" src="assets/squadlink-logo.png" alt="SquadLink logo" />
+          <img class="brand-mark" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
           <div>
-            <div class="brand-name">SquadLink</div>
+            <div class="brand-name">LobbyRush</div>
             <div class="brand-sub">FIFA. GTA. Warzone.</div>
           </div>
         </div>
         <nav class="nav" aria-label="Main navigation">
-          <button class="nav-button active" data-section="home">H <span>Home</span></button>
-          <button class="nav-button" data-section="feed">F <span>Feed</span></button>
-          <button class="nav-button" data-section="squads">S <span>Squads</span></button>
-          <button class="nav-button" data-section="events">E <span>Events</span></button>
-          <button class="nav-button" data-section="community">C <span>Chat</span></button>
-          <button class="nav-button" data-section="github">G <span>GitHub</span></button>
-          <button class="nav-button" data-section="profile">P <span>Profile</span></button>
+          <button class="nav-button active" data-section="home">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m3 10.8 9-7 9 7v9.7a1.5 1.5 0 0 1-1.5 1.5H15v-6h-6v6H4.5A1.5 1.5 0 0 1 3 20.5v-9.7Z"/></svg>
+            </span>
+            <span>Home</span>
+          </button>
+          <button class="nav-button" data-section="feed">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+            </span>
+            <span>Feed</span>
+          </button>
+          <button class="nav-button" data-section="squads">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M16 20v-1.7c0-1.7-1.3-3.1-3-3.1H7c-1.7 0-3 1.4-3 3.1V20"/><path d="M10 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M20 20v-1.4c0-1.5-.9-2.8-2.2-3.3"/><path d="M16.5 4.4a4 4 0 0 1 0 7.2"/></svg>
+            </span>
+            <span>Squads</span>
+          </button>
+          <button class="nav-button" data-section="events">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 2v4M17 2v4"/><path d="M4 8h16"/><path d="M5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4Z"/><path d="M8 12h3v3H8z"/></svg>
+            </span>
+            <span>Events</span>
+          </button>
+          <button class="nav-button" data-section="community">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 18.5 3.5 22 8 20h8.5A3.5 3.5 0 0 0 20 16.5v-9A3.5 3.5 0 0 0 16.5 4h-9A3.5 3.5 0 0 0 4 7.5v9c0 .8.3 1.5 1 2Z"/><path d="M8 10h8M8 14h5"/></svg>
+            </span>
+            <span>Chat</span>
+          </button>
+          <button class="nav-button" data-section="profile">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span>
+            <span>Profile</span>
+          </button>
         </nav>
         <div class="side-card">
-          <strong>Community Pulse</strong>
+          <strong>Live Operations</strong>
           <div class="mini-stat"><span>Posts</span><b id="pulsePosts">0</b></div>
           <div class="mini-stat"><span>Open squads</span><b id="pulseSquads">0</b></div>
           <div class="mini-stat"><span>Upcoming events</span><b id="pulseEvents">0</b></div>
@@ -1060,45 +2775,93 @@
       <main class="main">
         <header class="mobile-header">
           <div class="mobile-brand">
-            <img class="mobile-logo" src="assets/squadlink-logo.png" alt="SquadLink logo" />
+            <img class="mobile-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
             <div>
-              <div class="mobile-title">SquadLink</div>
-              <div class="mobile-subtitle">Find your squad</div>
+              <div class="mobile-title">LobbyRush</div>
+              <div class="mobile-subtitle">Queue your squad</div>
             </div>
           </div>
           <button class="primary" id="mobileComposer" type="button">Post</button>
         </header>
         <div class="topbar">
           <label class="search-wrap" aria-label="Search community">
-            <span>Search</span>
+            <span class="search-icon">Find</span>
             <input id="globalSearch" type="search" placeholder="Search posts, squads, events, tags..." />
           </label>
-          <button class="primary" id="openComposer">+ Create Post</button>
+          <button class="primary" id="openComposer">Create Post</button>
+        </div>
+        <div class="command-strip" aria-label="Community snapshot">
+          <div class="command-stat">
+            <span>Live Posts</span>
+            <strong id="commandPosts">0</strong>
+          </div>
+          <div class="command-stat">
+            <span>Squads Open</span>
+            <strong id="commandSquads">0</strong>
+          </div>
+          <div class="command-stat">
+            <span>Events Queued</span>
+            <strong id="commandEvents">0</strong>
+          </div>
+          <button class="ghost compact-action" data-section-jump="community">Open Chat</button>
         </div>
 
         <section class="section active" id="home">
           <div class="grid dashboard">
             <div class="grid">
               <div class="hero">
-                <img class="hero-logo" src="assets/squadlink-logo.png" alt="SquadLink" />
-                <div class="eyebrow">SquadLink</div>
-                <h1>Find players, crews, sessions, and rivalries in one place.</h1>
-                <div class="hero-actions">
-                  <button class="primary" data-section-jump="squads">Find a Squad</button>
-                  <button class="ghost" data-section-jump="events">Browse Events</button>
+                <div class="hero-copy">
+                  <img class="hero-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush" />
+                  <div class="eyebrow">LobbyRush Picks</div>
+                  <h1>Jump into a better lobby.</h1>
+                  <p class="hero-subtitle">A bold way to find FIFA grinders, GTA crews, and Warzone teammates before the match starts.</p>
+                  <div class="hero-actions">
+                    <button class="primary" data-section-jump="squads">Match Me</button>
+                    <button class="ghost" data-section-jump="events">See Sessions</button>
+                  </div>
+                </div>
+                <div class="hero-art" aria-hidden="true">
+                  <div class="phone-mockup phone-main">
+                    <div class="phone-speaker"></div>
+                    <div class="mock-title">Tonight</div>
+                    <div class="mock-card mock-card-large">
+                      <span>Warzone</span>
+                      <strong>Ranked trio</strong>
+                      <small>2 spots open</small>
+                    </div>
+                    <div class="mock-list-row"><b>FIFA</b><span>Draft night</span></div>
+                    <div class="mock-list-row"><b>GTA</b><span>Clean meet</span></div>
+                    <div class="mock-list-row"><b>COD</b><span>Customs</span></div>
+                  </div>
+                  <div class="phone-mockup phone-back">
+                    <div class="phone-speaker"></div>
+                    <div class="mock-title">Squads</div>
+                    <div class="mock-avatar-row">
+                      <span></span><span></span><span></span>
+                    </div>
+                    <div class="mock-card">
+                      <span>Live</span>
+                      <strong>Chat ready</strong>
+                    </div>
+                  </div>
+                  <div class="floating-pill pill-one">3 game hubs</div>
+                  <div class="floating-pill pill-two">24/7 calls</div>
                 </div>
               </div>
               <div class="grid game-grid">
                 <button class="game-tile fifa" data-game-jump="fifa">
                   <span class="chip fifa-color">FIFA</span>
+                  <span class="game-tile-copy"><strong>Clubhouse</strong><small>Tactics, clubs, rivals</small></span>
                   <span class="tile-count" id="fifaCount">0 live posts</span>
                 </button>
                 <button class="game-tile gta" data-game-jump="gta">
                   <span class="chip gta-color">GTA</span>
+                  <span class="game-tile-copy"><strong>Crews</strong><small>Heists, meets, lobbies</small></span>
                   <span class="tile-count" id="gtaCount">0 live posts</span>
                 </button>
                 <button class="game-tile warzone" data-game-jump="warzone">
                   <span class="chip warzone-color">Warzone</span>
+                  <span class="game-tile-copy"><strong>Drop Zone</strong><small>Ranked, customs, loadouts</small></span>
                   <span class="tile-count" id="warzoneCount">0 live posts</span>
                 </button>
               </div>
@@ -1162,7 +2925,7 @@
             <div class="panel">
               <div class="panel-header">
                 <h2>Community Chat</h2>
-                <span class="chip rose-color">Live local room</span>
+                <span class="chip warzone-color" id="firebaseStatus">Local mode</span>
               </div>
               <div class="chat-list" id="chatList"></div>
               <form id="chatForm" style="margin-top: 14px">
@@ -1185,57 +2948,6 @@
                   <h2>Mod Queue</h2>
                 </div>
                 <div class="report-list" id="reportList"></div>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section class="section" id="github">
-          <div class="grid dashboard">
-            <div class="panel">
-              <div class="panel-header">
-                <h2>GitHub Connection</h2>
-                <span class="chip warzone-color" id="githubStatus">Not connected</span>
-              </div>
-              <form id="githubForm">
-                <div class="field">
-                  <label for="githubRepo">Repository URL</label>
-                  <input id="githubRepo" name="repo" placeholder="https://github.com/your-user/squadlink" />
-                </div>
-                <div class="field">
-                  <label for="githubBranch">Default branch</label>
-                  <input id="githubBranch" name="branch" placeholder="main" />
-                </div>
-                <button class="primary" type="submit">Connect Repo</button>
-              </form>
-              <div class="github-card" style="margin-top: 16px">
-                <div class="github-status">
-                  <div>
-                    <h3 id="githubRepoName">No repository saved</h3>
-                    <p class="meta" id="githubRepoMeta">Add a GitHub repository to link this web app to your project.</p>
-                  </div>
-                  <button class="ghost" id="copyIssueTemplate" type="button">Copy Issue Template</button>
-                </div>
-                <div class="code-box" id="issueTemplate"></div>
-              </div>
-            </div>
-            <aside class="grid">
-              <div class="panel">
-                <div class="panel-header">
-                  <h2>Deploy Checklist</h2>
-                </div>
-                <div class="report-list">
-                  <div class="report-row"><span>Create or choose a repo</span><span class="chip rose-color">Needed</span></div>
-                  <div class="report-row"><span>Push this workspace</span><span class="chip rose-color">Needed</span></div>
-                  <div class="report-row"><span>Enable Pages or hosting</span><span class="chip rose-color">Next</span></div>
-                  <div class="report-row"><span>Add backend auth/storage</span><span class="chip rose-color">Later</span></div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-header">
-                  <h2>Connector</h2>
-                </div>
-                <p class="post-body">The app can remember a repository URL in your browser. Publishing the actual files requires an existing GitHub repo that Codex can access.</p>
               </div>
             </aside>
           </div>
@@ -1311,7 +3023,7 @@
       <form method="dialog" id="composerForm">
         <div class="modal-head">
           <h2>Create Post</h2>
-          <button class="icon-button" value="cancel" aria-label="Close">x</button>
+          <button class="icon-button" id="closeComposer" type="button" aria-label="Close">x</button>
         </div>
         <div class="modal-body">
           <div class="field">
@@ -1344,6 +3056,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+    <script src="firebase-config.js"></script>
     <script>
       const gameInfo = {
         fifa: { label: "FIFA", colorClass: "fifa-color" },
@@ -1398,11 +3111,18 @@
         }),
         messages: load("squadlink-messages", starterMessages),
         reports: load("squadlink-reports", []),
-        github: load("squadlink-github", { repo: "", branch: "main" }),
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
         query: ""
+      };
+
+      let db = null;
+      let firebaseApi = null;
+      const firebaseState = {
+        connected: false,
+        usingCloud: false,
+        error: ""
       };
 
       const $ = (selector) => document.querySelector(selector);
@@ -1418,6 +3138,104 @@
 
       function save(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function serializePost(form) {
+        return {
+          game: form.get("game"),
+          title: form.get("title").trim(),
+          meta: form.get("meta").trim(),
+          body: form.get("body").trim(),
+          replies: 0,
+          joined: false
+        };
+      }
+
+      function serializeMessage(form) {
+        const now = new Date();
+        return {
+          author: state.profile.displayName || "New Player",
+          game: state.profile.mainGame || "warzone",
+          text: form.get("message").trim(),
+          time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+        };
+      }
+
+      async function initFirebase() {
+        const firebaseConfig = window.SQUADLINK_FIREBASE_CONFIG;
+        const firebaseEnabled = window.SQUADLINK_FIREBASE_ENABLED;
+
+        if (!firebaseEnabled) {
+          firebaseState.error = "Add Firebase config to enable shared data.";
+          return;
+        }
+
+        try {
+          const [{ initializeApp }, firestore] = await Promise.all([
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"),
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js")
+          ]);
+          firebaseApi = firestore;
+          const app = initializeApp(firebaseConfig);
+          db = firestore.getFirestore(app);
+          firebaseState.connected = true;
+          firebaseState.usingCloud = true;
+          subscribeToSharedData();
+          showToast("Firebase connected.");
+          render();
+        } catch (error) {
+          firebaseState.error = error.message;
+          console.error(error);
+          render();
+        }
+      }
+
+      function subscribeToSharedData() {
+        const postsQuery = firebaseApi.query(firebaseApi.collection(db, "posts"), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(50));
+        firebaseApi.onSnapshot(postsQuery, (snapshot) => {
+          state.posts = snapshot.docs.map((doc) => ({ id: doc.id, joined: false, replies: 0, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+          showToast("Firebase posts could not load.");
+          render();
+        });
+
+        const messagesQuery = firebaseApi.query(firebaseApi.collection(db, "messages"), firebaseApi.orderBy("createdAt", "desc"), firebaseApi.limit(50));
+        firebaseApi.onSnapshot(messagesQuery, (snapshot) => {
+          state.messages = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+          showToast("Firebase chat could not load.");
+          render();
+        });
+      }
+
+      async function createSharedPost(post) {
+        if (!firebaseState.usingCloud) {
+          state.posts.unshift({ id: `p${Date.now()}`, ...post });
+          save("squadlink-posts", state.posts);
+          return;
+        }
+
+        await firebaseApi.addDoc(firebaseApi.collection(db, "posts"), {
+          ...post,
+          createdAt: firebaseApi.serverTimestamp()
+        });
+      }
+
+      async function createSharedMessage(message) {
+        if (!firebaseState.usingCloud) {
+          state.messages.unshift({ id: `m${Date.now()}`, ...message });
+          save("squadlink-messages", state.messages);
+          return;
+        }
+
+        await firebaseApi.addDoc(firebaseApi.collection(db, "messages"), {
+          ...message,
+          createdAt: firebaseApi.serverTimestamp()
+        });
       }
 
       function showToast(message) {
@@ -1444,7 +3262,7 @@
 
       function postCard(post) {
         return `
-          <article class="post-card">
+          <article class="post-card ${post.game}-card">
             <div class="card-top">
               ${gameChip(post.game)}
               <span class="meta">${post.meta}</span>
@@ -1464,7 +3282,7 @@
 
       function squadCard(squad) {
         return `
-          <article class="squad-card">
+          <article class="squad-card ${squad.game}-card">
             <div class="accent ${squad.game === "fifa" ? "fifa-bg" : squad.game === "gta" ? "gta-bg" : ""}"></div>
             <div class="squad-content">
               <div class="card-top">
@@ -1485,7 +3303,7 @@
 
       function eventCard(event) {
         return `
-          <article class="event-card">
+          <article class="event-card ${event.game}-card">
             <div class="event-date ${gameInfo[event.game].colorClass}">${event.when.split(" ")[0]}</div>
             <div class="event-copy">
               <div class="card-top">
@@ -1501,7 +3319,7 @@
 
       function chatCard(message) {
         return `
-          <article class="chat-message">
+          <article class="chat-message ${message.game}-card">
             <div class="message-head">
               <span class="message-author">${message.author}</span>
               ${gameChip(message.game)}
@@ -1514,7 +3332,7 @@
 
       function leaderboardCard(player, index) {
         return `
-          <article class="leaderboard-row">
+          <article class="leaderboard-row ${player.game}-card">
             <span class="rank">${index + 1}</span>
             <div style="flex: 1">
               <div class="leader-name">${player.name}</div>
@@ -1537,29 +3355,6 @@
         `;
       }
 
-      function buildIssueTemplate() {
-        const repo = state.github.repo || "https://github.com/your-user/squadlink";
-        return `# SquadLink Web App Launch
-
-Repository: ${repo}
-Branch: ${state.github.branch || "main"}
-
-## Features ready
-- Gamer community dashboard for FIFA, GTA, and Warzone
-- Feed creation, search, filters, and join state
-- Squad finder with invite requests
-- Event RSVPs
-- Community chat and leaderboard
-- Mod report queue
-- Editable player profile
-
-## Next engineering tasks
-- Add real authentication
-- Replace localStorage with a database
-- Add server-side moderation
-- Deploy to GitHub Pages, Vercel, Netlify, or Expo web`;
-      }
-
       function renderFilters(containerId, active, attr) {
         const labels = [["all", "All"], ["warzone", "Warzone"], ["fifa", "FIFA"], ["gta", "GTA"]];
         $(containerId).innerHTML = labels.map(([value, label]) => `<button class="pill-button ${active === value ? "active" : ""}" data-${attr}="${value}">${label}</button>`).join("");
@@ -1572,7 +3367,8 @@ Branch: ${state.github.branch || "main"}
 
         const posts = filteredPosts();
         $("#feedList").innerHTML = posts.length ? posts.map(postCard).join("") : `<p class="empty">No posts match your search yet.</p>`;
-        $("#homeFeed").innerHTML = filteredPosts(3).map(postCard).join("");
+        const homePosts = filteredPosts(3);
+        $("#homeFeed").innerHTML = homePosts.length ? homePosts.map(postCard).join("") : `<p class="empty">No posts yet. Start the first squad call.</p>`;
 
         const filteredSquads = state.squads.filter((squad) => (state.squadGame === "all" || squad.game === state.squadGame) && matchesSearch(squad));
         $("#squadList").innerHTML = filteredSquads.length ? filteredSquads.map(squadCard).join("") : `<p class="empty">No squads match your filters.</p>`;
@@ -1586,11 +3382,14 @@ Branch: ${state.github.branch || "main"}
         $("#chatList").innerHTML = visibleMessages.length ? visibleMessages.map(chatCard).join("") : `<p class="empty">No chat messages match your search.</p>`;
         $("#leaderboardList").innerHTML = leaderboard.map(leaderboardCard).join("");
         $("#reportList").innerHTML = state.reports.length ? state.reports.map(reportCard).join("") : `<p class="empty">No reports in the queue.</p>`;
-        renderGithub();
+        renderFirebaseStatus();
 
         $("#pulsePosts").textContent = state.posts.length;
         $("#pulseSquads").textContent = state.squads.length;
         $("#pulseEvents").textContent = state.events.length;
+        $("#commandPosts").textContent = state.posts.length;
+        $("#commandSquads").textContent = state.squads.length;
+        $("#commandEvents").textContent = state.events.length;
         $("#fifaCount").textContent = `${state.posts.filter((post) => post.game === "fifa").length} live posts`;
         $("#gtaCount").textContent = `${state.posts.filter((post) => post.game === "gta").length} live posts`;
         $("#warzoneCount").textContent = `${state.posts.filter((post) => post.game === "warzone").length} live posts`;
@@ -1598,15 +3397,17 @@ Branch: ${state.github.branch || "main"}
         bindDynamicActions();
       }
 
-      function renderGithub() {
-        const connected = Boolean(state.github.repo);
-        $("#githubStatus").textContent = connected ? "Connected" : "Not connected";
-        $("#githubStatus").className = connected ? "chip fifa-color" : "chip warzone-color";
-        $("#githubRepo").value = state.github.repo;
-        $("#githubBranch").value = state.github.branch || "main";
-        $("#githubRepoName").textContent = connected ? state.github.repo.replace(/^https?:\/\/github\.com\//, "") : "No repository saved";
-        $("#githubRepoMeta").textContent = connected ? `Tracking branch ${state.github.branch || "main"} in this browser.` : "Add a GitHub repository to link this web app to your project.";
-        $("#issueTemplate").textContent = buildIssueTemplate();
+      function renderFirebaseStatus() {
+        const status = $("#firebaseStatus");
+        if (!status) return;
+
+        if (firebaseState.usingCloud) {
+          status.textContent = "Firebase live";
+          status.className = "chip fifa-color";
+        } else {
+          status.textContent = "Local mode";
+          status.className = "chip warzone-color";
+        }
       }
 
       function bindDynamicActions() {
@@ -1714,69 +3515,39 @@ Branch: ${state.github.branch || "main"}
 
       $("#openComposer").addEventListener("click", () => $("#composer").showModal());
       $("#mobileComposer").addEventListener("click", () => $("#composer").showModal());
+      $("#closeComposer").addEventListener("click", () => $("#composer").close());
       $("#cancelComposer").addEventListener("click", () => $("#composer").close());
 
-      $("#composerForm").addEventListener("submit", (event) => {
+      $("#composerForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
-        state.posts.unshift({
-          id: `p${Date.now()}`,
-          game: form.get("game"),
-          title: form.get("title").trim(),
-          meta: form.get("meta").trim(),
-          body: form.get("body").trim(),
-          replies: 0,
-          joined: false
-        });
-        save("squadlink-posts", state.posts);
-        event.currentTarget.reset();
-        $("#composer").close();
-        state.activeGame = "all";
-        showSection("feed");
-        showToast("Post added to the feed.");
-        render();
-      });
-
-      $("#chatForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const form = new FormData(event.currentTarget);
-        const now = new Date();
-        state.messages.unshift({
-          id: `m${Date.now()}`,
-          author: state.profile.displayName || "New Player",
-          game: state.profile.mainGame || "warzone",
-          text: form.get("message").trim(),
-          time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
-        });
-        save("squadlink-messages", state.messages);
-        event.currentTarget.reset();
-        showToast("Message sent.");
-        render();
-      });
-
-      $("#githubForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const form = new FormData(event.currentTarget);
-        const repo = form.get("repo").trim();
-        if (repo && !/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/.test(repo)) {
-          showToast("Use a full GitHub repo URL.");
-          return;
-        }
-        state.github = {
-          repo,
-          branch: form.get("branch").trim() || "main"
-        };
-        save("squadlink-github", state.github);
-        renderGithub();
-        showToast(repo ? "GitHub repo connected locally." : "GitHub repo cleared.");
-      });
-
-      $("#copyIssueTemplate").addEventListener("click", async () => {
+        const post = serializePost(form);
         try {
-          await navigator.clipboard.writeText(buildIssueTemplate());
-          showToast("Issue template copied.");
-        } catch {
-          showToast("Copy unavailable in this browser.");
+          await createSharedPost(post);
+          event.currentTarget.reset();
+          $("#composer").close();
+          state.activeGame = "all";
+          showSection("feed");
+          showToast(firebaseState.usingCloud ? "Post shared with everyone." : "Post saved locally.");
+          render();
+        } catch (error) {
+          showToast("Post could not be saved.");
+          console.error(error);
+        }
+      });
+
+      $("#chatForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const message = serializeMessage(form);
+        try {
+          await createSharedMessage(message);
+          event.currentTarget.reset();
+          showToast(firebaseState.usingCloud ? "Message shared with everyone." : "Message saved locally.");
+          render();
+        } catch (error) {
+          showToast("Message could not be saved.");
+          console.error(error);
         }
       });
 
@@ -1822,6 +3593,7 @@ Branch: ${state.github.branch || "main"}
         });
       });
 
+      initFirebase();
       renderProfile();
       render();
     </script>

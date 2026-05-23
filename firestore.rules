@@ -1,0 +1,72 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'game', 'title', 'body', 'meta', 'replies', 'joined', 'createdAt'
+      ])
+      && request.resource.data.game in ['fifa', 'gta', 'warzone']
+      && request.resource.data.title is string
+      && request.resource.data.title.size() <= 80
+      && request.resource.data.body is string
+      && request.resource.data.body.size() <= 260
+      && request.resource.data.meta is string
+      && request.resource.data.meta.size() <= 90;
+      allow update, delete: if false;
+    }
+
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'author', 'game', 'text', 'time', 'createdAt'
+      ])
+      && request.resource.data.game in ['fifa', 'gta', 'warzone']
+      && request.resource.data.author is string
+      && request.resource.data.author.size() <= 40
+      && request.resource.data.text is string
+      && request.resource.data.text.size() <= 160;
+      allow update, delete: if false;
+    }
+
+    match /squads/{squadId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'game', 'name', 'need', 'region', 'vibe', 'tags', 'requested', 'createdAt'
+      ])
+      && request.resource.data.game in ['fifa', 'gta', 'warzone']
+      && request.resource.data.name is string
+      && request.resource.data.name.size() <= 48
+      && request.resource.data.need is string
+      && request.resource.data.need.size() <= 60
+      && request.resource.data.region is string
+      && request.resource.data.region.size() <= 36
+      && request.resource.data.vibe is string
+      && request.resource.data.vibe.size() <= 40
+      && request.resource.data.tags is list
+      && request.resource.data.tags.size() <= 4;
+      allow update, delete: if false;
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'game', 'title', 'when', 'spots', 'rsvp', 'createdAt'
+      ])
+      && request.resource.data.game in ['fifa', 'gta', 'warzone']
+      && request.resource.data.title is string
+      && request.resource.data.title.size() <= 64
+      && request.resource.data.when is string
+      && request.resource.data.when.size() <= 40
+      && request.resource.data.spots is number
+      && request.resource.data.spots >= 1
+      && request.resource.data.spots <= 99;
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
