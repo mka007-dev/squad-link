@@ -2742,9 +2742,64 @@
         margin-top: 10px;
       }
 
+      .auth-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 2px 0 12px;
+      }
+
+      .check-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--soft);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .check-control input {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--lime);
+      }
+
+      .link-action {
+        border: 0;
+        background: transparent;
+        color: var(--lime);
+        min-height: 34px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 900;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      .form-error {
+        min-height: 20px;
+        margin: 0 0 10px;
+        color: var(--rose);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .field input[aria-invalid="true"],
+      .field select[aria-invalid="true"],
+      .field textarea[aria-invalid="true"] {
+        border-color: var(--rose);
+        box-shadow: 0 0 0 3px rgba(255, 90, 122, 0.16);
+      }
+
       @media (max-width: 680px) {
         .account-grid {
           grid-template-columns: 1fr;
+        }
+
+        .auth-options {
+          align-items: flex-start;
+          flex-direction: column;
         }
 
         .panel-actions {
@@ -3201,17 +3256,25 @@
                 <strong id="accountName">Not signed in</strong>
                 <p class="meta" id="accountSummary">Sign in to sync your profile, joins, RSVPs, reports, squads, and events across devices.</p>
               </div>
-              <form id="authForm" style="margin-top: 14px">
+              <form id="authForm" style="margin-top: 14px" novalidate>
                 <div class="account-grid">
                   <div class="field">
                     <label for="authEmail">Email</label>
-                    <input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+                    <input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required aria-describedby="authError" aria-invalid="false" />
                   </div>
                   <div class="field">
                     <label for="authPassword">Password</label>
-                    <input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="6+ characters" />
+                    <input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="6+ characters" required aria-describedby="authError" aria-invalid="false" />
                   </div>
                 </div>
+                <div class="auth-options">
+                  <label class="check-control" for="rememberMe">
+                    <input id="rememberMe" name="remember" type="checkbox" />
+                    <span>Remember me</span>
+                  </label>
+                  <button class="link-action" type="button" id="forgotPassword">Forgot password?</button>
+                </div>
+                <p class="form-error" id="authError" role="alert" aria-live="assertive"></p>
                 <div class="account-actions">
                   <button class="primary" type="submit" data-auth-action="signin">Sign In</button>
                   <button class="ghost" type="submit" data-auth-action="signup">Create Account</button>
@@ -3446,6 +3509,10 @@
         { name: "ClutchNine", game: "warzone", score: 802, label: "Thread assists" }
       ];
 
+      const AUTH_SESSION_KEY = "lobbyrush-account-session";
+      const AUTH_RECORD_KEY = "lobbyrush-account-record";
+      const AUTH_REMEMBER_KEY = "lobbyrush-remember-account";
+
       const state = {
         posts: load("squadlink-posts", starterPosts),
         squads: load("squadlink-squads", squads),
@@ -3465,7 +3532,7 @@
         authUser: null,
         authReady: false,
         isAdmin: false,
-        localAccount: load("lobbyrush-account-session", null),
+        localAccount: loadAccountSession(),
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
@@ -3501,6 +3568,36 @@
         localStorage.setItem(key, JSON.stringify(value));
       }
 
+      function loadFromStorage(storage, key, fallback) {
+        try {
+          return JSON.parse(storage.getItem(key)) || fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function saveToStorage(storage, key, value) {
+        storage.setItem(key, JSON.stringify(value));
+      }
+
+      function loadAccountSession() {
+        return loadFromStorage(localStorage, AUTH_SESSION_KEY, null) || loadFromStorage(sessionStorage, AUTH_SESSION_KEY, null);
+      }
+
+      function clearAccountSession() {
+        localStorage.removeItem(AUTH_SESSION_KEY);
+        sessionStorage.removeItem(AUTH_SESSION_KEY);
+      }
+
+      function loadRememberPreference() {
+        const saved = localStorage.getItem(AUTH_REMEMBER_KEY);
+        return saved === null ? true : saved === "true";
+      }
+
+      function saveRememberPreference(remember) {
+        localStorage.setItem(AUTH_REMEMBER_KEY, remember ? "true" : "false");
+      }
+
       function cleanText(value, fallback = "") {
         return String(value || "").trim() || fallback;
       }
@@ -3510,6 +3607,85 @@
         return code.includes("auth/configuration-not-found") || code.includes("auth/operation-not-allowed");
       }
 
+      function formatAuthError(error) {
+        const code = error?.code || "";
+        if (code.includes("invalid-email")) return "Enter a valid email address.";
+        if (code.includes("missing-password")) return "Enter your password.";
+        if (code.includes("weak-password")) return "Password must be at least 6 characters.";
+        if (code.includes("email-already-in-use")) return "An account already exists for this email.";
+        if (code.includes("user-not-found") || code.includes("wrong-password") || code.includes("invalid-credential")) return "Email or password is incorrect.";
+        if (code.includes("too-many-requests")) return "Too many attempts. Wait a bit, then try again.";
+        if (code.includes("network-request-failed")) return "Network connection failed. Check your connection and try again.";
+        if (isAuthSetupError(error)) return "Firebase Authentication is not enabled yet.";
+        return (error?.message || "Sign-in failed. Try again.").replace("Firebase: ", "").replace(/\s*\([^)]*\)\.?$/, ".");
+      }
+
+      function setAuthError(message = "") {
+        const error = $("#authError");
+        const email = $("#authEmail");
+        const password = $("#authPassword");
+        if (error) error.textContent = message;
+        if (!message) {
+          email?.setAttribute("aria-invalid", "false");
+          password?.setAttribute("aria-invalid", "false");
+        }
+      }
+
+      function setFieldValidity(field, valid) {
+        field?.setAttribute("aria-invalid", valid ? "false" : "true");
+      }
+
+      function validateAuthForm(requirePassword = true) {
+        const emailInput = $("#authEmail");
+        const passwordInput = $("#authPassword");
+        const rememberInput = $("#rememberMe");
+        const email = cleanText(emailInput?.value);
+        const password = String(passwordInput?.value || "");
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const passwordOk = !requirePassword || password.length >= 6;
+
+        setFieldValidity(emailInput, Boolean(email) && emailOk);
+        setFieldValidity(passwordInput, passwordOk);
+
+        if (!email) {
+          setAuthError("Enter your email address.");
+          return { valid: false, email, password, remember: Boolean(rememberInput?.checked) };
+        }
+        if (!emailOk) {
+          setAuthError("Enter a valid email address.");
+          return { valid: false, email, password, remember: Boolean(rememberInput?.checked) };
+        }
+        if (requirePassword && !password) {
+          setAuthError("Enter your password.");
+          return { valid: false, email, password, remember: Boolean(rememberInput?.checked) };
+        }
+        if (requirePassword && password.length < 6) {
+          setAuthError("Password must be at least 6 characters.");
+          return { valid: false, email, password, remember: Boolean(rememberInput?.checked) };
+        }
+
+        setAuthError("");
+        return { valid: true, email, password, remember: Boolean(rememberInput?.checked) };
+      }
+
+      async function applyAuthPersistence(remember) {
+        if (!auth || !firebaseApi?.setPersistence) return;
+        const persistence = remember ? firebaseApi.browserLocalPersistence : firebaseApi.browserSessionPersistence;
+        if (!persistence) return;
+        await firebaseApi.setPersistence(auth, persistence);
+      }
+
+      function clearAuthPassword() {
+        const passwordInput = $("#authPassword");
+        if (passwordInput) passwordInput.value = "";
+      }
+
+      function setAuthBusy(isBusy) {
+        $$("[data-auth-action], #guestSignIn, #forgotPassword").forEach((button) => {
+          button.disabled = isBusy;
+        });
+      }
+
       async function hashPassword(value) {
         const input = new TextEncoder().encode(`lobbyrush:${value}`);
         const digest = await crypto.subtle.digest("SHA-256", input);
@@ -3517,18 +3693,28 @@
       }
 
       function localAccountRecord() {
-        return load("lobbyrush-account-record", null);
+        return load(AUTH_RECORD_KEY, null);
       }
 
-      function setLocalSession(account) {
+      function setLocalSession(account, remember = loadRememberPreference()) {
         state.localAccount = account;
-        save("lobbyrush-account-session", account);
+        saveRememberPreference(remember);
+        clearAccountSession();
+        saveToStorage(remember ? localStorage : sessionStorage, AUTH_SESSION_KEY, account);
         renderAuth();
         renderProfile();
         render();
       }
 
-      async function createLocalAccount(email, password) {
+      async function createLocalAccount(email, password, remember = loadRememberPreference()) {
+        const existing = localAccountRecord();
+        if (existing?.email?.toLowerCase() === email.toLowerCase()) {
+          const message = "An account already exists for this email.";
+          setAuthError(message);
+          showToast(message);
+          return false;
+        }
+
         const record = {
           uid: `local-${Date.now()}`,
           email,
@@ -3537,30 +3723,35 @@
           isLocal: true,
           createdAt: new Date().toISOString()
         };
-        save("lobbyrush-account-record", record);
-        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true });
+        save(AUTH_RECORD_KEY, record);
+        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true }, remember);
         showToast("Local account created.");
+        return true;
       }
 
-      async function signInLocalAccount(email, password) {
+      async function signInLocalAccount(email, password, remember = loadRememberPreference()) {
         const record = localAccountRecord();
         if (!record || record.email.toLowerCase() !== email.toLowerCase()) {
-          showToast("No local account found for that email.");
+          const message = "Email or password is incorrect.";
+          setAuthError(message);
+          showToast(message);
           return false;
         }
 
         const passwordHash = await hashPassword(password);
         if (record.passwordHash !== passwordHash) {
-          showToast("Local password does not match.");
+          const message = "Email or password is incorrect.";
+          setAuthError(message);
+          showToast(message);
           return false;
         }
 
-        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true });
+        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true }, remember);
         showToast("Signed in locally.");
         return true;
       }
 
-      function signInLocalGuest() {
+      function signInLocalGuest(remember = loadRememberPreference()) {
         const guest = {
           uid: `guest-${Date.now()}`,
           email: "",
@@ -3568,13 +3759,13 @@
           isLocal: true,
           isAnonymous: true
         };
-        setLocalSession(guest);
+        setLocalSession(guest, remember);
         showToast("Guest mode ready.");
       }
 
       function signOutLocalAccount() {
         state.localAccount = null;
-        localStorage.removeItem("lobbyrush-account-session");
+        clearAccountSession();
         renderAuth();
         render();
       }
@@ -3657,7 +3848,12 @@
             if (user) {
               subscribeToProfile(user.uid);
               subscribeToAdmin(user.uid);
-              await syncProfileToCloud();
+              try {
+                await syncProfileToCloud();
+              } catch (error) {
+                firebaseState.error = error.message;
+                console.warn("Profile sync pending:", error);
+              }
             } else {
               unsubscribeCloudIdentity();
               state.isAdmin = false;
@@ -4459,34 +4655,28 @@
 
       $("#authForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!auth || !firebaseApi) {
-          const form = new FormData(event.currentTarget);
-          const email = cleanText(form.get("email"));
-          const password = cleanText(form.get("password"));
-          const action = event.submitter?.dataset.authAction || "signin";
-          if (!email || !password) {
-            showToast("Enter an email and password.");
+        const action = event.submitter?.dataset.authAction || "signin";
+        const { valid, email, password, remember } = validateAuthForm(true);
+        if (!valid) {
+          return;
+        }
+
+        saveRememberPreference(remember);
+        setAuthBusy(true);
+        try {
+          if (!auth || !firebaseApi) {
+            const localSuccess = action === "signup"
+              ? await createLocalAccount(email, password, remember)
+              : await signInLocalAccount(email, password, remember);
+            if (localSuccess) {
+              clearAuthPassword();
+              showSection("home");
+            }
             return;
           }
-          if (action === "signup") {
-            await createLocalAccount(email, password);
-          } else {
-            await signInLocalAccount(email, password);
-          }
-          return;
-        }
 
-        const action = event.submitter?.dataset.authAction || "signin";
-        const form = new FormData(event.currentTarget);
-        const email = cleanText(form.get("email"));
-        const password = cleanText(form.get("password"));
+          await applyAuthPersistence(remember);
 
-        if (!email || !password) {
-          showToast("Enter an email and password.");
-          return;
-        }
-
-        try {
           if (action === "signup") {
             await firebaseApi.createUserWithEmailAndPassword(auth, email, password);
             showToast("Account created.");
@@ -4494,40 +4684,85 @@
             await firebaseApi.signInWithEmailAndPassword(auth, email, password);
             showToast("Signed in.");
           }
-          await syncProfileToCloud();
+
+          try {
+            await syncProfileToCloud();
+          } catch (syncError) {
+            firebaseState.error = syncError.message;
+            console.warn("Profile sync pending:", syncError);
+          }
+
+          setAuthError("");
+          clearAuthPassword();
+          showSection("home");
         } catch (error) {
           if (isAuthSetupError(error)) {
             firebaseState.authUnavailable = true;
-            if (action === "signup") {
-              await createLocalAccount(email, password);
-            } else {
-              await signInLocalAccount(email, password);
+            const localSuccess = action === "signup"
+              ? await createLocalAccount(email, password, remember)
+              : await signInLocalAccount(email, password, remember);
+            if (localSuccess) {
+              clearAuthPassword();
+              showSection("home");
             }
             renderFirebaseStatus();
             return;
           }
-          showToast(error.message.replace("Firebase: ", ""));
+          const message = formatAuthError(error);
+          setAuthError(message);
+          showToast(message);
           console.error(error);
+        } finally {
+          setAuthBusy(false);
+        }
+      });
+
+      $("#forgotPassword").addEventListener("click", async () => {
+        const { valid, email } = validateAuthForm(false);
+        if (!valid) return;
+
+        if (!auth || !firebaseApi || firebaseState.authUnavailable) {
+          const message = "Password reset email needs Firebase Authentication.";
+          setAuthError(message);
+          showToast(message);
+          return;
+        }
+
+        setAuthBusy(true);
+        try {
+          await firebaseApi.sendPasswordResetEmail(auth, email);
+          setAuthError("");
+          showToast("Password reset email sent.");
+        } catch (error) {
+          const message = formatAuthError(error);
+          setAuthError(message);
+          showToast(message);
+          console.error(error);
+        } finally {
+          setAuthBusy(false);
         }
       });
 
       $("#guestSignIn").addEventListener("click", async () => {
         if (!auth || !firebaseApi) {
-          signInLocalGuest();
+          signInLocalGuest(loadRememberPreference());
           return;
         }
 
         try {
+          await applyAuthPersistence(loadRememberPreference());
           await firebaseApi.signInAnonymously(auth);
           showToast("Guest mode connected.");
         } catch (error) {
           if (isAuthSetupError(error)) {
             firebaseState.authUnavailable = true;
-            signInLocalGuest();
+            signInLocalGuest(loadRememberPreference());
             renderFirebaseStatus();
             return;
           }
-          showToast(error.message.replace("Firebase: ", ""));
+          const message = formatAuthError(error);
+          setAuthError(message);
+          showToast(message);
           console.error(error);
         }
       });
@@ -4657,6 +4892,17 @@
             bio: form.get("bio").trim() || "Add your vibe, rank, play style, and what kind of teammates you want."
           };
           renderProfile();
+        });
+      });
+
+      $("#rememberMe").checked = loadRememberPreference();
+      $("#rememberMe").addEventListener("change", (event) => {
+        saveRememberPreference(event.currentTarget.checked);
+      });
+
+      ["authEmail", "authPassword"].forEach((id) => {
+        $(`#${id}`).addEventListener("input", () => {
+          setAuthError("");
         });
       });
 
