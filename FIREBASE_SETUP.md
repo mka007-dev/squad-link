@@ -21,6 +21,22 @@ If Firebase Authentication is not enabled yet, the app falls back to local brows
 
 ## 3. Publish Security Rules
 
+Preferred CLI deploy:
+
+```bash
+firebase login
+firebase deploy --only firestore --project squad-link-aa29e
+```
+
+The CLI uses:
+
+- `.firebaserc`
+- `firebase.json`
+- `firestore.rules`
+- `firestore.indexes.json`
+
+Manual console deploy:
+
 1. Open **Firestore Database > Rules**.
 2. Replace the rules with the contents of `firestore.rules`.
 3. Click **Publish**.
@@ -45,7 +61,11 @@ Upload the updated project files to the `mka007-dev/squad-link` repository:
 
 - `preview.html`
 - `firebase-config.js`
+- `firebase.json`
+- `.firebaserc`
 - `firestore.rules`
+- `firestore.indexes.json`
+- `APP_STACK.md`
 - `FIREBASE_SETUP.md`
 - `DEPLOYMENT.md`
 - `README.md`

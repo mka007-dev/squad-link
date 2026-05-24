@@ -1,0 +1,66 @@
+# LobbyRush App Stack
+
+This repository includes the frontend, backend integration, database rules, and deployment infrastructure needed to run LobbyRush.
+
+## Frontend
+
+- `preview.html` is the production web app for GitHub Pages.
+- `index.html` redirects users into the web app.
+- `assets/lobbyrush-logo.svg`, `site.webmanifest`, `service-worker.js`, `404.html`, `robots.txt`, and `sitemap.xml` support branding, installability, offline shell behavior, and search metadata.
+- The UI is responsive for mobile and desktop.
+
+## Backend
+
+- Firebase Authentication is used for Email/Password, password reset, remembered sessions, and optional anonymous guest sign-in.
+- `firebase-config.js` connects the frontend to the Firebase project `squad-link-aa29e`.
+- If Firebase Auth is unavailable, the app falls back to local browser accounts so the interface remains usable during setup.
+
+## Database
+
+- Cloud Firestore stores shared app data.
+- `firestore.rules` defines the access model.
+- `firestore.indexes.json` is included for repeatable Firestore deploys. The current queries use single-field ordering, so no composite indexes are required yet.
+
+Collections used:
+
+- `profiles`
+- `posts`
+- `messages`
+- `squads`
+- `events`
+- `postJoins`
+- `squadRequests`
+- `eventRsvps`
+- `reports`
+- `admins`
+
+User-created posts, chat messages, squads, events, joins, invite requests, and RSVPs are visible to other users once Firestore rules are published.
+
+## Infrastructure
+
+- GitHub Pages deployment is handled by `.github/workflows/pages.yml`.
+- Firebase deploy configuration is handled by `firebase.json`.
+- Firebase project targeting is handled by `.firebaserc`.
+- Manual upload copies are kept in `lobbyrush-upload-files` and `lobbyrush-github-upload.zip`.
+
+## Required Console Setup
+
+These one-time settings must exist in Firebase Console:
+
+- Authentication: Email/Password enabled.
+- Authentication: Anonymous enabled if Guest Mode should use cloud accounts.
+- Authentication: authorized domain includes `mka007-dev.github.io`.
+- Firestore Database: created in production mode.
+- Firestore Rules: deployed from `firestore.rules`.
+
+Deploy Firestore rules and indexes with:
+
+```bash
+firebase deploy --only firestore --project squad-link-aa29e
+```
+
+Deploy the frontend by pushing to `main`; GitHub Actions publishes the app to:
+
+```text
+https://mka007-dev.github.io/squad-link/
+```

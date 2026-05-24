@@ -5,6 +5,8 @@ LobbyRush is a cross-platform React Native Expo app for gaming communities focus
 The deploy-ready web app is in `preview.html` and can run on GitHub Pages as a static site.
 It includes Firebase Auth, Firestore-backed posts/chat/squads/events, profile sync, joins, invite requests, RSVPs, reports, admin moderation, and a mobile installable shell.
 
+For the full frontend, backend, database, and infrastructure map, see `APP_STACK.md`.
+
 ## Deploy the web app
 
 Upload the project files to GitHub and keep `.github/workflows/pages.yml` enabled. GitHub Actions will publish the static app to:
@@ -14,6 +16,21 @@ https://mka007-dev.github.io/squad-link/
 ```
 
 For a complete checklist, see `DEPLOYMENT.md`.
+
+## Backend and database
+
+Firebase is the backend for the web app:
+
+- `firebase-config.js` connects the frontend to Firebase.
+- `firestore.rules` protects Cloud Firestore data.
+- `firestore.indexes.json` keeps database index deploys repeatable.
+- `firebase.json` and `.firebaserc` let the Firebase CLI deploy the database rules.
+
+Deploy Firestore rules and indexes with:
+
+```bash
+firebase deploy --only firestore --project squad-link-aa29e
+```
 
 ## Preview the static web app
 

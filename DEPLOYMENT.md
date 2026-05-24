@@ -16,7 +16,11 @@ LobbyRush is ready to deploy as a static GitHub Pages site from the repository r
 - `preview.html`
 - `404.html`
 - `firebase-config.js`
+- `firebase.json`
+- `.firebaserc`
 - `firestore.rules`
+- `firestore.indexes.json`
+- `APP_STACK.md`
 - `service-worker.js`
 - `site.webmanifest`
 - `robots.txt`
@@ -31,7 +35,15 @@ The app already loads Firebase from `firebase-config.js`. Finish `FIREBASE_SETUP
 
 - Enable Email/Password and Anonymous sign-in.
 - Create the Firestore database.
-- Publish `firestore.rules`.
+- Publish `firestore.rules` and `firestore.indexes.json`.
 - Add your UID to the `admins` collection if you want the Mod Queue controls.
 
 If Firebase is unavailable, the app still runs in local browser storage so the UI does not break.
+
+Use the Firebase CLI command below after signing in:
+
+```bash
+firebase deploy --only firestore --project squad-link-aa29e
+```
+
+The complete frontend, backend, database, and infrastructure map is in `APP_STACK.md`.
