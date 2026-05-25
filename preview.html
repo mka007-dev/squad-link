@@ -2599,7 +2599,7 @@
           position: relative;
           z-index: 1;
           display: grid;
-          grid-template-columns: repeat(6, minmax(0, 1fr));
+          grid-template-columns: repeat(7, minmax(0, 1fr));
           gap: 6px;
           min-width: 0;
         }
@@ -3002,6 +3002,221 @@
           min-width: 0;
         }
       }
+
+      /* Matchmaking and social layer */
+      .matchmaking-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.82fr);
+        align-items: start;
+      }
+
+      .player-card,
+      .voice-room,
+      .dm-message,
+      .notification-item,
+      .mini-player {
+        border: 1px solid rgba(234, 209, 173, 0.86);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 14px 28px rgba(118, 63, 5, 0.08);
+      }
+
+      .player-card {
+        overflow: hidden;
+      }
+
+      .player-hero {
+        min-height: 212px;
+        padding: 18px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        color: #ffffff;
+        background:
+          linear-gradient(180deg, rgba(18, 14, 24, 0.12), rgba(18, 14, 24, 0.88)),
+          var(--match-art, linear-gradient(135deg, #ff5a2b, #6a35ff));
+        background-size: cover;
+        background-position: center;
+      }
+
+      .player-avatar {
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: #171221;
+        font-weight: 950;
+        font-size: 25px;
+        background: #ffffff;
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+      }
+
+      .player-copy {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .player-copy h3 {
+        margin: 6px 0 6px;
+        font-size: 30px;
+        color: #ffffff;
+      }
+
+      .player-copy .meta {
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: #3de07d;
+        box-shadow: 0 0 0 4px rgba(61, 224, 125, 0.18);
+      }
+
+      .compatibility-ring {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: #171221;
+        font-weight: 950;
+        background:
+          radial-gradient(circle at center, #ffffff 0 52%, transparent 53%),
+          conic-gradient(#d9ff66 calc(var(--score, 82) * 1%), rgba(255, 255, 255, 0.28) 0);
+      }
+
+      .player-card-body {
+        padding: 16px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .profile-tags,
+      .link-grid,
+      .social-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .link-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .link-chip {
+        min-height: 42px;
+        padding: 9px 11px;
+        border-radius: 8px;
+        border: 1px solid rgba(234, 209, 173, 0.92);
+        background: rgba(255, 255, 255, 0.78);
+        overflow: hidden;
+      }
+
+      .link-chip span,
+      .stat-box small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 850;
+        margin-bottom: 2px;
+      }
+
+      .link-chip strong {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .mini-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .mini-player,
+      .voice-room,
+      .dm-message,
+      .notification-item {
+        padding: 12px;
+      }
+
+      .mini-player,
+      .voice-room {
+        display: grid;
+        gap: 8px;
+      }
+
+      .room-top,
+      .mini-player-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .match-empty {
+        min-height: 300px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .dm-composer {
+        display: grid;
+        gap: 10px;
+      }
+
+      .notification-item.unread {
+        border-color: rgba(255, 90, 43, 0.44);
+        background: rgba(255, 245, 232, 0.92);
+      }
+
+      @media (max-width: 980px) {
+        .matchmaking-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .player-hero {
+          min-height: 190px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .player-hero {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .compatibility-ring {
+          width: 72px;
+          height: 72px;
+        }
+
+        .player-copy h3 {
+          font-size: 24px;
+        }
+
+        .link-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .social-actions .primary,
+        .social-actions .ghost {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3020,6 +3235,12 @@
               <svg viewBox="0 0 24 24"><path d="m3 10.8 9-7 9 7v9.7a1.5 1.5 0 0 1-1.5 1.5H15v-6h-6v6H4.5A1.5 1.5 0 0 1 3 20.5v-9.7Z"/></svg>
             </span>
             <span>Home</span>
+          </button>
+          <button class="nav-button" data-section="match">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="m8 12 2.5 2.5L16 9"/><path d="M8 18h8"/></svg>
+            </span>
+            <span>Match</span>
           </button>
           <button class="nav-button" data-section="feed">
             <span class="nav-icon" aria-hidden="true">
@@ -3104,7 +3325,7 @@
                   <h1>Jump into a better lobby.</h1>
                   <p class="hero-subtitle">A bold way to find FIFA grinders, GTA crews, and Warzone teammates before the match starts.</p>
                   <div class="hero-actions">
-                    <button class="primary" data-section-jump="squads">Match Me</button>
+                    <button class="primary" data-section-jump="match">Match Me</button>
                     <button class="ghost" data-section-jump="events">See Sessions</button>
                   </div>
                 </div>
@@ -3173,6 +3394,71 @@
                   <h2>Featured Squads</h2>
                 </div>
                 <div class="squad-list" id="featuredSquads"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section" id="match">
+          <div class="grid matchmaking-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Player Matchmaker</h2>
+                  <p class="meta">Swipe through compatible FIFA, GTA, and Warzone players, then start a DM or voice room.</p>
+                </div>
+                <div class="filters" id="matchFilters"></div>
+              </div>
+              <div id="matchCard"></div>
+            </div>
+            <aside class="grid">
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Playing Now</h2>
+                  <span class="chip fifa-color" id="playingNowCount">0 live</span>
+                </div>
+                <div class="mini-list" id="playingNowList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Matches</h2>
+                  <button class="ghost" type="button" id="resetMatches">Reset</button>
+                </div>
+                <div class="mini-list" id="matchesList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Voice Rooms</h2>
+                  <button class="primary" type="button" id="quickVoiceRoom">Start Room</button>
+                </div>
+                <div class="mini-list" id="voiceRoomList"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Private Messages</h2>
+                  <button class="ghost" type="button" id="enableAlerts">Alerts</button>
+                </div>
+                <form class="dm-composer" id="dmForm">
+                  <div class="account-grid">
+                    <div class="field">
+                      <label for="dmTarget">To</label>
+                      <select id="dmTarget" name="target"></select>
+                    </div>
+                    <div class="field">
+                      <label for="dmMessage">Message</label>
+                      <input id="dmMessage" name="message" maxlength="160" placeholder="Invite them to a run." required />
+                    </div>
+                  </div>
+                  <button class="primary" type="submit">Send DM</button>
+                </form>
+                <div class="mini-list" id="dmList" style="margin-top: 12px"></div>
+              </div>
+              <div class="panel">
+                <div class="panel-header">
+                  <h2>Notifications</h2>
+                  <span class="chip gta-color" id="notificationCount">0</span>
+                </div>
+                <div class="mini-list" id="notificationList"></div>
               </div>
             </aside>
           </div>
@@ -3313,13 +3599,86 @@
                   <option>Crossplay</option>
                 </select>
               </div>
+              <div class="account-grid">
+                <div class="field">
+                  <label for="region">Region</label>
+                  <input id="region" name="region" maxlength="36" placeholder="NA East, UK/EU, Global" />
+                </div>
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status" name="status">
+                    <option>Looking now</option>
+                    <option>Available later</option>
+                    <option>Scrimming</option>
+                    <option>Offline</option>
+                  </select>
+                </div>
+              </div>
+              <div class="account-grid">
+                <div class="field">
+                  <label for="playStyle">Play style</label>
+                  <select id="playStyle" name="playStyle">
+                    <option>Competitive</option>
+                    <option>Chill wins</option>
+                    <option>Creative</option>
+                    <option>Coaching</option>
+                    <option>Clips and content</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="rank">Rank</label>
+                  <input id="rank" name="rank" maxlength="40" placeholder="Diamond, Elite, Level 120..." />
+                </div>
+              </div>
               <div class="field">
                 <label for="availability">Availability</label>
                 <input id="availability" name="availability" />
               </div>
               <div class="field">
+                <label for="lookingFor">Looking for</label>
+                <input id="lookingFor" name="lookingFor" maxlength="80" placeholder="Smart rotates, chill mic, rivals duo..." />
+              </div>
+              <div class="field">
+                <label for="statsSummary">Stats summary</label>
+                <input id="statsSummary" name="statsSummary" maxlength="90" placeholder="1.8 K/D, 62% win rate, Elite 2..." />
+              </div>
+              <div class="field">
                 <label for="bio">Bio</label>
                 <textarea id="bio" name="bio"></textarea>
+              </div>
+              <div class="account-grid">
+                <div class="field">
+                  <label for="psn">PSN</label>
+                  <input id="psn" name="psn" maxlength="40" placeholder="PSN ID" />
+                </div>
+                <div class="field">
+                  <label for="xbox">Xbox</label>
+                  <input id="xbox" name="xbox" maxlength="40" placeholder="Gamertag" />
+                </div>
+              </div>
+              <div class="account-grid">
+                <div class="field">
+                  <label for="activision">Activision</label>
+                  <input id="activision" name="activision" maxlength="40" placeholder="Activision ID" />
+                </div>
+                <div class="field">
+                  <label for="ea">EA ID</label>
+                  <input id="ea" name="ea" maxlength="40" placeholder="EA account" />
+                </div>
+              </div>
+              <div class="account-grid">
+                <div class="field">
+                  <label for="discord">Discord</label>
+                  <input id="discord" name="discord" maxlength="40" placeholder="discordname" />
+                </div>
+                <div class="field">
+                  <label for="twitch">Twitch / YouTube</label>
+                  <input id="twitch" name="twitch" maxlength="60" placeholder="@channel" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="highlightUrl">Highlight link</label>
+                <input id="highlightUrl" name="highlightUrl" maxlength="140" placeholder="https://..." />
               </div>
               <button class="primary" type="submit">Save Profile</button>
             </form>
@@ -3346,6 +3705,13 @@
                 <p class="post-body" id="profileBio">Add your vibe, rank, play style, and what kind of teammates you want.</p>
                 <span class="chip rose-color" id="profileAvailability">Evenings</span>
               </div>
+              <div class="link-grid" style="margin-top: 14px">
+                <div class="link-chip"><span>Status</span><strong id="profileStatus">Looking now</strong></div>
+                <div class="link-chip"><span>Region</span><strong id="profileRegion">Global</strong></div>
+                <div class="link-chip"><span>Style</span><strong id="profileStyle">Competitive</strong></div>
+                <div class="link-chip"><span>Rank / Stats</span><strong id="profileStats">Add stats</strong></div>
+              </div>
+              <div class="profile-tags" id="profileLinks" style="margin-top: 14px"></div>
             </div>
           </div>
         </section>
@@ -3513,6 +3879,126 @@
         { name: "ClutchNine", game: "warzone", score: 802, label: "Thread assists" }
       ];
 
+      const playerDirectory = [
+        {
+          id: "player-rotateking",
+          name: "RotateKing",
+          game: "warzone",
+          platform: "Crossplay",
+          region: "NA East",
+          status: "Looking now",
+          current: "Ranked Resurgence",
+          playStyle: "Competitive",
+          rank: "Diamond push",
+          statsSummary: "2.1 K/D - 38% top five",
+          lookingFor: "IGL, smart rotations, mic on",
+          bio: "Calm late-game comms, early rotates, and no rage quits.",
+          tags: ["Mic on", "Ranked", "Nightly"],
+          likesYou: true,
+          art: "url('https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=86')",
+          links: { Activision: "RotateKing#1147", Discord: "rotateking" }
+        },
+        {
+          id: "player-ximaestro",
+          name: "XI Maestro",
+          game: "fifa",
+          platform: "PS5",
+          region: "UK/EU",
+          status: "Available later",
+          current: "Weekend League lab",
+          playStyle: "Coaching",
+          rank: "Elite Division",
+          statsSummary: "14 wins avg - 4-2-3-1 main",
+          lookingFor: "Tactics swaps, co-op rivals, clubs",
+          bio: "Formation nerd, patient buildup, happy to review clips.",
+          tags: ["Coaching", "Clubs", "Rivals"],
+          likesYou: false,
+          art: "url('https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=86')",
+          links: { PSN: "XI-Maestro", EA: "XIMaestro" }
+        },
+        {
+          id: "player-viceroute",
+          name: "ViceRoute",
+          game: "gta",
+          platform: "PC",
+          region: "Global",
+          status: "Looking now",
+          current: "Clean car meet",
+          playStyle: "Creative",
+          rank: "Host",
+          statsSummary: "26 meets hosted - 0 grief policy",
+          lookingFor: "Hosts, photographers, heist crew",
+          bio: "Clean builds, photo routes, and smooth lobby hosting.",
+          tags: ["Car meets", "Heists", "Photos"],
+          likesYou: true,
+          art: "url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1200&q=86')",
+          links: { Discord: "viceroute", Twitch: "@viceroute" }
+        },
+        {
+          id: "player-clutchnine",
+          name: "ClutchNine",
+          game: "warzone",
+          platform: "Xbox",
+          region: "NA West",
+          status: "Scrimming",
+          current: "Customs warmup",
+          playStyle: "Chill wins",
+          rank: "Crimson",
+          statsSummary: "1.7 K/D - support main",
+          lookingFor: "Support, sniper, calm comms",
+          bio: "Good vibes, clean pings, and strong reset calls.",
+          tags: ["Customs", "Support", "Crossplay"],
+          likesYou: false,
+          art: "url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=86')",
+          links: { Xbox: "ClutchNine", Activision: "ClutchNine#9021" }
+        },
+        {
+          id: "player-losastra",
+          name: "LosAstra",
+          game: "gta",
+          platform: "PS5",
+          region: "NA East",
+          status: "Looking now",
+          current: "Heist chain",
+          playStyle: "Chill wins",
+          rank: "Planner",
+          statsSummary: "Elite challenge ready",
+          lookingFor: "Reliable heist team",
+          bio: "Route planner for clean finales and no drama runs.",
+          tags: ["Heists", "Mic on", "Late night"],
+          likesYou: true,
+          art: "url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=86')",
+          links: { PSN: "LosAstra", Discord: "losastra" }
+        },
+        {
+          id: "player-presslab",
+          name: "PressLab",
+          game: "fifa",
+          platform: "Crossplay",
+          region: "Global",
+          status: "Available later",
+          current: "Pro Clubs trials",
+          playStyle: "Competitive",
+          rank: "Div 1 Clubs",
+          statsSummary: "CAM - 8.4 avg rating",
+          lookingFor: "Strikers, CDM, keeper",
+          bio: "Quick passing, pressing triggers, and club nights.",
+          tags: ["Pro Clubs", "Trials", "Tactics"],
+          likesYou: false,
+          art: "url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=86')",
+          links: { EA: "PressLabFC", Discord: "presslab" }
+        }
+      ];
+
+      const starterVoiceRooms = [
+        { id: "vr1", game: "warzone", name: "Ranked Warmup", host: "RotateKing", hostUid: "seed", roomCode: "ranked-warmup", slots: 4, createdAt: Date.now() - 900000 },
+        { id: "vr2", game: "gta", name: "Heist Planning", host: "ViceRoute", hostUid: "seed", roomCode: "heist-planning", slots: 6, createdAt: Date.now() - 600000 }
+      ];
+
+      const starterNotifications = [
+        { id: "n1", title: "Matchmaker ready", body: "Swipe compatible players and start a room when you match.", unread: true, createdAt: Date.now() - 240000 }
+      ];
+
       const AUTH_SESSION_KEY = "lobbyrush-account-session";
       const AUTH_RECORD_KEY = "lobbyrush-account-record";
       const AUTH_REMEMBER_KEY = "lobbyrush-remember-account";
@@ -3525,18 +4011,37 @@
           displayName: "New Player",
           mainGame: "warzone",
           platform: "PS5",
+          region: "Global",
+          status: "Looking now",
+          playStyle: "Competitive",
+          rank: "Fresh",
           availability: "Evenings",
-          bio: "Add your vibe, rank, play style, and what kind of teammates you want."
+          lookingFor: "Reliable teammates",
+          statsSummary: "Add stats",
+          bio: "Add your vibe, rank, play style, and what kind of teammates you want.",
+          psn: "",
+          xbox: "",
+          activision: "",
+          ea: "",
+          discord: "",
+          twitch: "",
+          highlightUrl: ""
         }),
         messages: load("squadlink-messages", starterMessages),
         reports: load("squadlink-reports", []),
         postJoins: load("lobbyrush-post-joins", []),
         squadRequests: load("lobbyrush-squad-requests", []),
         eventRsvps: load("lobbyrush-event-rsvps", []),
+        playerActions: load("lobbyrush-player-actions", []),
+        voiceRooms: load("lobbyrush-voice-rooms", starterVoiceRooms),
+        privateMessages: load("lobbyrush-private-messages", []),
+        notifications: load("lobbyrush-notifications", starterNotifications),
         authUser: null,
         authReady: false,
         isAdmin: false,
         localAccount: loadAccountSession(),
+        matchGame: "all",
+        currentMatchIndex: 0,
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
@@ -3550,6 +4055,9 @@
       let profileUnsubscribe = null;
       let adminUnsubscribe = null;
       let reportsUnsubscribe = null;
+      let playerActionsUnsubscribe = null;
+      let privateMessagesUnsubscribe = null;
+      let notificationsUnsubscribe = null;
       const firebaseState = {
         connected: false,
         usingCloud: false,
@@ -3856,6 +4364,36 @@
         };
       }
 
+      const profileFieldIds = [
+        "displayName", "mainGame", "platform", "region", "status", "playStyle",
+        "rank", "availability", "lookingFor", "statsSummary", "bio",
+        "psn", "xbox", "activision", "ea", "discord", "twitch", "highlightUrl"
+      ];
+
+      function readProfileForm() {
+        const form = new FormData($("#profileForm"));
+        return {
+          displayName: cleanText(form.get("displayName"), "New Player"),
+          mainGame: safeGame(form.get("mainGame")),
+          platform: cleanText(form.get("platform"), "PS5"),
+          region: cleanText(form.get("region"), "Global"),
+          status: cleanText(form.get("status"), "Looking now"),
+          playStyle: cleanText(form.get("playStyle"), "Competitive"),
+          rank: cleanText(form.get("rank"), "Fresh"),
+          availability: cleanText(form.get("availability"), "Evenings"),
+          lookingFor: cleanText(form.get("lookingFor"), "Reliable teammates"),
+          statsSummary: cleanText(form.get("statsSummary"), "Add stats"),
+          bio: cleanText(form.get("bio"), "Add your vibe, rank, play style, and what kind of teammates you want."),
+          psn: cleanText(form.get("psn")),
+          xbox: cleanText(form.get("xbox")),
+          activision: cleanText(form.get("activision")),
+          ea: cleanText(form.get("ea")),
+          discord: cleanText(form.get("discord")),
+          twitch: cleanText(form.get("twitch")),
+          highlightUrl: cleanText(form.get("highlightUrl"))
+        };
+      }
+
       async function initFirebase() {
         const firebaseConfig = window.LOBBYRUSH_FIREBASE_CONFIG || window.SQUADLINK_FIREBASE_CONFIG;
         const firebaseEnabled = window.LOBBYRUSH_FIREBASE_ENABLED || window.SQUADLINK_FIREBASE_ENABLED;
@@ -3886,6 +4424,7 @@
             if (user) {
               subscribeToProfile(user.uid);
               subscribeToAdmin(user.uid);
+              subscribeToUserSocial(user.uid);
               try {
                 await syncProfileToCloud();
               } catch (error) {
@@ -3916,6 +4455,7 @@
         subscribeCollection("messages", "messages", {});
         subscribeCollection("squads", "squads", { requested: false });
         subscribeCollection("events", "events", { rsvp: false });
+        subscribeCollection("voiceRooms", "voiceRooms", {});
         subscribeCollection("postJoins", "postJoins", {});
         subscribeCollection("squadRequests", "squadRequests", {});
         subscribeCollection("eventRsvps", "eventRsvps", {});
@@ -3937,9 +4477,58 @@
         if (profileUnsubscribe) profileUnsubscribe();
         if (adminUnsubscribe) adminUnsubscribe();
         if (reportsUnsubscribe) reportsUnsubscribe();
+        if (playerActionsUnsubscribe) playerActionsUnsubscribe();
+        if (privateMessagesUnsubscribe) privateMessagesUnsubscribe();
+        if (notificationsUnsubscribe) notificationsUnsubscribe();
         profileUnsubscribe = null;
         adminUnsubscribe = null;
         reportsUnsubscribe = null;
+        playerActionsUnsubscribe = null;
+        privateMessagesUnsubscribe = null;
+        notificationsUnsubscribe = null;
+      }
+
+      function subscribeToUserSocial(uid) {
+        if (playerActionsUnsubscribe) playerActionsUnsubscribe();
+        if (privateMessagesUnsubscribe) privateMessagesUnsubscribe();
+        if (notificationsUnsubscribe) notificationsUnsubscribe();
+
+        const actionQuery = firebaseApi.query(
+          firebaseApi.collection(db, "playerActions"),
+          firebaseApi.where("uid", "==", uid),
+          firebaseApi.limit(120)
+        );
+        playerActionsUnsubscribe = firebaseApi.onSnapshot(actionQuery, (snapshot) => {
+          state.playerActions = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
+
+        const dmQuery = firebaseApi.query(
+          firebaseApi.collection(db, "privateMessages"),
+          firebaseApi.where("participants", "array-contains", uid),
+          firebaseApi.limit(120)
+        );
+        privateMessagesUnsubscribe = firebaseApi.onSnapshot(dmQuery, (snapshot) => {
+          state.privateMessages = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
+
+        const notificationQuery = firebaseApi.query(
+          firebaseApi.collection(db, "notifications"),
+          firebaseApi.where("uid", "==", uid),
+          firebaseApi.limit(120)
+        );
+        notificationsUnsubscribe = firebaseApi.onSnapshot(notificationQuery, (snapshot) => {
+          const cloudNotifications = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          state.notifications = cloudNotifications.length ? cloudNotifications : state.notifications;
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
       }
 
       function subscribeToProfile(uid) {
@@ -4146,6 +4735,224 @@
       function eventOpenSpots(event) {
         if (!firebaseState.usingCloud) return Math.max(0, Number(event.spots) || 0);
         return Math.max(0, (Number(event.spots) || 0) - eventRsvpCount(event));
+      }
+
+      function createdValue(item) {
+        const value = item?.createdAt;
+        if (!value) return 0;
+        if (typeof value === "number") return value;
+        if (typeof value === "string") return Date.parse(value) || 0;
+        if (typeof value.toMillis === "function") return value.toMillis();
+        if (typeof value.seconds === "number") return value.seconds * 1000;
+        return 0;
+      }
+
+      function sortedRecent(items) {
+        return [...items].sort((a, b) => createdValue(b) - createdValue(a));
+      }
+
+      function publicProfilePlayer() {
+        return {
+          id: currentUid() || "local-preview",
+          name: getDisplayName(),
+          game: safeGame(state.profile.mainGame),
+          platform: cleanText(state.profile.platform, "Crossplay"),
+          region: cleanText(state.profile.region, "Global"),
+          status: cleanText(state.profile.status, "Looking now"),
+          current: cleanText(state.profile.lookingFor, "Finding a squad"),
+          playStyle: cleanText(state.profile.playStyle, "Competitive"),
+          rank: cleanText(state.profile.rank, "Fresh"),
+          statsSummary: cleanText(state.profile.statsSummary, "Add stats"),
+          lookingFor: cleanText(state.profile.lookingFor, "Reliable teammates"),
+          bio: cleanText(state.profile.bio, "Add your player card."),
+          tags: [
+            cleanText(state.profile.platform, "Crossplay"),
+            cleanText(state.profile.playStyle, "Competitive"),
+            cleanText(state.profile.availability, "Evenings")
+          ],
+          links: {
+            PSN: state.profile.psn,
+            Xbox: state.profile.xbox,
+            Activision: state.profile.activision,
+            EA: state.profile.ea,
+            Discord: state.profile.discord,
+            Twitch: state.profile.twitch
+          }
+        };
+      }
+
+      function allPlayers() {
+        const own = currentUid() ? [publicProfilePlayer()] : [];
+        return [...own, ...playerDirectory].filter((player, index, list) => list.findIndex((item) => item.id === player.id) === index);
+      }
+
+      function matchCandidates() {
+        const uid = currentUid();
+        const passed = new Set(state.playerActions.filter((action) => action.action === "pass").map((action) => action.targetId));
+        return allPlayers()
+          .filter((player) => player.id !== uid)
+          .filter((player) => state.matchGame === "all" || player.game === state.matchGame)
+          .filter((player) => !passed.has(player.id))
+          .filter(matchesSearch);
+      }
+
+      function playerActionFor(playerId) {
+        return state.playerActions.find((action) => action.targetId === playerId && action.uid === currentUid());
+      }
+
+      function compatibilityScore(player) {
+        let score = 48;
+        if (safeGame(state.profile.mainGame) === safeGame(player.game)) score += 24;
+        if (cleanText(state.profile.platform).toLowerCase() === cleanText(player.platform).toLowerCase() || player.platform === "Crossplay" || state.profile.platform === "Crossplay") score += 12;
+        if (cleanText(state.profile.region).toLowerCase() === cleanText(player.region).toLowerCase() || player.region === "Global" || state.profile.region === "Global") score += 8;
+        if (cleanText(state.profile.playStyle).toLowerCase() === cleanText(player.playStyle).toLowerCase()) score += 8;
+        if (cleanText(player.status).toLowerCase().includes("looking")) score += 6;
+        return Math.min(98, score);
+      }
+
+      async function addNotification(title, body, unread = true) {
+        const note = { id: `n${Date.now()}`, title, body, unread, uid: currentUid(), createdAt: Date.now() };
+        state.notifications.unshift(note);
+        state.notifications = state.notifications.slice(0, 80);
+        save("lobbyrush-notifications", state.notifications);
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(`LobbyRush: ${title}`, { body });
+        }
+
+        if (firebaseState.usingCloud && currentUser) {
+          await firebaseApi.addDoc(firebaseApi.collection(db, "notifications"), {
+            title,
+            body,
+            unread,
+            uid: currentUser.uid,
+            createdAt: firebaseApi.serverTimestamp()
+          });
+        }
+      }
+
+      async function savePlayerAction(player, action) {
+        const account = await requireAccount(action === "like" ? "match with players" : "update matches");
+        if (!account) return;
+
+        const existingIndex = state.playerActions.findIndex((item) => item.targetId === player.id && item.uid === account.uid);
+        const actionRecord = {
+          id: existingIndex >= 0 ? state.playerActions[existingIndex].id : `pa${Date.now()}`,
+          uid: account.uid,
+          targetId: player.id,
+          targetName: player.name,
+          game: player.game,
+          action,
+          createdAt: Date.now()
+        };
+
+        if (existingIndex >= 0) {
+          state.playerActions[existingIndex] = actionRecord;
+        } else {
+          state.playerActions.unshift(actionRecord);
+        }
+        save("lobbyrush-player-actions", state.playerActions);
+
+        if (firebaseState.usingCloud && currentUser) {
+          await firebaseApi.addDoc(firebaseApi.collection(db, "playerActions"), {
+            uid: currentUser.uid,
+            targetId: player.id,
+            targetName: player.name,
+            game: player.game,
+            action,
+            createdAt: firebaseApi.serverTimestamp()
+          });
+        }
+
+        if (action === "like") {
+          await addNotification(player.likesYou ? "New mutual match" : "Player saved", player.likesYou ? `${player.name} already liked your card.` : `${player.name} is saved to your match list.`);
+          showToast(player.likesYou ? "It is a match." : "Player saved.");
+        } else {
+          showToast("Player skipped.");
+        }
+
+        state.currentMatchIndex += 1;
+        render();
+      }
+
+      async function createVoiceRoom(game = state.profile.mainGame) {
+        const account = await requireAccount("start voice rooms");
+        if (!account) return false;
+
+        const roomCode = `lobbyrush-${safeGame(game)}-${Date.now().toString(36)}`;
+        const room = {
+          id: `vr${Date.now()}`,
+          game: safeGame(game),
+          name: `${getDisplayName()}'s ${gameInfo[safeGame(game)].label} room`,
+          host: getDisplayName(),
+          hostUid: account.uid,
+          roomCode,
+          slots: 6,
+          createdAt: Date.now()
+        };
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.voiceRooms.unshift(room);
+          save("lobbyrush-voice-rooms", state.voiceRooms);
+          await addNotification("Voice room started", `${room.name} is ready.`);
+          render();
+          return true;
+        }
+
+        await firebaseApi.addDoc(firebaseApi.collection(db, "voiceRooms"), {
+          game: room.game,
+          name: room.name,
+          host: room.host,
+          hostUid: currentUser.uid,
+          roomCode,
+          slots: room.slots,
+          createdAt: firebaseApi.serverTimestamp()
+        });
+        await addNotification("Voice room started", `${room.name} is ready.`);
+        return true;
+      }
+
+      function joinVoiceRoom(room) {
+        const code = cleanText(room.roomCode, `lobbyrush-${room.id}`).replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+        window.open(`https://meet.jit.si/${code}`, "_blank", "noopener");
+        addNotification("Voice room opened", `${room.name} opened in a new tab.`).catch(console.error);
+      }
+
+      async function sendPrivateMessage(targetId, text) {
+        const account = await requireAccount("send private messages");
+        if (!account) return false;
+        const target = allPlayers().find((player) => player.id === targetId) || playerDirectory[0];
+        const message = {
+          id: `dm${Date.now()}`,
+          uid: account.uid,
+          senderName: getDisplayName(),
+          targetId: target.id,
+          targetName: target.name,
+          participants: [account.uid, target.id],
+          text: cleanText(text),
+          createdAt: Date.now()
+        };
+
+        if (!message.text) return false;
+
+        if (!firebaseState.usingCloud || !currentUser) {
+          state.privateMessages.unshift(message);
+          save("lobbyrush-private-messages", state.privateMessages);
+          await addNotification("DM sent", `Message sent to ${target.name}.`);
+          render();
+          return true;
+        }
+
+        await firebaseApi.addDoc(firebaseApi.collection(db, "privateMessages"), {
+          uid: currentUser.uid,
+          senderName: getDisplayName(),
+          targetId: target.id,
+          targetName: target.name,
+          participants: [currentUser.uid, target.id],
+          text: message.text,
+          createdAt: firebaseApi.serverTimestamp()
+        });
+        await addNotification("DM sent", `Message sent to ${target.name}.`);
+        return true;
       }
 
       async function togglePostJoin(post) {
@@ -4435,12 +5242,163 @@
         `;
       }
 
+      function playerSearchText(player) {
+        return [
+          player.name, player.game, player.platform, player.region, player.status,
+          player.current, player.playStyle, player.rank, player.statsSummary,
+          player.lookingFor, player.bio, ...(player.tags || [])
+        ].join(" ").toLowerCase();
+      }
+
+      function playerLinkChips(player) {
+        const links = player.links || {
+          PSN: player.psn,
+          Xbox: player.xbox,
+          Activision: player.activision,
+          EA: player.ea,
+          Discord: player.discord,
+          Twitch: player.twitch
+        };
+        const entries = Object.entries(links).filter(([, value]) => cleanText(value));
+        if (!entries.length) return `<span class="meta">No linked accounts yet.</span>`;
+        return entries.map(([label, value]) => `<div class="link-chip"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
+      }
+
+      function playerCard(player) {
+        const game = safeGame(player.game);
+        const score = compatibilityScore(player);
+        const action = playerActionFor(player.id);
+        const tags = Array.isArray(player.tags) ? player.tags : [];
+
+        return `
+          <article class="player-card ${game}-card">
+            <div class="player-hero" style="--match-art: ${player.art || "linear-gradient(135deg, #ff5a2b, #6a35ff)"}">
+              <div class="player-avatar">${escapeHtml(player.name.slice(0, 2).toUpperCase())}</div>
+              <div class="player-copy">
+                <span class="chip ${gameInfo[game].colorClass} status-pill"><span class="status-dot"></span>${escapeHtml(player.status)}</span>
+                <h3>${escapeHtml(player.name)}</h3>
+                <p class="meta">${gameInfo[game].label} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
+              </div>
+              <div class="compatibility-ring" style="--score: ${score}">${score}%</div>
+            </div>
+            <div class="player-card-body">
+              <div class="stat-row">
+                <div class="stat-box"><div class="stat-label">Current</div><div class="stat-value">${escapeHtml(player.current)}</div></div>
+                <div class="stat-box"><div class="stat-label">Style</div><div class="stat-value">${escapeHtml(player.playStyle)}</div></div>
+                <div class="stat-box"><div class="stat-label">Rank</div><div class="stat-value">${escapeHtml(player.rank)}</div></div>
+              </div>
+              <p class="post-body">${escapeHtml(player.bio)}</p>
+              <div class="profile-tags">
+                ${tags.map((tag) => `<span class="chip rose-color">${escapeHtml(tag)}</span>`).join("")}
+              </div>
+              <div class="link-grid">${playerLinkChips(player)}</div>
+              <div class="social-actions">
+                <button class="ghost" type="button" data-player-pass="${player.id}">Pass</button>
+                <button class="${action?.action === "like" ? "primary" : "ghost"}" type="button" data-player-like="${player.id}">${action?.action === "like" ? "Matched" : "Squad Up"}</button>
+                <button class="ghost" type="button" data-player-dm="${player.id}">Message</button>
+                <button class="primary" type="button" data-player-voice="${player.id}">Voice</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      function miniPlayerCard(player) {
+        return `
+          <article class="mini-player">
+            <div class="mini-player-top">
+              <strong>${escapeHtml(player.name)}</strong>
+              ${gameChip(player.game)}
+            </div>
+            <p class="meta">${escapeHtml(player.current)} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
+          </article>
+        `;
+      }
+
+      function matchListCard(action) {
+        const player = allPlayers().find((item) => item.id === action.targetId) || playerDirectory.find((item) => item.id === action.targetId);
+        if (!player) return "";
+        return `
+          <article class="mini-player">
+            <div class="mini-player-top">
+              <strong>${escapeHtml(player.name)}</strong>
+              <span class="chip ${player.likesYou ? "fifa-color" : "rose-color"}">${player.likesYou ? "Mutual" : "Saved"}</span>
+            </div>
+            <p class="meta">${gameInfo[safeGame(player.game)].label} - ${escapeHtml(player.lookingFor)}</p>
+            <div class="social-actions">
+              <button class="ghost" type="button" data-player-dm="${player.id}">Message</button>
+              <button class="primary" type="button" data-player-voice="${player.id}">Voice</button>
+            </div>
+          </article>
+        `;
+      }
+
+      function voiceRoomCard(room) {
+        const game = safeGame(room.game);
+        return `
+          <article class="voice-room ${game}-card">
+            <div class="room-top">
+              <strong>${escapeHtml(room.name)}</strong>
+              ${gameChip(game)}
+            </div>
+            <p class="meta">Hosted by ${escapeHtml(room.host || "LobbyRush")} - ${Number(room.slots) || 6} slots</p>
+            <button class="primary" type="button" data-join-voice="${room.id}">Join Voice</button>
+          </article>
+        `;
+      }
+
+      function dmCard(message) {
+        return `
+          <article class="dm-message">
+            <strong>${escapeHtml(message.senderName || "Player")} to ${escapeHtml(message.targetName || "Squadmate")}</strong>
+            <p class="post-body" style="margin: 6px 0">${escapeHtml(message.text)}</p>
+            <span class="meta">${createdValue(message) ? new Date(createdValue(message)).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Just now"}</span>
+          </article>
+        `;
+      }
+
+      function notificationCard(note) {
+        return `
+          <article class="notification-item ${note.unread ? "unread" : ""}">
+            <strong>${escapeHtml(note.title)}</strong>
+            <p class="meta">${escapeHtml(note.body)}</p>
+          </article>
+        `;
+      }
+
+      function renderMatchmaker() {
+        renderFilters("#matchFilters", state.matchGame, "match-filter");
+        const candidates = matchCandidates().filter((player) => playerSearchText(player).includes(state.query.toLowerCase()));
+        const current = candidates[state.currentMatchIndex % Math.max(1, candidates.length)];
+        $("#matchCard").innerHTML = current
+          ? playerCard(current)
+          : `<div class="match-empty"><div><h3>No more cards</h3><p class="meta">Reset matches or change filters to keep searching.</p></div></div>`;
+
+        const playingNow = allPlayers().filter((player) => cleanText(player.status).toLowerCase().includes("looking"));
+        $("#playingNowCount").textContent = `${playingNow.length} live`;
+        $("#playingNowList").innerHTML = playingNow.length ? playingNow.slice(0, 5).map(miniPlayerCard).join("") : `<p class="empty">No one is looking right now.</p>`;
+
+        const likedActions = sortedRecent(state.playerActions.filter((action) => action.uid === currentUid() && action.action === "like"));
+        $("#matchesList").innerHTML = likedActions.length ? likedActions.map(matchListCard).join("") : `<p class="empty">Use Squad Up to save players and build matches.</p>`;
+
+        $("#voiceRoomList").innerHTML = state.voiceRooms.length ? sortedRecent(state.voiceRooms).slice(0, 6).map(voiceRoomCard).join("") : `<p class="empty">No voice rooms yet.</p>`;
+
+        const players = allPlayers().filter((player) => player.id !== currentUid());
+        $("#dmTarget").innerHTML = players.map((player) => `<option value="${escapeHtml(player.id)}">${escapeHtml(player.name)} - ${gameInfo[safeGame(player.game)].label}</option>`).join("");
+        $("#dmList").innerHTML = state.privateMessages.length ? sortedRecent(state.privateMessages).slice(0, 6).map(dmCard).join("") : `<p class="empty">No private messages yet.</p>`;
+
+        const unread = state.notifications.filter((note) => note.unread).length;
+        $("#notificationCount").textContent = unread;
+        $("#notificationList").innerHTML = state.notifications.length ? sortedRecent(state.notifications).slice(0, 6).map(notificationCard).join("") : `<p class="empty">No notifications yet.</p>`;
+      }
+
       function renderFilters(containerId, active, attr) {
         const labels = [["all", "All"], ["warzone", "Warzone"], ["fifa", "FIFA"], ["gta", "GTA"]];
         $(containerId).innerHTML = labels.map(([value, label]) => `<button class="pill-button ${active === value ? "active" : ""}" data-${attr}="${value}">${label}</button>`).join("");
       }
 
       function render() {
+        renderMatchmaker();
         renderFilters("#feedFilters", state.activeGame, "feed-filter");
         renderFilters("#squadFilters", state.squadGame, "squad-filter");
         renderFilters("#eventFilters", state.eventGame, "event-filter");
@@ -4577,6 +5535,70 @@
             render();
           };
         });
+
+        $$("[data-match-filter]").forEach((button) => {
+          button.onclick = () => {
+            state.matchGame = button.dataset.matchFilter;
+            state.currentMatchIndex = 0;
+            render();
+          };
+        });
+
+        $$("[data-player-pass]").forEach((button) => {
+          button.onclick = async () => {
+            const player = allPlayers().find((item) => item.id === button.dataset.playerPass);
+            if (!player) return;
+            try {
+              await savePlayerAction(player, "pass");
+            } catch (error) {
+              showToast("Player action could not be saved.");
+              console.error(error);
+            }
+          };
+        });
+
+        $$("[data-player-like]").forEach((button) => {
+          button.onclick = async () => {
+            const player = allPlayers().find((item) => item.id === button.dataset.playerLike);
+            if (!player) return;
+            try {
+              await savePlayerAction(player, "like");
+            } catch (error) {
+              showToast("Match could not be saved.");
+              console.error(error);
+            }
+          };
+        });
+
+        $$("[data-player-dm]").forEach((button) => {
+          button.onclick = () => {
+            const target = $("#dmTarget");
+            if (target) target.value = button.dataset.playerDm;
+            $("#dmMessage")?.focus();
+            showToast("Message target selected.");
+          };
+        });
+
+        $$("[data-player-voice]").forEach((button) => {
+          button.onclick = async () => {
+            const player = allPlayers().find((item) => item.id === button.dataset.playerVoice);
+            try {
+              await createVoiceRoom(player?.game || state.profile.mainGame);
+              await addNotification("Voice invite ready", `${player?.name || "A player"} can join from the Voice Rooms panel.`);
+              showToast("Voice room ready.");
+            } catch (error) {
+              showToast("Voice room could not be created.");
+              console.error(error);
+            }
+          };
+        });
+
+        $$("[data-join-voice]").forEach((button) => {
+          button.onclick = () => {
+            const room = state.voiceRooms.find((item) => item.id === button.dataset.joinVoice);
+            if (room) joinVoiceRoom(room);
+          };
+        });
       }
 
       function showSection(id) {
@@ -4616,6 +5638,37 @@
       $("#openEventDialog").addEventListener("click", () => $("#eventDialog").showModal());
       $("#closeEventDialog").addEventListener("click", () => $("#eventDialog").close());
       $("#cancelEventDialog").addEventListener("click", () => $("#eventDialog").close());
+      $("#resetMatches").addEventListener("click", async () => {
+        if (firebaseState.usingCloud && currentUser) {
+          await Promise.all(
+            state.playerActions
+              .filter((action) => action.uid === currentUser.uid)
+              .map((action) => firebaseApi.deleteDoc(firebaseApi.doc(db, "playerActions", action.id)))
+          );
+        }
+        state.playerActions = [];
+        state.currentMatchIndex = 0;
+        save("lobbyrush-player-actions", state.playerActions);
+        showToast("Match deck reset.");
+        render();
+      });
+      $("#quickVoiceRoom").addEventListener("click", async () => {
+        try {
+          const saved = await createVoiceRoom(state.matchGame === "all" ? state.profile.mainGame : state.matchGame);
+          if (saved) showToast("Voice room started.");
+        } catch (error) {
+          showToast("Voice room could not be started.");
+          console.error(error);
+        }
+      });
+      $("#enableAlerts").addEventListener("click", async () => {
+        if (!("Notification" in window)) {
+          showToast("Browser alerts are not available here.");
+          return;
+        }
+        const permission = await Notification.requestPermission();
+        showToast(permission === "granted" ? "Browser alerts enabled." : "Browser alerts not enabled.");
+      });
 
       $("#composerForm").addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -4687,6 +5740,21 @@
           render();
         } catch (error) {
           showToast("Message could not be saved.");
+          console.error(error);
+        }
+      });
+
+      $("#dmForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        try {
+          const sent = await sendPrivateMessage(form.get("target"), form.get("message"));
+          if (!sent) return;
+          $("#dmMessage").value = "";
+          showToast(firebaseState.usingCloud ? "Private message synced." : "Private message saved locally.");
+          render();
+        } catch (error) {
+          showToast("Private message could not be sent.");
           console.error(error);
         }
       });
@@ -4880,33 +5948,54 @@
           displayName: cleanText(state.profile.displayName, "New Player"),
           mainGame: safeGame(state.profile.mainGame),
           platform: cleanText(state.profile.platform, "PS5"),
+          region: cleanText(state.profile.region, "Global"),
+          status: cleanText(state.profile.status, "Looking now"),
+          playStyle: cleanText(state.profile.playStyle, "Competitive"),
+          rank: cleanText(state.profile.rank, "Fresh"),
           availability: cleanText(state.profile.availability, "Evenings"),
-          bio: cleanText(state.profile.bio, "Add your vibe, rank, play style, and what kind of teammates you want.")
+          lookingFor: cleanText(state.profile.lookingFor, "Reliable teammates"),
+          statsSummary: cleanText(state.profile.statsSummary, "Add stats"),
+          bio: cleanText(state.profile.bio, "Add your vibe, rank, play style, and what kind of teammates you want."),
+          psn: cleanText(state.profile.psn),
+          xbox: cleanText(state.profile.xbox),
+          activision: cleanText(state.profile.activision),
+          ea: cleanText(state.profile.ea),
+          discord: cleanText(state.profile.discord),
+          twitch: cleanText(state.profile.twitch),
+          highlightUrl: cleanText(state.profile.highlightUrl)
         };
         state.profile = { ...state.profile, ...profile };
 
-        $("#displayName").value = profile.displayName;
-        $("#mainGame").value = profile.mainGame;
-        $("#platform").value = profile.platform;
-        $("#availability").value = profile.availability;
-        $("#bio").value = profile.bio;
+        profileFieldIds.forEach((id) => {
+          const field = $(`#${id}`);
+          if (field) field.value = profile[id] || "";
+        });
         $("#profileName").textContent = profile.displayName;
         $("#profileMain").textContent = gameInfo[profile.mainGame].label;
         $("#profilePlatform").textContent = profile.platform;
+        $("#profileRegion").textContent = profile.region;
+        $("#profileStatus").textContent = profile.status;
+        $("#profileStyle").textContent = profile.playStyle;
+        $("#profileStats").textContent = profile.statsSummary || profile.rank;
         $("#profileAvailability").textContent = profile.availability;
         $("#profileBio").textContent = profile.bio;
+        const links = [
+          ["PSN", profile.psn],
+          ["Xbox", profile.xbox],
+          ["Activision", profile.activision],
+          ["EA", profile.ea],
+          ["Discord", profile.discord],
+          ["Twitch", profile.twitch],
+          ["Highlight", profile.highlightUrl]
+        ].filter(([, value]) => cleanText(value));
+        $("#profileLinks").innerHTML = links.length
+          ? links.map(([label, value]) => `<span class="chip rose-color">${escapeHtml(label)}: ${escapeHtml(value)}</span>`).join("")
+          : `<span class="meta">Add linked gaming accounts to make matching easier.</span>`;
       }
 
       $("#profileForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        const form = new FormData(event.currentTarget);
-        state.profile = {
-          displayName: cleanText(form.get("displayName"), "New Player"),
-          mainGame: form.get("mainGame"),
-          platform: form.get("platform"),
-          availability: cleanText(form.get("availability"), "Evenings"),
-          bio: cleanText(form.get("bio"), "Add your vibe, rank, play style, and what kind of teammates you want.")
-        };
+        state.profile = readProfileForm();
         save("squadlink-profile", state.profile);
         try {
           await syncProfileToCloud();
@@ -4919,18 +6008,15 @@
         }
       });
 
-      ["displayName", "mainGame", "platform", "availability", "bio"].forEach((id) => {
-        $(`#${id}`).addEventListener("input", () => {
-          const form = new FormData($("#profileForm"));
-          state.profile = {
-            displayName: form.get("displayName").trim() || "New Player",
-            mainGame: form.get("mainGame"),
-            platform: form.get("platform"),
-            availability: form.get("availability").trim() || "Availability",
-            bio: form.get("bio").trim() || "Add your vibe, rank, play style, and what kind of teammates you want."
-          };
+      profileFieldIds.forEach((id) => {
+        const field = $(`#${id}`);
+        const previewProfile = () => {
+          state.profile = readProfileForm();
           renderProfile();
-        });
+          render();
+        };
+        field.addEventListener("input", previewProfile);
+        field.addEventListener("change", previewProfile);
       });
 
       $("#rememberMe").checked = loadRememberPreference();
