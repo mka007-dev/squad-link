@@ -3257,6 +3257,139 @@
           width: 100%;
         }
       }
+
+      /* Profile media and voice call layer */
+      .avatar-upload {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 14px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .avatar-field {
+        margin-bottom: 0;
+      }
+
+      .profile-avatar-preview {
+        width: 86px;
+        height: 86px;
+        border: 1px solid rgba(217, 255, 102, 0.34);
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        color: #0b0d12;
+        font-size: 25px;
+        font-weight: 950;
+        background:
+          linear-gradient(135deg, rgba(217, 255, 102, 0.92), rgba(93, 183, 255, 0.88)),
+          var(--panel-2);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .profile-avatar-preview.large {
+        width: 104px;
+        height: 104px;
+        border-radius: 26px;
+        font-size: 30px;
+      }
+
+      .profile-avatar-preview img,
+      .player-avatar img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .profile-avatar-preview.has-image,
+      .player-avatar.has-image {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .avatar-status {
+        margin: -2px 0 0;
+      }
+
+      .avatar-status[data-tone="error"] {
+        color: var(--rose);
+      }
+
+      .avatar-status[data-tone="success"],
+      .avatar-status[data-tone="ready"] {
+        color: var(--green);
+      }
+
+      .profile-preview-head {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .profile-preview-copy {
+        min-width: 0;
+      }
+
+      .profile-preview-copy h3 {
+        margin: 0 0 6px;
+      }
+
+      .profile-preview-copy .post-body {
+        margin-bottom: 10px;
+      }
+
+      .voice-call-dialog {
+        width: min(1080px, calc(100vw - 24px));
+        background: #07090d;
+      }
+
+      .voice-call-frame-wrap {
+        margin: 0 16px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #05070b;
+        aspect-ratio: 16 / 9;
+        min-height: min(540px, 62vh);
+      }
+
+      .voice-call-frame-wrap iframe {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border: 0;
+        background: #05070b;
+      }
+
+      .voice-room .primary,
+      .voice-room .ghost {
+        justify-self: start;
+      }
+
+      @media (max-width: 680px) {
+        .avatar-upload,
+        .profile-preview-head {
+          grid-template-columns: 1fr;
+          align-items: flex-start;
+        }
+
+        .profile-preview-head {
+          display: grid;
+        }
+
+        .profile-avatar-preview.large {
+          width: 92px;
+          height: 92px;
+        }
+
+        .voice-call-frame-wrap {
+          margin: 0 10px;
+          min-height: 58vh;
+          aspect-ratio: auto;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3629,6 +3762,14 @@
                 <label for="displayName">Display name</label>
                 <input id="displayName" name="displayName" required />
               </div>
+              <div class="avatar-upload">
+                <div class="profile-avatar-preview" id="avatarFormPreview" aria-hidden="true">NP</div>
+                <div class="field avatar-field">
+                  <label for="avatarFile">Profile picture</label>
+                  <input id="avatarFile" name="avatarFile" type="file" accept="image/png,image/jpeg,image/webp" />
+                  <p class="meta avatar-status" id="avatarStatus">PNG, JPG, or WebP under 2 MB. Save Profile uploads it to your account.</p>
+                </div>
+              </div>
               <div class="field">
                 <label for="mainGame">Main game</label>
                 <select id="mainGame" name="mainGame">
@@ -3747,10 +3888,13 @@
                   <div class="stat-value" id="profileRep">Fresh</div>
                 </div>
               </div>
-              <div style="margin-top: 16px">
-                <h3 id="profileName">New Player</h3>
-                <p class="post-body" id="profileBio">Add your vibe, rank, play style, and what kind of teammates you want.</p>
-                <span class="chip rose-color" id="profileAvailability">Evenings</span>
+              <div class="profile-preview-head">
+                <div class="profile-avatar-preview large" id="profileAvatarPreview" aria-hidden="true">NP</div>
+                <div class="profile-preview-copy">
+                  <h3 id="profileName">New Player</h3>
+                  <p class="post-body" id="profileBio">Add your vibe, rank, play style, and what kind of teammates you want.</p>
+                  <span class="chip rose-color" id="profileAvailability">Evenings</span>
+                </div>
               </div>
               <div class="link-grid" style="margin-top: 14px">
                 <div class="link-chip"><span>Status</span><strong id="profileStatus">Looking now</strong></div>
@@ -3885,6 +4029,25 @@
           <button class="primary" value="default" type="submit">Schedule Event</button>
         </div>
       </form>
+    </dialog>
+
+    <dialog id="voiceCallDialog" class="voice-call-dialog" aria-labelledby="voiceCallTitle">
+      <div class="voice-call-shell">
+        <div class="modal-head">
+          <div>
+            <h2 id="voiceCallTitle">Squad Voice</h2>
+            <p class="meta" id="voiceCallMeta">Allow microphone access when the call loads.</p>
+          </div>
+          <button class="icon-button" id="closeVoiceCall" type="button" aria-label="Close voice call">x</button>
+        </div>
+        <div class="voice-call-frame-wrap">
+          <iframe id="voiceCallFrame" title="LobbyRush squad voice call" allow="camera; microphone; fullscreen; display-capture; autoplay" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost" type="button" id="openVoiceExternal">Open in New Tab</button>
+          <button class="primary" type="button" id="leaveVoiceCall">Leave Call</button>
+        </div>
+      </div>
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -4052,6 +4215,8 @@
       ];
 
       const AUTH_REMEMBER_KEY = "lobbyrush-remember-account";
+      const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+      const AVATAR_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
       const state = {
         posts: load("squadlink-posts", starterPosts),
@@ -4075,7 +4240,9 @@
           ea: "",
           discord: "",
           twitch: "",
-          highlightUrl: ""
+          highlightUrl: "",
+          avatarUrl: "",
+          avatarPath: ""
         }),
         messages: load("squadlink-messages", starterMessages),
         reports: load("squadlink-reports", []),
@@ -4101,8 +4268,12 @@
 
       let db = null;
       let firebaseApi = null;
+      let storage = null;
       let auth = null;
       let currentUser = null;
+      let pendingAvatarFile = null;
+      let pendingAvatarPreviewUrl = "";
+      let activeVoiceUrl = "";
       let profileUnsubscribe = null;
       let adminUnsubscribe = null;
       let reportsUnsubscribe = null;
@@ -4344,7 +4515,9 @@
           ea: cleanText(form.get("ea")),
           discord: cleanText(form.get("discord")),
           twitch: cleanText(form.get("twitch")),
-          highlightUrl: cleanText(form.get("highlightUrl"))
+          highlightUrl: cleanText(form.get("highlightUrl")),
+          avatarUrl: cleanText(state.profile.avatarUrl),
+          avatarPath: cleanText(state.profile.avatarPath)
         };
       }
 
@@ -4358,13 +4531,14 @@
         }
 
         try {
-          const [{ initializeApp }, firestore, authSdk, appCheckSdk] = await Promise.all([
+          const [{ initializeApp }, firestore, authSdk, storageSdk, appCheckSdk] = await Promise.all([
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"),
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-storage.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app-check.js").catch(() => null)
           ]);
-          firebaseApi = { ...firestore, ...authSdk };
+          firebaseApi = { ...firestore, ...authSdk, ...storageSdk };
           const app = initializeApp(firebaseConfig);
           const appCheckSiteKey = window.LOBBYRUSH_APP_CHECK_SITE_KEY || window.SQUADLINK_APP_CHECK_SITE_KEY;
           if (appCheckSiteKey && appCheckSdk?.initializeAppCheck && appCheckSdk?.ReCaptchaEnterpriseProvider) {
@@ -4375,6 +4549,7 @@
           }
           db = firestore.getFirestore(app);
           auth = authSdk.getAuth(app);
+          storage = storageSdk.getStorage(app);
           firebaseState.connected = true;
           firebaseState.usingCloud = true;
           subscribeToSharedData();
@@ -4755,6 +4930,7 @@
           statsSummary: cleanText(state.profile.statsSummary, "Add stats"),
           lookingFor: cleanText(state.profile.lookingFor, "Reliable teammates"),
           bio: cleanText(state.profile.bio, "Add your player card."),
+          avatarUrl: cleanText(state.profile.avatarUrl),
           tags: [
             cleanText(state.profile.platform, "Crossplay"),
             cleanText(state.profile.playStyle, "Competitive"),
@@ -4787,6 +4963,7 @@
           statsSummary: cleanText(profile.statsSummary, "Stats hidden"),
           lookingFor: cleanText(profile.lookingFor, "Reliable teammates"),
           bio: cleanText(profile.bio, "Ready to squad up."),
+          avatarUrl: cleanText(profile.avatarUrl),
           tags: [
             cleanText(profile.platform, "Crossplay"),
             cleanText(profile.playStyle, "Competitive"),
@@ -4904,15 +5081,16 @@
         render();
       }
 
-      async function createVoiceRoom(game = state.profile.mainGame) {
+      async function createVoiceRoom(game = state.profile.mainGame, customName = "") {
         const account = await requireAccount("start voice rooms");
         if (!account) return false;
 
-        const roomCode = `lobbyrush-${safeGame(game)}-${Date.now().toString(36)}`;
+        const gameKey = safeGame(game);
+        const roomCode = `lobbyrush-${gameKey}-${Date.now().toString(36)}`;
         const room = {
           id: `vr${Date.now()}`,
-          game: safeGame(game),
-          name: `${getDisplayName()}'s ${gameInfo[safeGame(game)].label} room`,
+          game: gameKey,
+          name: cleanText(customName, `${getDisplayName()}'s ${gameInfo[gameKey].label} room`),
           host: getDisplayName(),
           hostUid: account.uid,
           roomCode,
@@ -4925,10 +5103,10 @@
           save("lobbyrush-voice-rooms", state.voiceRooms);
           await addNotification("Voice room started", `${room.name} is ready.`);
           render();
-          return true;
+          return room;
         }
 
-        await firebaseApi.addDoc(firebaseApi.collection(db, "voiceRooms"), {
+        const docRef = await firebaseApi.addDoc(firebaseApi.collection(db, "voiceRooms"), {
           game: room.game,
           name: room.name,
           host: room.host,
@@ -4938,13 +5116,37 @@
           createdAt: firebaseApi.serverTimestamp()
         });
         await addNotification("Voice room started", `${room.name} is ready.`);
-        return true;
+        return { ...room, id: docRef.id };
       }
 
       function joinVoiceRoom(room) {
         const code = cleanText(room.roomCode, `lobbyrush-${room.id}`).replace(/[^a-z0-9-]/gi, "-").toLowerCase();
-        window.open(`https://meet.jit.si/${code}`, "_blank", "noopener");
-        addNotification("Voice room opened", `${room.name} opened in a new tab.`).catch(console.error);
+        const game = safeGame(room.game);
+        activeVoiceUrl = `https://meet.jit.si/${code}#config.prejoinPageEnabled=false&config.disableDeepLinking=true`;
+        const dialog = $("#voiceCallDialog");
+        const frame = $("#voiceCallFrame");
+        const title = $("#voiceCallTitle");
+        const meta = $("#voiceCallMeta");
+
+        if (title) title.textContent = cleanText(room.name, "Squad Voice");
+        if (meta) meta.textContent = `${gameInfo[game].label} voice room hosted by ${cleanText(room.host, "LobbyRush")}. Allow microphone access to talk.`;
+        if (frame) frame.src = activeVoiceUrl;
+
+        if (dialog?.showModal) {
+          dialog.showModal();
+        } else {
+          window.open(activeVoiceUrl, "_blank", "noopener");
+        }
+
+        addNotification("Voice room joined", `${room.name} is open for squad comms.`).catch(console.error);
+      }
+
+      function leaveVoiceCall() {
+        const frame = $("#voiceCallFrame");
+        const dialog = $("#voiceCallDialog");
+        if (frame) frame.src = "about:blank";
+        activeVoiceUrl = "";
+        if (dialog?.open) dialog.close();
       }
 
       async function sendPrivateMessage(targetId, text) {
@@ -5164,6 +5366,84 @@
           .replaceAll("'", "&#039;");
       }
 
+      function avatarInitials(name) {
+        const safeName = cleanText(name, "NP");
+        const initials = safeName
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((part) => part[0])
+          .join("")
+          .toUpperCase();
+        return initials || safeName.slice(0, 2).toUpperCase();
+      }
+
+      function setAvatarStatus(message, tone = "") {
+        const status = $("#avatarStatus");
+        if (!status) return;
+        status.textContent = message;
+        status.dataset.tone = tone;
+      }
+
+      function setAvatarPreview(element, url, name) {
+        if (!element) return;
+        const avatarUrl = cleanText(url);
+        element.classList.toggle("has-image", Boolean(avatarUrl));
+        element.innerHTML = avatarUrl
+          ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(cleanText(name, "Player"))} profile picture" />`
+          : escapeHtml(avatarInitials(name));
+      }
+
+      function playerAvatarMarkup(player) {
+        const name = cleanText(player?.name, "Player");
+        const avatarUrl = cleanText(player?.avatarUrl);
+        if (avatarUrl) {
+          return `<div class="player-avatar has-image"><img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(name)} profile picture" loading="lazy" referrerpolicy="no-referrer" /></div>`;
+        }
+        return `<div class="player-avatar">${escapeHtml(avatarInitials(name))}</div>`;
+      }
+
+      function avatarValidationError(file) {
+        if (!file) return "";
+        if (!AVATAR_TYPES.includes(file.type)) return "Use a PNG, JPG, or WebP profile picture.";
+        if (file.size > MAX_AVATAR_BYTES) return "Choose a profile picture under 2 MB.";
+        return "";
+      }
+
+      function avatarFileExtension(file) {
+        if (file?.type === "image/png") return "png";
+        if (file?.type === "image/webp") return "webp";
+        return "jpg";
+      }
+
+      function readAvatarDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(new Error("Profile picture preview failed."));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function uploadPendingAvatar() {
+        if (!pendingAvatarFile) return {};
+        if (!currentUser) throw new Error("Sign in to upload profile pictures.");
+        if (!storage || !firebaseApi?.ref || !firebaseApi?.uploadBytes || !firebaseApi?.getDownloadURL) {
+          throw new Error("Firebase Storage is not ready yet.");
+        }
+
+        const path = `avatars/${currentUser.uid}/profile-${Date.now()}.${avatarFileExtension(pendingAvatarFile)}`;
+        const avatarRef = firebaseApi.ref(storage, path);
+        await firebaseApi.uploadBytes(avatarRef, pendingAvatarFile, {
+          contentType: pendingAvatarFile.type,
+          customMetadata: { ownerUid: currentUser.uid }
+        });
+        const avatarUrl = await firebaseApi.getDownloadURL(avatarRef);
+        pendingAvatarFile = null;
+        pendingAvatarPreviewUrl = "";
+        return { avatarUrl, avatarPath: path };
+      }
+
       function gameChip(game) {
         const gameKey = safeGame(game);
         return `<span class="chip ${gameInfo[gameKey].colorClass}">${gameInfo[gameKey].label}</span>`;
@@ -5225,7 +5505,10 @@
               <div class="squad-tags">${tags.map((tag) => `<span class="chip rose-color">${escapeHtml(tag)}</span>`).join("")}</div>
               <div class="card-footer">
                 <span class="meta">${requests} ${requests === 1 ? "request" : "requests"}</span>
-                <button class="${requested ? "primary" : "ghost"}" data-request-squad="${squad.id}">${requested ? "Invite Requested" : "Request Invite"}</button>
+                <div class="filters">
+                  <button class="ghost" type="button" data-squad-voice="${squad.id}">Voice Room</button>
+                  <button class="${requested ? "primary" : "ghost"}" type="button" data-request-squad="${squad.id}">${requested ? "Invite Requested" : "Request Invite"}</button>
+                </div>
               </div>
             </div>
           </article>
@@ -5324,7 +5607,7 @@
         return `
           <article class="player-card ${game}-card">
             <div class="player-hero" style="--match-art: ${player.art || "linear-gradient(135deg, #ff5a2b, #6a35ff)"}">
-              <div class="player-avatar">${escapeHtml(player.name.slice(0, 2).toUpperCase())}</div>
+              ${playerAvatarMarkup(player)}
               <div class="player-copy">
                 <span class="chip ${gameInfo[game].colorClass} status-pill"><span class="status-dot"></span>${escapeHtml(player.status)}</span>
                 <h3>${escapeHtml(player.name)}</h3>
@@ -5636,11 +5919,30 @@
           button.onclick = async () => {
             const player = allPlayers().find((item) => item.id === button.dataset.playerVoice);
             try {
-              await createVoiceRoom(player?.game || state.profile.mainGame);
-              await addNotification("Voice invite ready", `${player?.name || "A player"} can join from the Voice Rooms panel.`);
-              showToast("Voice room ready.");
+              const room = await createVoiceRoom(player?.game || state.profile.mainGame, `${player?.name || "Squad"} voice room`);
+              if (room) {
+                await addNotification("Voice invite ready", `${player?.name || "A player"} can join from the Voice Rooms panel.`);
+                joinVoiceRoom(room);
+                showToast("Voice room opened.");
+              }
             } catch (error) {
               showToast("Voice room could not be created.");
+              console.error(error);
+            }
+          };
+        });
+
+        $$("[data-squad-voice]").forEach((button) => {
+          button.onclick = async () => {
+            const squad = state.squads.find((item) => item.id === button.dataset.squadVoice);
+            try {
+              const room = await createVoiceRoom(squad?.game || state.profile.mainGame, `${squad?.name || "Squad"} voice room`);
+              if (room) {
+                joinVoiceRoom(room);
+                showToast("Squad voice opened.");
+              }
+            } catch (error) {
+              showToast("Squad voice could not be started.");
               console.error(error);
             }
           };
@@ -5691,6 +5993,19 @@
       $("#openEventDialog").addEventListener("click", () => $("#eventDialog").showModal());
       $("#closeEventDialog").addEventListener("click", () => $("#eventDialog").close());
       $("#cancelEventDialog").addEventListener("click", () => $("#eventDialog").close());
+      $("#closeVoiceCall").addEventListener("click", leaveVoiceCall);
+      $("#leaveVoiceCall").addEventListener("click", () => {
+        leaveVoiceCall();
+        showToast("Left voice call.");
+      });
+      $("#openVoiceExternal").addEventListener("click", () => {
+        if (activeVoiceUrl) window.open(activeVoiceUrl, "_blank", "noopener");
+      });
+      $("#voiceCallDialog").addEventListener("cancel", () => {
+        const frame = $("#voiceCallFrame");
+        if (frame) frame.src = "about:blank";
+        activeVoiceUrl = "";
+      });
       $("#resetMatches").addEventListener("click", async () => {
         if (firebaseState.usingCloud && currentUser) {
           await Promise.all(
@@ -5707,8 +6022,11 @@
       });
       $("#quickVoiceRoom").addEventListener("click", async () => {
         try {
-          const saved = await createVoiceRoom(state.matchGame === "all" ? state.profile.mainGame : state.matchGame);
-          if (saved) showToast("Voice room started.");
+          const room = await createVoiceRoom(state.matchGame === "all" ? state.profile.mainGame : state.matchGame);
+          if (room) {
+            joinVoiceRoom(room);
+            showToast("Voice room started.");
+          }
         } catch (error) {
           showToast("Voice room could not be started.");
           console.error(error);
@@ -6014,7 +6332,9 @@
           ea: cleanText(state.profile.ea),
           discord: cleanText(state.profile.discord),
           twitch: cleanText(state.profile.twitch),
-          highlightUrl: cleanText(state.profile.highlightUrl)
+          highlightUrl: cleanText(state.profile.highlightUrl),
+          avatarUrl: cleanText(state.profile.avatarUrl),
+          avatarPath: cleanText(state.profile.avatarPath)
         };
         state.profile = { ...state.profile, ...profile };
 
@@ -6022,6 +6342,9 @@
           const field = $(`#${id}`);
           if (field) field.value = profile[id] || "";
         });
+        const avatarPreviewUrl = pendingAvatarPreviewUrl || profile.avatarUrl;
+        setAvatarPreview($("#avatarFormPreview"), avatarPreviewUrl, profile.displayName);
+        setAvatarPreview($("#profileAvatarPreview"), avatarPreviewUrl, profile.displayName);
         $("#profileName").textContent = profile.displayName;
         $("#profileMain").textContent = gameInfo[profile.mainGame].label;
         $("#profilePlatform").textContent = profile.platform;
@@ -6029,6 +6352,7 @@
         $("#profileStatus").textContent = profile.status;
         $("#profileStyle").textContent = profile.playStyle;
         $("#profileStats").textContent = profile.statsSummary || profile.rank;
+        $("#profileRep").textContent = profile.rank || "Fresh";
         $("#profileAvailability").textContent = profile.availability;
         $("#profileBio").textContent = profile.bio;
         const links = [
@@ -6047,15 +6371,31 @@
 
       $("#profileForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        state.profile = readProfileForm();
-        save("squadlink-profile", state.profile);
+        const nextProfile = readProfileForm();
         try {
+          if (pendingAvatarFile) {
+            setAvatarStatus("Uploading profile picture...", "ready");
+            Object.assign(nextProfile, await uploadPendingAvatar());
+            const avatarInput = $("#avatarFile");
+            if (avatarInput) avatarInput.value = "";
+            setAvatarStatus("Profile picture synced.", "success");
+          }
+          state.profile = nextProfile;
+          save("squadlink-profile", state.profile);
           await syncProfileToCloud();
           renderProfile();
           renderAuth();
           showToast(firebaseState.usingCloud && currentUser ? "Profile synced." : "Profile saved.");
         } catch (error) {
-          showToast("Profile saved locally, but cloud sync failed.");
+          state.profile = {
+            ...nextProfile,
+            avatarUrl: cleanText(state.profile.avatarUrl),
+            avatarPath: cleanText(state.profile.avatarPath)
+          };
+          save("squadlink-profile", state.profile);
+          renderProfile();
+          setAvatarStatus(error.message || "Profile picture upload failed.", "error");
+          showToast(error.message?.includes("Sign in") ? "Sign in to upload profile pictures." : "Profile saved locally, but upload or sync failed.");
           console.error(error);
         }
       });
@@ -6069,6 +6409,40 @@
         };
         field.addEventListener("input", previewProfile);
         field.addEventListener("change", previewProfile);
+      });
+
+      $("#avatarFile").addEventListener("change", async (event) => {
+        const file = event.currentTarget.files?.[0];
+        pendingAvatarFile = null;
+        pendingAvatarPreviewUrl = "";
+
+        if (!file) {
+          setAvatarStatus("PNG, JPG, or WebP under 2 MB. Save Profile uploads it to your account.");
+          renderProfile();
+          return;
+        }
+
+        const error = avatarValidationError(file);
+        if (error) {
+          event.currentTarget.value = "";
+          setAvatarStatus(error, "error");
+          showToast(error);
+          renderProfile();
+          return;
+        }
+
+        try {
+          pendingAvatarFile = file;
+          pendingAvatarPreviewUrl = await readAvatarDataUrl(file);
+          setAvatarStatus("Ready to upload. Save Profile to sync your picture.", "ready");
+          renderProfile();
+        } catch (previewError) {
+          event.currentTarget.value = "";
+          pendingAvatarFile = null;
+          pendingAvatarPreviewUrl = "";
+          setAvatarStatus(previewError.message, "error");
+          showToast("Profile picture preview failed.");
+        }
       });
 
       $("#rememberMe").checked = loadRememberPreference();

@@ -1,6 +1,6 @@
 # Firebase Setup
 
-LobbyRush is wired for Firebase Auth and Cloud Firestore. With the current `firebase-config.js`, the app can connect to your `squad-link-aa29e` Firebase project after the console setup below is finished. The file exposes `LOBBYRUSH_FIREBASE_CONFIG` for the app and keeps the old `SQUADLINK_FIREBASE_CONFIG` alias for compatibility.
+LobbyRush is wired for Firebase Auth, Cloud Firestore, and Firebase Storage. With the current `firebase-config.js`, the app can connect to your `squad-link-aa29e` Firebase project after the console setup below is finished. The file exposes `LOBBYRUSH_FIREBASE_CONFIG` for the app and keeps the old `SQUADLINK_FIREBASE_CONFIG` alias for compatibility.
 
 Firebase Authentication must be enabled for Create Account, Sign In, Guest Mode, password reset, and cloud-synced community actions. The app clears old browser-only account data and does not store password accounts locally.
 
@@ -19,13 +19,22 @@ Firebase Authentication must be enabled for Create Account, Sign In, Guest Mode,
 3. Choose production mode.
 4. Pick your nearest region.
 
-## 3. Publish Security Rules
+## 3. Enable Firebase Storage
+
+1. Go to **Build > Storage**.
+2. Click **Get started**.
+3. Choose production mode.
+4. Use the default bucket for `squad-link-aa29e`.
+
+Storage is used for profile pictures. Users can only write under `avatars/{theirUid}/`, images must be PNG, JPG, or WebP, and each upload must be under 2 MB.
+
+## 4. Publish Security Rules
 
 Preferred CLI deploy:
 
 ```bash
 firebase login
-firebase deploy --only firestore,functions --project squad-link-aa29e
+firebase deploy --only firestore,storage,functions --project squad-link-aa29e
 ```
 
 The CLI uses:
@@ -33,6 +42,7 @@ The CLI uses:
 - `.firebaserc`
 - `firebase.json`
 - `firestore.rules`
+- `storage.rules`
 - `firestore.indexes.json`
 - `functions/`
 
@@ -43,8 +53,9 @@ Manual console deploy:
 3. Click **Publish**.
 
 The rules allow public reads for the community app, require signed-in users for posts/chat/squads/events/actions/reports, protect profiles by user ID, and make report reading/clearing admin-only.
+Storage rules allow public avatar reads and restrict avatar uploads/deletes to the signed-in profile owner.
 
-## 4. App Check And API Key Restrictions
+## 5. App Check And API Key Restrictions
 
 App Check is configured for the web app with a reCAPTCHA Enterprise key. The frontend reads `LOBBYRUSH_APP_CHECK_SITE_KEY` from `firebase-config.js` and initializes App Check before Firestore/Auth.
 
@@ -56,7 +67,11 @@ The Firebase web API key is restricted to these browser referrers:
 
 Do not enable App Check enforcement until you have tested the deployed app after each release.
 
-## 5. Email Notifications
+## 6. Voice Rooms
+
+Squad voice uses Jitsi Meet rooms generated from the app's `voiceRooms` collection. No Firebase secret is required for voice calls. Users must allow microphone access in the browser when the call dialog opens.
+
+## 7. Email Notifications
 
 The app includes Firebase Cloud Functions for email:
 
@@ -85,7 +100,7 @@ firebase deploy --only functions,firestore --project squad-link-aa29e
 
 If SMTP is not configured, the functions still create in-app match notifications and admin-only `emailEvents` logs, but emails are marked `skipped`.
 
-## 6. Add An Admin
+## 8. Add An Admin
 
 After your own account signs in once:
 
@@ -97,7 +112,7 @@ After your own account signs in once:
 
 That account will be able to view and clear the Mod Queue.
 
-## 7. Upload To GitHub Pages
+## 9. Upload To GitHub Pages
 
 Upload the updated project files to the `mka007-dev/squad-link` repository:
 
@@ -109,6 +124,7 @@ Upload the updated project files to the `mka007-dev/squad-link` repository:
 - `firebase.json`
 - `.firebaserc`
 - `firestore.rules`
+- `storage.rules`
 - `firestore.indexes.json`
 - `functions/`
 - `APP_STACK.md`

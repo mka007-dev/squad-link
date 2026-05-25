@@ -8,6 +8,8 @@ Last checked: May 25, 2026
 - Account form validation shows clear errors for bad email and short passwords.
 - Firebase loads on the live app path and reports `Firebase live`.
 - Firestore rules compile and were deployed successfully.
+- Profile picture upload UI is wired to Firebase Storage, and owner-only `storage.rules` is ready.
+- Squad voice rooms open an in-app call dialog and still support opening the room in a new tab.
 - App Check is configured and the Firebase API key is referrer-restricted.
 - Local and mobile browser smoke tests pass with no runtime console errors.
 - Mobile viewport has no horizontal overflow and no tiny visible buttons.
@@ -19,6 +21,7 @@ Last checked: May 25, 2026
 
 - Firebase Cloud Functions email delivery needs the Firebase Blaze plan before it can be deployed.
 - SMTP credentials must be added in `functions/.env` before custom welcome and match emails can send.
+- Firebase Storage must be enabled in the console before `storage.rules` can deploy and live profile picture uploads can complete.
 - Native app store release still needs production Android/iOS signing assets, screenshots, store descriptions, and real device QA.
 - App Check enforcement should only be enabled after a live sign-in/create-account test passes.
 
@@ -31,4 +34,5 @@ node --check functions/index.js
 npm audit --omit=dev --audit-level=high
 npm audit --prefix functions --omit=dev --audit-level=high
 firebase deploy --only firestore --project squad-link-aa29e
+firebase deploy --only storage --project squad-link-aa29e
 ```
