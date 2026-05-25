@@ -102,7 +102,9 @@ service cloud.firestore {
       allow read: if true;
       allow create: if signedIn()
         && request.resource.data.keys().hasOnly([
-          'author', 'game', 'text', 'time', 'uid', 'createdAt'
+          'author', 'game', 'text', 'time', 'uid', 'messageType',
+          'audioUrl', 'audioPath', 'audioDataUrl', 'audioMimeType', 'audioDuration',
+          'createdAt'
         ])
         && request.resource.data.uid == request.auth.uid
         && validGame(request.resource.data.game)
@@ -111,7 +113,36 @@ service cloud.firestore {
         && request.resource.data.text is string
         && request.resource.data.text.size() <= 160
         && request.resource.data.time is string
-        && request.resource.data.time.size() <= 20;
+        && request.resource.data.time.size() <= 20
+        && request.resource.data.messageType in ['text', 'voice']
+        && (
+          request.resource.data.messageType == 'text'
+          || request.resource.data.keys().hasAny(['audioUrl', 'audioDataUrl'])
+        )
+        && (
+          !request.resource.data.keys().hasAny(['audioUrl'])
+          || (request.resource.data.audioUrl is string && request.resource.data.audioUrl.size() <= 500)
+        )
+        && (
+          !request.resource.data.keys().hasAny(['audioPath'])
+          || (request.resource.data.audioPath is string && request.resource.data.audioPath.size() <= 180)
+        )
+        && (
+          !request.resource.data.keys().hasAny(['audioDataUrl'])
+          || (request.resource.data.audioDataUrl is string
+            && request.resource.data.audioDataUrl.size() <= 700000
+            && request.resource.data.audioDataUrl.matches('data:audio/.*'))
+        )
+        && (
+          !request.resource.data.keys().hasAny(['audioMimeType'])
+          || (request.resource.data.audioMimeType is string && request.resource.data.audioMimeType.matches('audio/.*'))
+        )
+        && (
+          !request.resource.data.keys().hasAny(['audioDuration'])
+          || (request.resource.data.audioDuration is number
+            && request.resource.data.audioDuration >= 0
+            && request.resource.data.audioDuration <= 45)
+        );
       allow update, delete: if isAdmin();
     }
 
@@ -234,26 +265,6 @@ service cloud.firestore {
         && request.resource.data.action in ['like', 'pass'];
       allow update: if false;
       allow delete: if isOwner(resource.data.uid) || isAdmin();
-    }
-
-    match /voiceRooms/{roomId} {
-      allow read: if true;
-      allow create: if signedIn()
-        && request.resource.data.keys().hasOnly([
-          'game', 'name', 'host', 'hostUid', 'roomCode', 'slots', 'createdAt'
-        ])
-        && request.resource.data.hostUid == request.auth.uid
-        && validGame(request.resource.data.game)
-        && request.resource.data.name is string
-        && request.resource.data.name.size() <= 64
-        && request.resource.data.host is string
-        && request.resource.data.host.size() <= 40
-        && request.resource.data.roomCode is string
-        && request.resource.data.roomCode.size() <= 80
-        && request.resource.data.slots is number
-        && request.resource.data.slots >= 1
-        && request.resource.data.slots <= 12;
-      allow update, delete: if isOwner(resource.data.hostUid) || isAdmin();
     }
 
     match /privateMessages/{messageId} {

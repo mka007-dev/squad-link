@@ -18,7 +18,7 @@ This repository includes the frontend, backend integration, database rules, and 
 - The Firebase web API key is restricted to GitHub Pages plus localhost/127.0.0.1 testing referrers.
 - If Firebase Auth is unavailable, account actions stay disabled instead of storing browser-only password accounts.
 - Firebase Storage stores signed-in user profile pictures under each user's avatar folder.
-- Squad voice rooms use Jitsi Meet rooms created from the app's voice room records.
+- Community chat supports short voice notes with Firebase Storage uploads and a capped Firestore inline fallback.
 - Firebase Cloud Functions in `functions/` send welcome emails when new profile docs are created and match emails when two real users both tap Squad Up.
 - SMTP credentials are read from function environment variables, not from browser code.
 
@@ -40,7 +40,6 @@ Collections used:
 - `squadRequests`
 - `eventRsvps`
 - `playerActions`
-- `voiceRooms`
 - `privateMessages`
 - `notifications`
 - `matches`
@@ -48,7 +47,7 @@ Collections used:
 - `reports`
 - `admins`
 
-User-created posts, chat messages, squads, events, joins, invite requests, RSVPs, voice rooms, public player cards, and profile pictures are visible to other users once Firebase rules are published. Private messages, player match actions, match records, and notifications are restricted to the signed-in owner by Firestore rules. Email delivery logs are admin-only.
+User-created posts, chat messages, chat voice notes, squads, events, joins, invite requests, RSVPs, public player cards, and profile pictures are visible to other users once Firebase rules are published. Private messages, player match actions, match records, and notifications are restricted to the signed-in owner by Firestore rules. Email delivery logs are admin-only.
 
 ## Infrastructure
 

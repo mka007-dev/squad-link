@@ -26,7 +26,7 @@ Firebase Authentication must be enabled for Create Account, Sign In, Guest Mode,
 3. Choose production mode.
 4. Use the default bucket for `squad-link-aa29e`.
 
-Storage is used for profile pictures. Users can only write under `avatars/{theirUid}/`, images must be PNG, JPG, or WebP, and each upload must be under 2 MB.
+Storage is used for profile pictures and chat voice notes. Users can only write under their own `avatars/{theirUid}/` and `voice-notes/{theirUid}/` folders. Images must be PNG, JPG, or WebP under 2 MB; voice notes must be audio files under 512 KB.
 
 ## 4. Publish Security Rules
 
@@ -67,9 +67,9 @@ The Firebase web API key is restricted to these browser referrers:
 
 Do not enable App Check enforcement until you have tested the deployed app after each release.
 
-## 6. Voice Rooms
+## 6. Chat Voice Notes
 
-Squad voice uses Jitsi Meet rooms generated from the app's `voiceRooms` collection. No Firebase secret is required for voice calls. Users must allow microphone access in the browser when the call dialog opens.
+Community chat supports short voice notes. When Firebase Storage is enabled, audio files are uploaded to `voice-notes/{uid}/` and the chat message stores the download URL. If Storage is not enabled yet, the app falls back to a small inline Firestore audio payload so the MVP still works.
 
 ## 7. Email Notifications
 
@@ -150,7 +150,6 @@ The ready-to-upload copy is also in `lobbyrush-upload-files`, and the zipped ver
 - `squadRequests`
 - `eventRsvps`
 - `playerActions`
-- `voiceRooms`
 - `privateMessages`
 - `notifications`
 - `matches`

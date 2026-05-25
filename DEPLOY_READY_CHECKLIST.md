@@ -9,7 +9,7 @@ Last checked: May 25, 2026
 - Firebase loads on the live app path and reports `Firebase live`.
 - Firestore rules compile and were deployed successfully.
 - Profile picture upload UI is wired to Firebase Storage, and owner-only `storage.rules` is ready.
-- Squad voice rooms open an in-app call dialog and still support opening the room in a new tab.
+- Community chat supports text messages and short playable voice notes.
 - App Check is configured and the Firebase API key is referrer-restricted.
 - Local and mobile browser smoke tests pass with no runtime console errors.
 - Mobile viewport has no horizontal overflow and no tiny visible buttons.

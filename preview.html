@@ -3050,7 +3050,6 @@
       }
 
       .player-card,
-      .voice-room,
       .dm-message,
       .notification-item,
       .mini-player {
@@ -3186,19 +3185,16 @@
       }
 
       .mini-player,
-      .voice-room,
       .dm-message,
       .notification-item {
         padding: 12px;
       }
 
-      .mini-player,
-      .voice-room {
+      .mini-player {
         display: grid;
         gap: 8px;
       }
 
-      .room-top,
       .mini-player-top {
         display: flex;
         justify-content: space-between;
@@ -3258,7 +3254,7 @@
         }
       }
 
-      /* Profile media and voice call layer */
+      /* Profile media and voice notes layer */
       .avatar-upload {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
@@ -3340,32 +3336,50 @@
         margin-bottom: 10px;
       }
 
-      .voice-call-dialog {
-        width: min(1080px, calc(100vw - 24px));
-        background: #07090d;
+      .voice-note-composer {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
-      .voice-call-frame-wrap {
-        margin: 0 16px;
-        overflow: hidden;
-        border: 1px solid var(--line);
+      .voice-note-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .voice-note-actions .meta[data-tone="recording"] {
+        color: var(--rose);
+        font-weight: 900;
+      }
+
+      .voice-note-actions .meta[data-tone="ready"],
+      .voice-note-actions .meta[data-tone="success"] {
+        color: var(--green);
+      }
+
+      .voice-note-actions .meta[data-tone="error"] {
+        color: var(--rose);
+      }
+
+      .voice-note-preview,
+      .voice-note-player {
+        border: 1px solid rgba(234, 209, 173, 0.92);
         border-radius: 8px;
-        background: #05070b;
-        aspect-ratio: 16 / 9;
-        min-height: min(540px, 62vh);
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.74);
       }
 
-      .voice-call-frame-wrap iframe {
+      .voice-note-player {
+        display: grid;
+        gap: 7px;
+        margin: 0 0 10px;
+      }
+
+      .voice-note-player audio,
+      #voiceNotePreview {
         width: 100%;
-        height: 100%;
-        display: block;
-        border: 0;
-        background: #05070b;
-      }
-
-      .voice-room .primary,
-      .voice-room .ghost {
-        justify-self: start;
       }
 
       @media (max-width: 680px) {
@@ -3382,12 +3396,6 @@
         .profile-avatar-preview.large {
           width: 92px;
           height: 92px;
-        }
-
-        .voice-call-frame-wrap {
-          margin: 0 10px;
-          min-height: 58vh;
-          aspect-ratio: auto;
         }
       }
     </style>
@@ -3585,7 +3593,7 @@
               <div class="panel-header">
                 <div>
                   <h2>Player Matchmaker</h2>
-                  <p class="meta">Swipe through compatible FIFA, GTA, and Warzone players, then start a DM or voice room.</p>
+                  <p class="meta">Swipe through compatible FIFA, GTA, and Warzone players, then start a DM or squad invite.</p>
                 </div>
                 <div class="filters" id="matchFilters"></div>
               </div>
@@ -3605,13 +3613,6 @@
                   <button class="ghost" type="button" id="resetMatches">Reset</button>
                 </div>
                 <div class="mini-list" id="matchesList"></div>
-              </div>
-              <div class="panel">
-                <div class="panel-header">
-                  <h2>Voice Rooms</h2>
-                  <button class="primary" type="button" id="quickVoiceRoom">Start Room</button>
-                </div>
-                <div class="mini-list" id="voiceRoomList"></div>
               </div>
               <div class="panel">
                 <div class="panel-header">
@@ -3693,9 +3694,18 @@
               <form id="chatForm" style="margin-top: 14px">
                 <div class="field">
                   <label for="chatMessage">Message</label>
-                  <input id="chatMessage" name="message" maxlength="160" placeholder="Drop a squad call, result, clip note, or lobby update." required />
+                  <input id="chatMessage" name="message" maxlength="160" placeholder="Drop a squad call, result, clip note, or lobby update." />
                 </div>
-                <button class="primary" type="submit">Send Message</button>
+                <div class="voice-note-composer" id="voiceNoteComposer">
+                  <div class="voice-note-actions">
+                    <button class="ghost" type="button" id="recordVoiceNote">Record Voice Note</button>
+                    <button class="ghost" type="button" id="stopVoiceNote" hidden disabled>Stop</button>
+                    <button class="ghost" type="button" id="clearVoiceNote" hidden>Remove</button>
+                    <span class="meta" id="voiceNoteStatus">Voice notes can be up to 30 seconds.</span>
+                  </div>
+                  <audio id="voiceNotePreview" controls hidden></audio>
+                </div>
+                <button class="primary" type="submit">Send Chat</button>
               </form>
             </div>
             <aside class="grid">
@@ -4031,25 +4041,6 @@
       </form>
     </dialog>
 
-    <dialog id="voiceCallDialog" class="voice-call-dialog" aria-labelledby="voiceCallTitle">
-      <div class="voice-call-shell">
-        <div class="modal-head">
-          <div>
-            <h2 id="voiceCallTitle">Squad Voice</h2>
-            <p class="meta" id="voiceCallMeta">Allow microphone access when the call loads.</p>
-          </div>
-          <button class="icon-button" id="closeVoiceCall" type="button" aria-label="Close voice call">x</button>
-        </div>
-        <div class="voice-call-frame-wrap">
-          <iframe id="voiceCallFrame" title="LobbyRush squad voice call" allow="camera; microphone; fullscreen; display-capture; autoplay" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        </div>
-        <div class="modal-footer">
-          <button class="ghost" type="button" id="openVoiceExternal">Open in New Tab</button>
-          <button class="primary" type="button" id="leaveVoiceCall">Leave Call</button>
-        </div>
-      </div>
-    </dialog>
-
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="firebase-config.js"></script>
@@ -4205,18 +4196,16 @@
         }
       ];
 
-      const starterVoiceRooms = [
-        { id: "vr1", game: "warzone", name: "Ranked Warmup", host: "RotateKing", hostUid: "seed", roomCode: "ranked-warmup", slots: 4, createdAt: Date.now() - 900000 },
-        { id: "vr2", game: "gta", name: "Heist Planning", host: "ViceRoute", hostUid: "seed", roomCode: "heist-planning", slots: 6, createdAt: Date.now() - 600000 }
-      ];
-
       const starterNotifications = [
-        { id: "n1", title: "Matchmaker ready", body: "Swipe compatible players and start a room when you match.", unread: true, createdAt: Date.now() - 240000 }
+        { id: "n1", title: "Matchmaker ready", body: "Swipe compatible players and send a DM when you match.", unread: true, createdAt: Date.now() - 240000 }
       ];
 
       const AUTH_REMEMBER_KEY = "lobbyrush-remember-account";
       const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
       const AVATAR_TYPES = ["image/png", "image/jpeg", "image/webp"];
+      const MAX_VOICE_NOTE_SECONDS = 30;
+      const MAX_VOICE_NOTE_BYTES = 512 * 1024;
+      const MAX_VOICE_DATA_URL_LENGTH = 700000;
 
       const state = {
         posts: load("squadlink-posts", starterPosts),
@@ -4250,7 +4239,6 @@
         squadRequests: load("lobbyrush-squad-requests", []),
         eventRsvps: load("lobbyrush-event-rsvps", []),
         playerActions: load("lobbyrush-player-actions", []),
-        voiceRooms: load("lobbyrush-voice-rooms", starterVoiceRooms),
         privateMessages: load("lobbyrush-private-messages", []),
         notifications: load("lobbyrush-notifications", starterNotifications),
         publicPlayers: [],
@@ -4273,7 +4261,12 @@
       let currentUser = null;
       let pendingAvatarFile = null;
       let pendingAvatarPreviewUrl = "";
-      let activeVoiceUrl = "";
+      let pendingVoiceNote = null;
+      let voiceRecorder = null;
+      let voiceStream = null;
+      let voiceChunks = [];
+      let voiceNoteStartedAt = 0;
+      let voiceNoteTimer = null;
       let profileUnsubscribe = null;
       let adminUnsubscribe = null;
       let reportsUnsubscribe = null;
@@ -4452,11 +4445,15 @@
 
       function serializeMessage(form) {
         const now = new Date();
+        const text = cleanText(form.get("message"));
+        const hasVoiceNote = Boolean(pendingVoiceNote);
         return {
           author: getDisplayName(),
           game: state.profile.mainGame || "warzone",
-          text: cleanText(form.get("message")),
-          time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+          text: text || (hasVoiceNote ? "Voice note" : ""),
+          time: now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }),
+          messageType: hasVoiceNote ? "voice" : "text",
+          voiceNote: hasVoiceNote ? { ...pendingVoiceNote } : null
         };
       }
 
@@ -4593,7 +4590,6 @@
         subscribeCollection("messages", "messages", {});
         subscribeCollection("squads", "squads", { requested: false });
         subscribeCollection("events", "events", { rsvp: false });
-        subscribeCollection("voiceRooms", "voiceRooms", {});
         subscribeCollection("postJoins", "postJoins", {});
         subscribeCollection("squadRequests", "squadRequests", {});
         subscribeCollection("eventRsvps", "eventRsvps", {});
@@ -4781,15 +4777,19 @@
       async function createSharedMessage(message) {
         const account = await requireAccount("send chat messages");
         if (!account) return false;
+        const { voiceNote, ...baseMessage } = message;
+        const voicePayload = voiceNote ? await prepareVoiceNotePayload(voiceNote) : {};
+        const outgoingMessage = { ...baseMessage, ...voicePayload };
+        if (!outgoingMessage.text && !voiceNote) return false;
 
         if (!firebaseState.usingCloud || !currentUser) {
-          state.messages.unshift({ id: `m${Date.now()}`, uid: account.uid, ...message });
+          state.messages.unshift({ id: `m${Date.now()}`, uid: account.uid, ...outgoingMessage });
           save("squadlink-messages", state.messages);
           return true;
         }
 
         await firebaseApi.addDoc(firebaseApi.collection(db, "messages"), {
-          ...message,
+          ...outgoingMessage,
           uid: currentUser.uid,
           createdAt: firebaseApi.serverTimestamp()
         });
@@ -5079,74 +5079,6 @@
 
         state.currentMatchIndex += 1;
         render();
-      }
-
-      async function createVoiceRoom(game = state.profile.mainGame, customName = "") {
-        const account = await requireAccount("start voice rooms");
-        if (!account) return false;
-
-        const gameKey = safeGame(game);
-        const roomCode = `lobbyrush-${gameKey}-${Date.now().toString(36)}`;
-        const room = {
-          id: `vr${Date.now()}`,
-          game: gameKey,
-          name: cleanText(customName, `${getDisplayName()}'s ${gameInfo[gameKey].label} room`),
-          host: getDisplayName(),
-          hostUid: account.uid,
-          roomCode,
-          slots: 6,
-          createdAt: Date.now()
-        };
-
-        if (!firebaseState.usingCloud || !currentUser) {
-          state.voiceRooms.unshift(room);
-          save("lobbyrush-voice-rooms", state.voiceRooms);
-          await addNotification("Voice room started", `${room.name} is ready.`);
-          render();
-          return room;
-        }
-
-        const docRef = await firebaseApi.addDoc(firebaseApi.collection(db, "voiceRooms"), {
-          game: room.game,
-          name: room.name,
-          host: room.host,
-          hostUid: currentUser.uid,
-          roomCode,
-          slots: room.slots,
-          createdAt: firebaseApi.serverTimestamp()
-        });
-        await addNotification("Voice room started", `${room.name} is ready.`);
-        return { ...room, id: docRef.id };
-      }
-
-      function joinVoiceRoom(room) {
-        const code = cleanText(room.roomCode, `lobbyrush-${room.id}`).replace(/[^a-z0-9-]/gi, "-").toLowerCase();
-        const game = safeGame(room.game);
-        activeVoiceUrl = `https://meet.jit.si/${code}#config.prejoinPageEnabled=false&config.disableDeepLinking=true`;
-        const dialog = $("#voiceCallDialog");
-        const frame = $("#voiceCallFrame");
-        const title = $("#voiceCallTitle");
-        const meta = $("#voiceCallMeta");
-
-        if (title) title.textContent = cleanText(room.name, "Squad Voice");
-        if (meta) meta.textContent = `${gameInfo[game].label} voice room hosted by ${cleanText(room.host, "LobbyRush")}. Allow microphone access to talk.`;
-        if (frame) frame.src = activeVoiceUrl;
-
-        if (dialog?.showModal) {
-          dialog.showModal();
-        } else {
-          window.open(activeVoiceUrl, "_blank", "noopener");
-        }
-
-        addNotification("Voice room joined", `${room.name} is open for squad comms.`).catch(console.error);
-      }
-
-      function leaveVoiceCall() {
-        const frame = $("#voiceCallFrame");
-        const dialog = $("#voiceCallDialog");
-        if (frame) frame.src = "about:blank";
-        activeVoiceUrl = "";
-        if (dialog?.open) dialog.close();
       }
 
       async function sendPrivateMessage(targetId, text) {
@@ -5444,13 +5376,214 @@
         return { avatarUrl, avatarPath: path };
       }
 
+      function supportsVoiceNotes() {
+        return Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+      }
+
+      function preferredVoiceMimeType() {
+        const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus", "audio/mp4"];
+        return candidates.find((type) => window.MediaRecorder?.isTypeSupported?.(type)) || "";
+      }
+
+      function voiceNoteExtension(mimeType) {
+        if (mimeType.includes("ogg")) return "ogg";
+        if (mimeType.includes("mp4")) return "m4a";
+        return "webm";
+      }
+
+      function formatVoiceDuration(seconds) {
+        const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+        const minutes = Math.floor(safeSeconds / 60);
+        const remaining = String(safeSeconds % 60).padStart(2, "0");
+        return `${minutes}:${remaining}`;
+      }
+
+      function setVoiceNoteStatus(message, tone = "") {
+        const status = $("#voiceNoteStatus");
+        if (!status) return;
+        status.textContent = message;
+        status.dataset.tone = tone;
+      }
+
+      function setVoiceNoteControls(recording = false) {
+        const record = $("#recordVoiceNote");
+        const stop = $("#stopVoiceNote");
+        const clear = $("#clearVoiceNote");
+        if (record) {
+          record.hidden = recording;
+          record.disabled = recording;
+        }
+        if (stop) {
+          stop.hidden = !recording;
+          stop.disabled = !recording;
+        }
+        if (clear) clear.hidden = !pendingVoiceNote || recording;
+      }
+
+      function stopVoiceStream() {
+        voiceStream?.getTracks().forEach((track) => track.stop());
+        voiceStream = null;
+      }
+
+      function clearVoiceNoteTimer() {
+        window.clearInterval(voiceNoteTimer);
+        voiceNoteTimer = null;
+      }
+
+      function blobToDataUrl(blob, errorMessage = "Voice note could not be read.") {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(new Error(errorMessage));
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      function clearPendingVoiceNote() {
+        if (pendingVoiceNote?.previewUrl) URL.revokeObjectURL(pendingVoiceNote.previewUrl);
+        pendingVoiceNote = null;
+        const preview = $("#voiceNotePreview");
+        if (preview) {
+          preview.pause();
+          preview.removeAttribute("src");
+          preview.hidden = true;
+          preview.load();
+        }
+        setVoiceNoteStatus("Voice notes can be up to 30 seconds.");
+        setVoiceNoteControls(false);
+      }
+
+      async function startVoiceNoteRecording() {
+        if (!supportsVoiceNotes()) {
+          setVoiceNoteStatus("Voice notes are not supported in this browser.", "error");
+          showToast("Voice notes are not supported here.");
+          return;
+        }
+
+        clearPendingVoiceNote();
+
+        try {
+          voiceStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+          });
+          const mimeType = preferredVoiceMimeType();
+          const options = { audioBitsPerSecond: 32000 };
+          if (mimeType) options.mimeType = mimeType;
+          voiceChunks = [];
+          voiceRecorder = new MediaRecorder(voiceStream, options);
+          voiceNoteStartedAt = Date.now();
+
+          voiceRecorder.addEventListener("dataavailable", (event) => {
+            if (event.data?.size) voiceChunks.push(event.data);
+          });
+
+          voiceRecorder.addEventListener("stop", () => {
+            clearVoiceNoteTimer();
+            stopVoiceStream();
+            const duration = Math.min(MAX_VOICE_NOTE_SECONDS, (Date.now() - voiceNoteStartedAt) / 1000);
+            const blob = new Blob(voiceChunks, { type: voiceRecorder.mimeType || mimeType || "audio/webm" });
+            voiceChunks = [];
+            voiceRecorder = null;
+
+            if (!blob.size) {
+              setVoiceNoteStatus("No audio was recorded. Try again.", "error");
+              setVoiceNoteControls(false);
+              return;
+            }
+
+            if (blob.size > MAX_VOICE_NOTE_BYTES) {
+              setVoiceNoteStatus("Voice note is too long. Keep it under 30 seconds.", "error");
+              setVoiceNoteControls(false);
+              return;
+            }
+
+            const previewUrl = URL.createObjectURL(blob);
+            pendingVoiceNote = {
+              blob,
+              previewUrl,
+              duration: Math.round(duration),
+              mimeType: blob.type || "audio/webm"
+            };
+            const preview = $("#voiceNotePreview");
+            if (preview) {
+              preview.src = previewUrl;
+              preview.hidden = false;
+            }
+            setVoiceNoteStatus(`Voice note ready (${formatVoiceDuration(duration)}).`, "ready");
+            setVoiceNoteControls(false);
+          });
+
+          voiceRecorder.start();
+          setVoiceNoteControls(true);
+          setVoiceNoteStatus("Recording 0:00", "recording");
+          voiceNoteTimer = window.setInterval(() => {
+            const elapsed = Math.floor((Date.now() - voiceNoteStartedAt) / 1000);
+            setVoiceNoteStatus(`Recording ${formatVoiceDuration(elapsed)}`, "recording");
+            if (elapsed >= MAX_VOICE_NOTE_SECONDS && voiceRecorder?.state === "recording") {
+              voiceRecorder.stop();
+            }
+          }, 500);
+        } catch (error) {
+          stopVoiceStream();
+          clearVoiceNoteTimer();
+          setVoiceNoteControls(false);
+          setVoiceNoteStatus("Microphone access was blocked.", "error");
+          showToast("Allow microphone access to record voice notes.");
+          console.error(error);
+        }
+      }
+
+      function stopVoiceNoteRecording() {
+        if (voiceRecorder?.state === "recording") {
+          voiceRecorder.stop();
+        }
+      }
+
+      async function prepareVoiceNotePayload(note) {
+        if (!note?.blob) return {};
+
+        if (firebaseState.usingCloud && currentUser && storage && firebaseApi?.ref && firebaseApi?.uploadBytes && firebaseApi?.getDownloadURL) {
+          try {
+            const path = `voice-notes/${currentUser.uid}/chat-${Date.now()}.${voiceNoteExtension(note.mimeType)}`;
+            const voiceRef = firebaseApi.ref(storage, path);
+            await firebaseApi.uploadBytes(voiceRef, note.blob, {
+              contentType: note.mimeType || "audio/webm",
+              customMetadata: { ownerUid: currentUser.uid }
+            });
+            return {
+              audioUrl: await firebaseApi.getDownloadURL(voiceRef),
+              audioPath: path,
+              audioMimeType: note.mimeType || "audio/webm",
+              audioDuration: Math.round(note.duration || 0)
+            };
+          } catch (error) {
+            console.warn("Voice note Storage upload failed. Falling back to Firestore inline audio.", error);
+          }
+        }
+
+        const audioDataUrl = await blobToDataUrl(note.blob);
+        if (audioDataUrl.length > MAX_VOICE_DATA_URL_LENGTH) {
+          throw new Error("Voice note is too large to send. Record a shorter note.");
+        }
+
+        return {
+          audioDataUrl,
+          audioMimeType: note.mimeType || "audio/webm",
+          audioDuration: Math.round(note.duration || 0)
+        };
+      }
+
       function gameChip(game) {
         const gameKey = safeGame(game);
         return `<span class="chip ${gameInfo[gameKey].colorClass}">${gameInfo[gameKey].label}</span>`;
       }
 
       function matchesSearch(item) {
-        const text = Object.values(item).join(" ").toLowerCase();
+        const text = Object.entries(item)
+          .filter(([key]) => key !== "audioDataUrl")
+          .map(([, value]) => value)
+          .join(" ")
+          .toLowerCase();
         return text.includes(state.query.toLowerCase());
       }
 
@@ -5505,10 +5638,7 @@
               <div class="squad-tags">${tags.map((tag) => `<span class="chip rose-color">${escapeHtml(tag)}</span>`).join("")}</div>
               <div class="card-footer">
                 <span class="meta">${requests} ${requests === 1 ? "request" : "requests"}</span>
-                <div class="filters">
-                  <button class="ghost" type="button" data-squad-voice="${squad.id}">Voice Room</button>
-                  <button class="${requested ? "primary" : "ghost"}" type="button" data-request-squad="${squad.id}">${requested ? "Invite Requested" : "Request Invite"}</button>
-                </div>
+                <button class="${requested ? "primary" : "ghost"}" type="button" data-request-squad="${squad.id}">${requested ? "Invite Requested" : "Request Invite"}</button>
               </div>
             </div>
           </article>
@@ -5538,6 +5668,13 @@
 
       function chatCard(message) {
         const game = safeGame(message.game);
+        const audioSource = cleanText(message.audioUrl) || cleanText(message.audioDataUrl);
+        const isVoiceNote = message.messageType === "voice" && audioSource;
+        const duration = Number(message.audioDuration) ? ` - ${formatVoiceDuration(message.audioDuration)}` : "";
+        const voiceNoteMarkup = isVoiceNote
+          ? `<div class="voice-note-player"><strong>Voice note${duration}</strong><audio controls preload="metadata" src="${escapeHtml(audioSource)}"></audio></div>`
+          : "";
+        const text = cleanText(message.text);
 
         return `
           <article class="chat-message ${game}-card">
@@ -5545,7 +5682,8 @@
               <span class="message-author">${escapeHtml(message.author)}</span>
               ${gameChip(game)}
             </div>
-            <p class="post-body" style="margin: 0">${escapeHtml(message.text)}</p>
+            ${voiceNoteMarkup}
+            ${text && text !== "Voice note" ? `<p class="post-body" style="margin: 0">${escapeHtml(text)}</p>` : ""}
             <span class="meta">${escapeHtml(message.time)}</span>
           </article>
         `;
@@ -5630,7 +5768,6 @@
                 <button class="ghost" type="button" data-player-pass="${player.id}">Pass</button>
                 <button class="${action?.action === "like" ? "primary" : "ghost"}" type="button" data-player-like="${player.id}">${action?.action === "like" ? "Matched" : "Squad Up"}</button>
                 <button class="ghost" type="button" data-player-dm="${player.id}">Message</button>
-                <button class="primary" type="button" data-player-voice="${player.id}">Voice</button>
               </div>
             </div>
           </article>
@@ -5662,22 +5799,7 @@
             <p class="meta">${gameInfo[safeGame(player.game)].label} - ${escapeHtml(player.lookingFor)}</p>
             <div class="social-actions">
               <button class="ghost" type="button" data-player-dm="${player.id}">Message</button>
-              <button class="primary" type="button" data-player-voice="${player.id}">Voice</button>
             </div>
-          </article>
-        `;
-      }
-
-      function voiceRoomCard(room) {
-        const game = safeGame(room.game);
-        return `
-          <article class="voice-room ${game}-card">
-            <div class="room-top">
-              <strong>${escapeHtml(room.name)}</strong>
-              ${gameChip(game)}
-            </div>
-            <p class="meta">Hosted by ${escapeHtml(room.host || "LobbyRush")} - ${Number(room.slots) || 6} slots</p>
-            <button class="primary" type="button" data-join-voice="${room.id}">Join Voice</button>
           </article>
         `;
       }
@@ -5715,8 +5837,6 @@
 
         const likedActions = sortedRecent(state.playerActions.filter((action) => action.uid === currentUid() && action.action === "like"));
         $("#matchesList").innerHTML = likedActions.length ? likedActions.map(matchListCard).join("") : `<p class="empty">Use Squad Up to save players and build matches.</p>`;
-
-        $("#voiceRoomList").innerHTML = state.voiceRooms.length ? sortedRecent(state.voiceRooms).slice(0, 6).map(voiceRoomCard).join("") : `<p class="empty">No voice rooms yet.</p>`;
 
         const players = allPlayers().filter((player) => player.id !== currentUid());
         $("#dmTarget").innerHTML = players.map((player) => `<option value="${escapeHtml(player.id)}">${escapeHtml(player.name)} - ${gameInfo[safeGame(player.game)].label}</option>`).join("");
@@ -5915,45 +6035,6 @@
           };
         });
 
-        $$("[data-player-voice]").forEach((button) => {
-          button.onclick = async () => {
-            const player = allPlayers().find((item) => item.id === button.dataset.playerVoice);
-            try {
-              const room = await createVoiceRoom(player?.game || state.profile.mainGame, `${player?.name || "Squad"} voice room`);
-              if (room) {
-                await addNotification("Voice invite ready", `${player?.name || "A player"} can join from the Voice Rooms panel.`);
-                joinVoiceRoom(room);
-                showToast("Voice room opened.");
-              }
-            } catch (error) {
-              showToast("Voice room could not be created.");
-              console.error(error);
-            }
-          };
-        });
-
-        $$("[data-squad-voice]").forEach((button) => {
-          button.onclick = async () => {
-            const squad = state.squads.find((item) => item.id === button.dataset.squadVoice);
-            try {
-              const room = await createVoiceRoom(squad?.game || state.profile.mainGame, `${squad?.name || "Squad"} voice room`);
-              if (room) {
-                joinVoiceRoom(room);
-                showToast("Squad voice opened.");
-              }
-            } catch (error) {
-              showToast("Squad voice could not be started.");
-              console.error(error);
-            }
-          };
-        });
-
-        $$("[data-join-voice]").forEach((button) => {
-          button.onclick = () => {
-            const room = state.voiceRooms.find((item) => item.id === button.dataset.joinVoice);
-            if (room) joinVoiceRoom(room);
-          };
-        });
       }
 
       function showSection(id) {
@@ -5993,19 +6074,6 @@
       $("#openEventDialog").addEventListener("click", () => $("#eventDialog").showModal());
       $("#closeEventDialog").addEventListener("click", () => $("#eventDialog").close());
       $("#cancelEventDialog").addEventListener("click", () => $("#eventDialog").close());
-      $("#closeVoiceCall").addEventListener("click", leaveVoiceCall);
-      $("#leaveVoiceCall").addEventListener("click", () => {
-        leaveVoiceCall();
-        showToast("Left voice call.");
-      });
-      $("#openVoiceExternal").addEventListener("click", () => {
-        if (activeVoiceUrl) window.open(activeVoiceUrl, "_blank", "noopener");
-      });
-      $("#voiceCallDialog").addEventListener("cancel", () => {
-        const frame = $("#voiceCallFrame");
-        if (frame) frame.src = "about:blank";
-        activeVoiceUrl = "";
-      });
       $("#resetMatches").addEventListener("click", async () => {
         if (firebaseState.usingCloud && currentUser) {
           await Promise.all(
@@ -6020,18 +6088,6 @@
         showToast("Match deck reset.");
         render();
       });
-      $("#quickVoiceRoom").addEventListener("click", async () => {
-        try {
-          const room = await createVoiceRoom(state.matchGame === "all" ? state.profile.mainGame : state.matchGame);
-          if (room) {
-            joinVoiceRoom(room);
-            showToast("Voice room started.");
-          }
-        } catch (error) {
-          showToast("Voice room could not be started.");
-          console.error(error);
-        }
-      });
       $("#enableAlerts").addEventListener("click", async () => {
         if (!("Notification" in window)) {
           showToast("Browser alerts are not available here.");
@@ -6039,6 +6095,12 @@
         }
         const permission = await Notification.requestPermission();
         showToast(permission === "granted" ? "Browser alerts enabled." : "Browser alerts not enabled.");
+      });
+      $("#recordVoiceNote").addEventListener("click", startVoiceNoteRecording);
+      $("#stopVoiceNote").addEventListener("click", stopVoiceNoteRecording);
+      $("#clearVoiceNote").addEventListener("click", () => {
+        clearPendingVoiceNote();
+        showToast("Voice note removed.");
       });
       $("#retryConnection").addEventListener("click", () => {
         if ("onLine" in navigator && !navigator.onLine) {
@@ -6119,14 +6181,19 @@
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         const message = serializeMessage(form);
+        if (!message.text && !message.voiceNote) {
+          showToast("Type a message or record a voice note.");
+          return;
+        }
         try {
           const saved = await createSharedMessage(message);
           if (!saved) return;
           event.currentTarget.reset();
-          showToast(firebaseState.usingCloud ? "Message shared with everyone." : "Message saved locally.");
+          if (message.voiceNote) clearPendingVoiceNote();
+          showToast(message.messageType === "voice" ? "Voice note sent." : (firebaseState.usingCloud ? "Message shared with everyone." : "Message saved locally."));
           render();
         } catch (error) {
-          showToast("Message could not be saved.");
+          showToast(error.message || "Message could not be saved.");
           console.error(error);
         }
       });
@@ -6457,6 +6524,10 @@
       });
 
       clearLegacyLocalAuth();
+      if (!supportsVoiceNotes()) {
+        $("#recordVoiceNote").disabled = true;
+        setVoiceNoteStatus("Voice notes are not supported in this browser.", "error");
+      }
       initFirebase();
       renderProfile();
       renderAuth();

@@ -18,6 +18,14 @@ service firebase.storage {
       allow delete: if isOwner(uid);
     }
 
+    match /voice-notes/{uid}/{fileName} {
+      allow read: if true;
+      allow create, update: if isOwner(uid)
+        && request.resource.size < 512 * 1024
+        && request.resource.contentType.matches('audio/.*');
+      allow delete: if isOwner(uid);
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
