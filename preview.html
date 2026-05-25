@@ -39,6 +39,10 @@
         box-sizing: border-box;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       html {
         background: var(--bg);
       }
@@ -3282,7 +3286,7 @@
                   <button class="ghost" type="button" id="signOutButton">Sign Out</button>
                 </div>
               </form>
-              <p class="meta cloud-note">Create Account uses Firebase Email/Password for cloud synced accounts. If Firebase is temporarily unavailable, LobbyRush keeps a local browser backup.</p>
+              <p class="meta cloud-note" id="authModeNote">Create Account uses Firebase Email/Password for cloud synced accounts. If Firebase is temporarily unavailable, LobbyRush keeps a local browser backup.</p>
             </div>
             <form class="profile-panel" id="profileForm">
               <div class="panel-header">
@@ -3684,6 +3688,40 @@
         $$("[data-auth-action], #guestSignIn, #forgotPassword").forEach((button) => {
           button.disabled = isBusy;
         });
+      }
+
+      function setAuthPanelMode(isSignedIn) {
+        const note = $("#authModeNote");
+        const signOutButton = $("#signOutButton");
+        const signedOutControls = [
+          "#authForm .account-grid",
+          "#authForm .auth-options",
+          "#authError",
+          "[data-auth-action]",
+          "#guestSignIn"
+        ];
+
+        signedOutControls.forEach((selector) => {
+          $$(selector).forEach((element) => {
+            element.hidden = isSignedIn;
+          });
+        });
+
+        if (signOutButton) {
+          signOutButton.hidden = !isSignedIn;
+          signOutButton.disabled = !isSignedIn;
+        }
+
+        if (note) {
+          note.textContent = isSignedIn
+            ? "You are signed in. Sign out if you want to switch accounts."
+            : "Create Account uses Firebase Email/Password for cloud synced accounts. If Firebase is temporarily unavailable, LobbyRush keeps a local browser backup.";
+        }
+
+        if (isSignedIn) {
+          setAuthError("");
+          clearAuthPassword();
+        }
       }
 
       async function hashPassword(value) {
@@ -4800,7 +4838,7 @@
           chip.className = "chip warzone-color";
           name.textContent = "Local browser mode";
           summary.textContent = "Add Firebase config to sync accounts, profiles, joins, RSVPs, reports, squads, and events across devices.";
-          signOutButton.disabled = !state.localAccount;
+          setAuthPanelMode(Boolean(state.localAccount));
           if (state.localAccount) {
             chip.textContent = state.localAccount.isAnonymous ? "Guest" : "Local";
             chip.className = "chip gta-color";
@@ -4815,7 +4853,7 @@
           chip.className = "chip gta-color";
           name.textContent = state.localAccount.displayName || state.localAccount.email || "Guest Player";
           summary.textContent = "Local account active. Firebase Authentication is not enabled yet, so account data stays on this browser.";
-          signOutButton.disabled = false;
+          setAuthPanelMode(true);
           return;
         }
 
@@ -4824,11 +4862,11 @@
           chip.className = "chip warzone-color";
           name.textContent = "Not signed in";
           summary.textContent = "Sign in or use guest mode to make your community actions visible to everyone.";
-          signOutButton.disabled = true;
+          setAuthPanelMode(false);
           return;
         }
 
-        signOutButton.disabled = false;
+        setAuthPanelMode(true);
         chip.textContent = state.isAdmin ? "Admin" : (currentUser.isAnonymous ? "Guest" : "Live");
         chip.className = `chip ${state.isAdmin ? "fifa-color" : currentUser.isAnonymous ? "gta-color" : "rose-color"}`;
         name.textContent = currentUser.isAnonymous ? "Guest player" : (currentUser.email || getDisplayName());
