@@ -31,10 +31,14 @@ Collections used:
 - `postJoins`
 - `squadRequests`
 - `eventRsvps`
+- `playerActions`
+- `voiceRooms`
+- `privateMessages`
+- `notifications`
 - `reports`
 - `admins`
 
-User-created posts, chat messages, squads, events, joins, invite requests, and RSVPs are visible to other users once Firestore rules are published.
+User-created posts, chat messages, squads, events, joins, invite requests, RSVPs, voice rooms, and public player cards are visible to other users once Firestore rules are published. Private messages, player match actions, and notifications are restricted to the signed-in owner by Firestore rules.
 
 ## Infrastructure
 
