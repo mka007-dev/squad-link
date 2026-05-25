@@ -13,7 +13,9 @@ This repository includes the frontend, backend integration, database rules, and 
 
 - Firebase Authentication is used for Email/Password, password reset, remembered sessions, and optional anonymous guest sign-in.
 - `firebase-config.js` connects the frontend to the Firebase project `squad-link-aa29e`.
-- If Firebase Auth is unavailable, the app falls back to local browser accounts so the interface remains usable during setup.
+- Firebase App Check is configured with reCAPTCHA Enterprise to reduce abuse from unauthorized web origins.
+- The Firebase web API key is restricted to GitHub Pages plus localhost/127.0.0.1 testing referrers.
+- If Firebase Auth is unavailable, account actions stay disabled instead of storing browser-only password accounts.
 
 ## Database
 
@@ -54,6 +56,8 @@ These one-time settings must exist in Firebase Console:
 - Authentication: Email/Password enabled.
 - Authentication: Anonymous enabled if Guest Mode should use cloud accounts.
 - Authentication: authorized domain includes `mka007-dev.github.io`.
+- App Check: reCAPTCHA Enterprise configured for the web app.
+- API key restrictions: browser referrers include `mka007-dev.github.io/*`, `localhost/*`, and `127.0.0.1/*`.
 - Firestore Database: created in production mode.
 - Firestore Rules: deployed from `firestore.rules`.
 

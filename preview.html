@@ -3572,7 +3572,7 @@
                   <button class="ghost" type="button" id="signOutButton">Sign Out</button>
                 </div>
               </form>
-              <p class="meta cloud-note" id="authModeNote">Create Account uses Firebase Email/Password for cloud synced accounts. If Firebase is temporarily unavailable, LobbyRush keeps a local browser backup.</p>
+              <p class="meta cloud-note" id="authModeNote">Create Account uses Firebase Email/Password for cloud synced accounts.</p>
             </div>
             <form class="profile-panel" id="profileForm">
               <div class="panel-header">
@@ -3999,8 +3999,6 @@
         { id: "n1", title: "Matchmaker ready", body: "Swipe compatible players and start a room when you match.", unread: true, createdAt: Date.now() - 240000 }
       ];
 
-      const AUTH_SESSION_KEY = "lobbyrush-account-session";
-      const AUTH_RECORD_KEY = "lobbyrush-account-record";
       const AUTH_REMEMBER_KEY = "lobbyrush-remember-account";
 
       const state = {
@@ -4039,7 +4037,6 @@
         authUser: null,
         authReady: false,
         isAdmin: false,
-        localAccount: loadAccountSession(),
         matchGame: "all",
         currentMatchIndex: 0,
         activeGame: "all",
@@ -4061,7 +4058,6 @@
       const firebaseState = {
         connected: false,
         usingCloud: false,
-        authUnavailable: false,
         error: ""
       };
 
@@ -4080,27 +4076,6 @@
         localStorage.setItem(key, JSON.stringify(value));
       }
 
-      function loadFromStorage(storage, key, fallback) {
-        try {
-          return JSON.parse(storage.getItem(key)) || fallback;
-        } catch {
-          return fallback;
-        }
-      }
-
-      function saveToStorage(storage, key, value) {
-        storage.setItem(key, JSON.stringify(value));
-      }
-
-      function loadAccountSession() {
-        return loadFromStorage(localStorage, AUTH_SESSION_KEY, null) || loadFromStorage(sessionStorage, AUTH_SESSION_KEY, null);
-      }
-
-      function clearAccountSession() {
-        localStorage.removeItem(AUTH_SESSION_KEY);
-        sessionStorage.removeItem(AUTH_SESSION_KEY);
-      }
-
       function loadRememberPreference() {
         const saved = localStorage.getItem(AUTH_REMEMBER_KEY);
         return saved === null ? true : saved === "true";
@@ -4108,6 +4083,12 @@
 
       function saveRememberPreference(remember) {
         localStorage.setItem(AUTH_REMEMBER_KEY, remember ? "true" : "false");
+      }
+
+      function clearLegacyLocalAuth() {
+        localStorage.removeItem("lobbyrush-account-session");
+        sessionStorage.removeItem("lobbyrush-account-session");
+        localStorage.removeItem("lobbyrush-account-record");
       }
 
       function cleanText(value, fallback = "") {
@@ -4223,97 +4204,13 @@
         if (note) {
           note.textContent = isSignedIn
             ? "You are signed in. Sign out if you want to switch accounts."
-            : "Create Account uses Firebase Email/Password for cloud synced accounts. If Firebase is temporarily unavailable, LobbyRush keeps a local browser backup.";
+            : "Create Account uses Firebase Email/Password for cloud synced accounts.";
         }
 
         if (isSignedIn) {
           setAuthError("");
           clearAuthPassword();
         }
-      }
-
-      async function hashPassword(value) {
-        const input = new TextEncoder().encode(`lobbyrush:${value}`);
-        const digest = await crypto.subtle.digest("SHA-256", input);
-        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
-      }
-
-      function localAccountRecord() {
-        return load(AUTH_RECORD_KEY, null);
-      }
-
-      function setLocalSession(account, remember = loadRememberPreference()) {
-        state.localAccount = account;
-        saveRememberPreference(remember);
-        clearAccountSession();
-        saveToStorage(remember ? localStorage : sessionStorage, AUTH_SESSION_KEY, account);
-        renderAuth();
-        renderProfile();
-        render();
-      }
-
-      async function createLocalAccount(email, password, remember = loadRememberPreference()) {
-        const existing = localAccountRecord();
-        if (existing?.email?.toLowerCase() === email.toLowerCase()) {
-          const message = "An account already exists for this email.";
-          setAuthError(message);
-          showToast(message);
-          return false;
-        }
-
-        const record = {
-          uid: `local-${Date.now()}`,
-          email,
-          displayName: email.split("@")[0],
-          passwordHash: await hashPassword(password),
-          isLocal: true,
-          createdAt: new Date().toISOString()
-        };
-        save(AUTH_RECORD_KEY, record);
-        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true }, remember);
-        showToast("Local account created.");
-        return true;
-      }
-
-      async function signInLocalAccount(email, password, remember = loadRememberPreference()) {
-        const record = localAccountRecord();
-        if (!record || record.email.toLowerCase() !== email.toLowerCase()) {
-          const message = "Email or password is incorrect.";
-          setAuthError(message);
-          showToast(message);
-          return false;
-        }
-
-        const passwordHash = await hashPassword(password);
-        if (record.passwordHash !== passwordHash) {
-          const message = "Email or password is incorrect.";
-          setAuthError(message);
-          showToast(message);
-          return false;
-        }
-
-        setLocalSession({ uid: record.uid, email: record.email, displayName: record.displayName, isLocal: true }, remember);
-        showToast("Signed in locally.");
-        return true;
-      }
-
-      function signInLocalGuest(remember = loadRememberPreference()) {
-        const guest = {
-          uid: `guest-${Date.now()}`,
-          email: "",
-          displayName: "Guest Player",
-          isLocal: true,
-          isAnonymous: true
-        };
-        setLocalSession(guest, remember);
-        showToast("Guest mode ready.");
-      }
-
-      function signOutLocalAccount() {
-        state.localAccount = null;
-        clearAccountSession();
-        renderAuth();
-        render();
       }
 
       function serializePost(form) {
@@ -4404,13 +4301,21 @@
         }
 
         try {
-          const [{ initializeApp }, firestore, authSdk] = await Promise.all([
+          const [{ initializeApp }, firestore, authSdk, appCheckSdk] = await Promise.all([
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js"),
-            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js")
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"),
+            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app-check.js").catch(() => null)
           ]);
           firebaseApi = { ...firestore, ...authSdk };
           const app = initializeApp(firebaseConfig);
+          const appCheckSiteKey = window.LOBBYRUSH_APP_CHECK_SITE_KEY || window.SQUADLINK_APP_CHECK_SITE_KEY;
+          if (appCheckSiteKey && appCheckSdk?.initializeAppCheck && appCheckSdk?.ReCaptchaEnterpriseProvider) {
+            appCheckSdk.initializeAppCheck(app, {
+              provider: new appCheckSdk.ReCaptchaEnterpriseProvider(appCheckSiteKey),
+              isTokenAutoRefreshEnabled: true
+            });
+          }
           db = firestore.getFirestore(app);
           auth = authSdk.getAuth(app);
           firebaseState.connected = true;
@@ -4668,14 +4573,13 @@
       }
 
       function getDisplayName() {
-        if (state.localAccount?.displayName) return state.localAccount.displayName;
         if (state.profile.displayName && state.profile.displayName !== "New Player") return state.profile.displayName;
         if (currentUser?.email) return currentUser.email.split("@")[0];
         return "New Player";
       }
 
       function currentUid() {
-        return currentUser?.uid || state.localAccount?.uid || "";
+        return currentUser?.uid || "";
       }
 
       function memberDocId(targetId) {
@@ -4693,7 +4597,6 @@
 
       async function requireAccount(action) {
         if (currentUser) return currentUser;
-        if (state.localAccount) return state.localAccount;
 
         showToast(`Create an account to ${action}.`);
         showSection("profile");
@@ -5442,10 +5345,10 @@
         if (!status) return;
 
         if (firebaseState.usingCloud) {
-          status.textContent = firebaseState.authUnavailable ? "Local accounts" : "Firebase live";
-          status.className = firebaseState.authUnavailable ? "chip gta-color" : "chip fifa-color";
+          status.textContent = "Firebase live";
+          status.className = "chip fifa-color";
         } else {
-          status.textContent = "Local mode";
+          status.textContent = "Firebase setup needed";
           status.className = "chip warzone-color";
         }
       }
@@ -5770,13 +5673,9 @@
         setAuthBusy(true);
         try {
           if (!auth || !firebaseApi) {
-            const localSuccess = action === "signup"
-              ? await createLocalAccount(email, password, remember)
-              : await signInLocalAccount(email, password, remember);
-            if (localSuccess) {
-              clearAuthPassword();
-              showSection("home");
-            }
+            const message = "Firebase Authentication is required for accounts.";
+            setAuthError(message);
+            showToast(message);
             return;
           }
 
@@ -5802,14 +5701,9 @@
           showSection("home");
         } catch (error) {
           if (isAuthSetupError(error)) {
-            firebaseState.authUnavailable = true;
-            const localSuccess = action === "signup"
-              ? await createLocalAccount(email, password, remember)
-              : await signInLocalAccount(email, password, remember);
-            if (localSuccess) {
-              clearAuthPassword();
-              showSection("home");
-            }
+            const message = "Firebase Authentication is not enabled yet.";
+            setAuthError(message);
+            showToast(message);
             renderFirebaseStatus();
             return;
           }
@@ -5826,7 +5720,7 @@
         const { valid, email } = validateAuthForm(false);
         if (!valid) return;
 
-        if (!auth || !firebaseApi || firebaseState.authUnavailable) {
+        if (!auth || !firebaseApi) {
           const message = "Password reset email needs Firebase Authentication.";
           setAuthError(message);
           showToast(message);
@@ -5850,7 +5744,9 @@
 
       $("#guestSignIn").addEventListener("click", async () => {
         if (!auth || !firebaseApi) {
-          signInLocalGuest(loadRememberPreference());
+          const message = "Guest mode needs Firebase Authentication.";
+          setAuthError(message);
+          showToast(message);
           return;
         }
 
@@ -5860,8 +5756,9 @@
           showToast("Guest mode connected.");
         } catch (error) {
           if (isAuthSetupError(error)) {
-            firebaseState.authUnavailable = true;
-            signInLocalGuest(loadRememberPreference());
+            const message = "Anonymous sign-in is not enabled yet.";
+            setAuthError(message);
+            showToast(message);
             renderFirebaseStatus();
             return;
           }
@@ -5873,12 +5770,6 @@
       });
 
       $("#signOutButton").addEventListener("click", async () => {
-        if (state.localAccount) {
-          signOutLocalAccount();
-          showToast("Signed out.");
-          return;
-        }
-
         if (!auth || !currentUser) {
           showToast("No account is signed in.");
           return;
@@ -5901,26 +5792,11 @@
         if (!chip || !name || !summary || !signOutButton) return;
 
         if (!firebaseState.usingCloud) {
-          chip.textContent = "Local";
+          chip.textContent = "Setup needed";
           chip.className = "chip warzone-color";
-          name.textContent = "Local browser mode";
-          summary.textContent = "Add Firebase config to sync accounts, profiles, joins, RSVPs, reports, squads, and events across devices.";
-          setAuthPanelMode(Boolean(state.localAccount));
-          if (state.localAccount) {
-            chip.textContent = state.localAccount.isAnonymous ? "Guest" : "Local";
-            chip.className = "chip gta-color";
-            name.textContent = state.localAccount.displayName || state.localAccount.email || "Guest Player";
-            summary.textContent = "Local account active. Enable Firebase Authentication to sync this account across devices.";
-          }
-          return;
-        }
-
-        if (state.localAccount && !currentUser) {
-          chip.textContent = state.localAccount.isAnonymous ? "Guest" : "Local";
-          chip.className = "chip gta-color";
-          name.textContent = state.localAccount.displayName || state.localAccount.email || "Guest Player";
-          summary.textContent = "Local account active. Firebase Authentication is not enabled yet, so account data stays on this browser.";
-          setAuthPanelMode(true);
+          name.textContent = "Firebase unavailable";
+          summary.textContent = "Firebase Authentication must be available before accounts can be used.";
+          setAuthPanelMode(false);
           return;
         }
 
@@ -6029,6 +5905,7 @@
         });
       });
 
+      clearLegacyLocalAuth();
       initFirebase();
       renderProfile();
       renderAuth();

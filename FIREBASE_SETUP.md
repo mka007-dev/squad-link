@@ -2,7 +2,7 @@
 
 LobbyRush is wired for Firebase Auth and Cloud Firestore. With the current `firebase-config.js`, the app can connect to your `squad-link-aa29e` Firebase project after the console setup below is finished. The file exposes `LOBBYRUSH_FIREBASE_CONFIG` for the app and keeps the old `SQUADLINK_FIREBASE_CONFIG` alias for compatibility.
 
-If Firebase Authentication is not enabled yet, the app falls back to local browser accounts so the Create Account section still works. Local accounts do not sync across devices; enable Auth to make accounts cloud-backed.
+Firebase Authentication must be enabled for Create Account, Sign In, Guest Mode, password reset, and cloud-synced community actions. The app clears old browser-only account data and does not store password accounts locally.
 
 ## 1. Enable Authentication
 
@@ -43,7 +43,19 @@ Manual console deploy:
 
 The rules allow public reads for the community app, require signed-in users for posts/chat/squads/events/actions/reports, protect profiles by user ID, and make report reading/clearing admin-only.
 
-## 4. Add An Admin
+## 4. App Check And API Key Restrictions
+
+App Check is configured for the web app with a reCAPTCHA Enterprise key. The frontend reads `LOBBYRUSH_APP_CHECK_SITE_KEY` from `firebase-config.js` and initializes App Check before Firestore/Auth.
+
+The Firebase web API key is restricted to these browser referrers:
+
+- `mka007-dev.github.io/*`
+- `localhost/*`
+- `127.0.0.1/*`
+
+Do not enable App Check enforcement until you have tested the deployed app after each release.
+
+## 5. Add An Admin
 
 After your own account signs in once:
 
@@ -55,7 +67,7 @@ After your own account signs in once:
 
 That account will be able to view and clear the Mod Queue.
 
-## 5. Upload To GitHub Pages
+## 6. Upload To GitHub Pages
 
 Upload the updated project files to the `mka007-dev/squad-link` repository:
 
