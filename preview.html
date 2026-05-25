@@ -4034,6 +4034,8 @@
         voiceRooms: load("lobbyrush-voice-rooms", starterVoiceRooms),
         privateMessages: load("lobbyrush-private-messages", []),
         notifications: load("lobbyrush-notifications", starterNotifications),
+        publicPlayers: [],
+        matches: [],
         authUser: null,
         authReady: false,
         isAdmin: false,
@@ -4055,6 +4057,8 @@
       let playerActionsUnsubscribe = null;
       let privateMessagesUnsubscribe = null;
       let notificationsUnsubscribe = null;
+      let publicProfilesUnsubscribe = null;
+      let matchesUnsubscribe = null;
       const firebaseState = {
         connected: false,
         usingCloud: false,
@@ -4364,6 +4368,7 @@
         subscribeCollection("postJoins", "postJoins", {});
         subscribeCollection("squadRequests", "squadRequests", {});
         subscribeCollection("eventRsvps", "eventRsvps", {});
+        subscribePublicProfiles();
       }
 
       function subscribeCollection(name, stateKey, defaults) {
@@ -4385,18 +4390,21 @@
         if (playerActionsUnsubscribe) playerActionsUnsubscribe();
         if (privateMessagesUnsubscribe) privateMessagesUnsubscribe();
         if (notificationsUnsubscribe) notificationsUnsubscribe();
+        if (matchesUnsubscribe) matchesUnsubscribe();
         profileUnsubscribe = null;
         adminUnsubscribe = null;
         reportsUnsubscribe = null;
         playerActionsUnsubscribe = null;
         privateMessagesUnsubscribe = null;
         notificationsUnsubscribe = null;
+        matchesUnsubscribe = null;
       }
 
       function subscribeToUserSocial(uid) {
         if (playerActionsUnsubscribe) playerActionsUnsubscribe();
         if (privateMessagesUnsubscribe) privateMessagesUnsubscribe();
         if (notificationsUnsubscribe) notificationsUnsubscribe();
+        if (matchesUnsubscribe) matchesUnsubscribe();
 
         const actionQuery = firebaseApi.query(
           firebaseApi.collection(db, "playerActions"),
@@ -4430,6 +4438,32 @@
         notificationsUnsubscribe = firebaseApi.onSnapshot(notificationQuery, (snapshot) => {
           const cloudNotifications = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
           state.notifications = cloudNotifications.length ? cloudNotifications : state.notifications;
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
+
+        const matchesQuery = firebaseApi.query(
+          firebaseApi.collection(db, "matches"),
+          firebaseApi.where("participants", "array-contains", uid),
+          firebaseApi.limit(120)
+        );
+        matchesUnsubscribe = firebaseApi.onSnapshot(matchesQuery, (snapshot) => {
+          state.matches = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          render();
+        }, (error) => {
+          firebaseState.error = error.message;
+        });
+      }
+
+      function subscribePublicProfiles() {
+        if (publicProfilesUnsubscribe) publicProfilesUnsubscribe();
+
+        const profileQuery = firebaseApi.query(firebaseApi.collection(db, "profiles"), firebaseApi.limit(120));
+        publicProfilesUnsubscribe = firebaseApi.onSnapshot(profileQuery, (snapshot) => {
+          state.publicPlayers = snapshot.docs
+            .map((doc) => profilePlayerFromDoc(doc.id, doc.data()))
+            .filter(Boolean);
           render();
         }, (error) => {
           firebaseState.error = error.message;
@@ -4683,9 +4717,49 @@
         };
       }
 
+      function profilePlayerFromDoc(uid, profile) {
+        if (!uid || !profile || profile.isAnonymous) return null;
+        const name = cleanText(profile.displayName, "Player");
+        return {
+          id: uid,
+          name,
+          game: safeGame(profile.mainGame),
+          platform: cleanText(profile.platform, "Crossplay"),
+          region: cleanText(profile.region, "Global"),
+          status: cleanText(profile.status, "Looking now"),
+          current: cleanText(profile.lookingFor, "Finding a squad"),
+          playStyle: cleanText(profile.playStyle, "Competitive"),
+          rank: cleanText(profile.rank, "Fresh"),
+          statsSummary: cleanText(profile.statsSummary, "Stats hidden"),
+          lookingFor: cleanText(profile.lookingFor, "Reliable teammates"),
+          bio: cleanText(profile.bio, "Ready to squad up."),
+          tags: [
+            cleanText(profile.platform, "Crossplay"),
+            cleanText(profile.playStyle, "Competitive"),
+            cleanText(profile.availability, "Evenings")
+          ],
+          likesYou: false,
+          art: "linear-gradient(135deg, #111827, #ff4f7b 48%, #10b981)",
+          links: {
+            PSN: profile.psn,
+            Xbox: profile.xbox,
+            Activision: profile.activision,
+            EA: profile.ea,
+            Discord: profile.discord,
+            Twitch: profile.twitch
+          }
+        };
+      }
+
       function allPlayers() {
         const own = currentUid() ? [publicProfilePlayer()] : [];
-        return [...own, ...playerDirectory].filter((player, index, list) => list.findIndex((item) => item.id === player.id) === index);
+        return [...own, ...state.publicPlayers, ...playerDirectory].filter((player, index, list) => list.findIndex((item) => item.id === player.id) === index);
+      }
+
+      function isMutualMatch(playerId) {
+        const uid = currentUid();
+        if (!uid || !playerId) return false;
+        return state.matches.some((match) => Array.isArray(match.participants) && match.participants.includes(uid) && match.participants.includes(playerId));
       }
 
       function matchCandidates() {
@@ -5220,11 +5294,12 @@
       function matchListCard(action) {
         const player = allPlayers().find((item) => item.id === action.targetId) || playerDirectory.find((item) => item.id === action.targetId);
         if (!player) return "";
+        const mutual = player.likesYou || isMutualMatch(player.id);
         return `
           <article class="mini-player">
             <div class="mini-player-top">
               <strong>${escapeHtml(player.name)}</strong>
-              <span class="chip ${player.likesYou ? "fifa-color" : "rose-color"}">${player.likesYou ? "Mutual" : "Saved"}</span>
+              <span class="chip ${mutual ? "fifa-color" : "rose-color"}">${mutual ? "Mutual" : "Saved"}</span>
             </div>
             <p class="meta">${gameInfo[safeGame(player.game)].label} - ${escapeHtml(player.lookingFor)}</p>
             <div class="social-actions">
@@ -5682,8 +5757,18 @@
           await applyAuthPersistence(remember);
 
           if (action === "signup") {
-            await firebaseApi.createUserWithEmailAndPassword(auth, email, password);
-            showToast("Account created.");
+            const credential = await firebaseApi.createUserWithEmailAndPassword(auth, email, password);
+            if (credential.user && firebaseApi.sendEmailVerification) {
+              try {
+                await firebaseApi.sendEmailVerification(credential.user);
+                showToast("Account created. Check your email to verify it.");
+              } catch (verificationError) {
+                console.warn("Verification email could not be sent:", verificationError);
+                showToast("Account created.");
+              }
+            } else {
+              showToast("Account created.");
+            }
           } else {
             await firebaseApi.signInWithEmailAndPassword(auth, email, password);
             showToast("Signed in.");

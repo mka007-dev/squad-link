@@ -16,6 +16,8 @@ This repository includes the frontend, backend integration, database rules, and 
 - Firebase App Check is configured with reCAPTCHA Enterprise to reduce abuse from unauthorized web origins.
 - The Firebase web API key is restricted to GitHub Pages plus localhost/127.0.0.1 testing referrers.
 - If Firebase Auth is unavailable, account actions stay disabled instead of storing browser-only password accounts.
+- Firebase Cloud Functions in `functions/` send welcome emails when new profile docs are created and match emails when two real users both tap Squad Up.
+- SMTP credentials are read from function environment variables, not from browser code.
 
 ## Database
 
@@ -37,16 +39,19 @@ Collections used:
 - `voiceRooms`
 - `privateMessages`
 - `notifications`
+- `matches`
+- `emailEvents`
 - `reports`
 - `admins`
 
-User-created posts, chat messages, squads, events, joins, invite requests, RSVPs, voice rooms, and public player cards are visible to other users once Firestore rules are published. Private messages, player match actions, and notifications are restricted to the signed-in owner by Firestore rules.
+User-created posts, chat messages, squads, events, joins, invite requests, RSVPs, voice rooms, and public player cards are visible to other users once Firestore rules are published. Private messages, player match actions, match records, and notifications are restricted to the signed-in owner by Firestore rules. Email delivery logs are admin-only.
 
 ## Infrastructure
 
 - GitHub Pages deployment is handled by `.github/workflows/pages.yml`.
 - Firebase deploy configuration is handled by `firebase.json`.
 - Firebase project targeting is handled by `.firebaserc`.
+- Cloud Functions source and email backend dependencies live in `functions/`.
 - Manual upload copies are kept in `lobbyrush-upload-files` and `lobbyrush-github-upload.zip`.
 
 ## Required Console Setup
@@ -58,13 +63,14 @@ These one-time settings must exist in Firebase Console:
 - Authentication: authorized domain includes `mka007-dev.github.io`.
 - App Check: reCAPTCHA Enterprise configured for the web app.
 - API key restrictions: browser referrers include `mka007-dev.github.io/*`, `localhost/*`, and `127.0.0.1/*`.
+- Cloud Functions: SMTP environment variables configured before email delivery can send.
 - Firestore Database: created in production mode.
 - Firestore Rules: deployed from `firestore.rules`.
 
-Deploy Firestore rules and indexes with:
+Deploy Firestore rules, indexes, and functions with:
 
 ```bash
-firebase deploy --only firestore --project squad-link-aa29e
+firebase deploy --only firestore,functions --project squad-link-aa29e
 ```
 
 Deploy the frontend by pushing to `main`; GitHub Actions publishes the app to:

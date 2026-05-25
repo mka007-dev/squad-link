@@ -1,4 +1,4 @@
-const CACHE_NAME = "lobbyrush-shell-v2";
+const CACHE_NAME = "lobbyrush-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",

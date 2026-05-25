@@ -25,7 +25,7 @@ Preferred CLI deploy:
 
 ```bash
 firebase login
-firebase deploy --only firestore --project squad-link-aa29e
+firebase deploy --only firestore,functions --project squad-link-aa29e
 ```
 
 The CLI uses:
@@ -34,6 +34,7 @@ The CLI uses:
 - `firebase.json`
 - `firestore.rules`
 - `firestore.indexes.json`
+- `functions/`
 
 Manual console deploy:
 
@@ -55,7 +56,36 @@ The Firebase web API key is restricted to these browser referrers:
 
 Do not enable App Check enforcement until you have tested the deployed app after each release.
 
-## 5. Add An Admin
+## 5. Email Notifications
+
+The app includes Firebase Cloud Functions for email:
+
+- The frontend sends Firebase's built-in verification email immediately after Email/Password account creation.
+- `sendWelcomeEmail` sends a welcome email when a new signed-in user's profile is created.
+- `notifyMutualMatch` creates a private `matches` record and emails both users when they both tap Squad Up on each other.
+
+Email credentials stay server-side. Copy `functions/.env.example` to `functions/.env` and fill in SMTP details before deploying functions:
+
+```bash
+APP_BASE_URL=https://mka007-dev.github.io/squad-link/preview.html
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=sender@example.com
+SMTP_PASS=your-smtp-password-or-app-password
+MAIL_FROM=LobbyRush <sender@example.com>
+```
+
+Use a transactional email provider or a Gmail app password. Do not commit `functions/.env`; it is ignored by git.
+
+Deploy after SMTP is configured:
+
+```bash
+firebase deploy --only functions,firestore --project squad-link-aa29e
+```
+
+If SMTP is not configured, the functions still create in-app match notifications and admin-only `emailEvents` logs, but emails are marked `skipped`.
+
+## 6. Add An Admin
 
 After your own account signs in once:
 
@@ -67,7 +97,7 @@ After your own account signs in once:
 
 That account will be able to view and clear the Mod Queue.
 
-## 6. Upload To GitHub Pages
+## 7. Upload To GitHub Pages
 
 Upload the updated project files to the `mka007-dev/squad-link` repository:
 
@@ -77,6 +107,7 @@ Upload the updated project files to the `mka007-dev/squad-link` repository:
 - `.firebaserc`
 - `firestore.rules`
 - `firestore.indexes.json`
+- `functions/`
 - `APP_STACK.md`
 - `FIREBASE_SETUP.md`
 - `DEPLOYMENT.md`
@@ -99,5 +130,11 @@ The ready-to-upload copy is also in `lobbyrush-upload-files`, and the zipped ver
 - `postJoins`
 - `squadRequests`
 - `eventRsvps`
+- `playerActions`
+- `voiceRooms`
+- `privateMessages`
+- `notifications`
+- `matches`
+- `emailEvents`
 - `reports`
 - `admins`
