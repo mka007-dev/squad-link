@@ -24,7 +24,7 @@ service cloud.firestore {
         'displayName', 'mainGame', 'platform', 'region', 'status', 'playStyle',
         'rank', 'availability', 'lookingFor', 'statsSummary', 'bio',
         'psn', 'xbox', 'activision', 'ea', 'discord', 'twitch', 'highlightUrl',
-        'uid', 'email', 'isAnonymous', 'updatedAt'
+        'uid', 'isAnonymous', 'updatedAt'
       ])
       && request.resource.data.displayName is string
       && request.resource.data.displayName.size() <= 40
@@ -62,8 +62,6 @@ service cloud.firestore {
       && request.resource.data.highlightUrl is string
       && request.resource.data.highlightUrl.size() <= 140
       && request.resource.data.uid == request.auth.uid
-      && request.resource.data.email is string
-      && request.resource.data.email.size() <= 120
       && request.resource.data.isAnonymous is bool;
     }
 

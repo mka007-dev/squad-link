@@ -4586,10 +4586,9 @@
         await firebaseApi.setDoc(firebaseApi.doc(db, "profiles", currentUser.uid), {
           ...state.profile,
           uid: currentUser.uid,
-          email: currentUser.email || "",
           isAnonymous: currentUser.isAnonymous,
           updatedAt: firebaseApi.serverTimestamp()
-        }, { merge: true });
+        });
       }
 
       async function createSharedPost(post) {
