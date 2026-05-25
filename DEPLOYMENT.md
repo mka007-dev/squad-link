@@ -15,6 +15,9 @@ LobbyRush is ready to deploy as a static GitHub Pages site from the repository r
 - `index.html`
 - `preview.html`
 - `404.html`
+- `privacy.html`
+- `terms.html`
+- `community-guidelines.html`
 - `firebase-config.js`
 - `firebase.json`
 - `.firebaserc`
@@ -27,6 +30,7 @@ LobbyRush is ready to deploy as a static GitHub Pages site from the repository r
 - `sitemap.xml`
 - `.nojekyll`
 - `assets/lobbyrush-logo.svg`
+- `functions/`
 - `.github/workflows/pages.yml`
 
 ## Firebase
@@ -37,13 +41,14 @@ The app already loads Firebase from `firebase-config.js`. Finish `FIREBASE_SETUP
 - Create the Firestore database.
 - Publish `firestore.rules` and `firestore.indexes.json`.
 - Add your UID to the `admins` collection if you want the Mod Queue controls.
+- Upgrade to Blaze and configure `functions/.env` before deploying email notification functions.
 
-If Firebase is unavailable, the app still runs in local browser storage so the UI does not break.
+If Firebase is unavailable, account and cloud-write actions show clear errors instead of storing browser-only password accounts.
 
 Use the Firebase CLI command below after signing in:
 
 ```bash
-firebase deploy --only firestore --project squad-link-aa29e
+firebase deploy --only firestore,functions --project squad-link-aa29e
 ```
 
 The complete frontend, backend, database, and infrastructure map is in `APP_STACK.md`.

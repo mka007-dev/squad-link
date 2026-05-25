@@ -1,9 +1,12 @@
-const CACHE_NAME = "lobbyrush-shell-v3";
+const CACHE_NAME = "lobbyrush-shell-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./preview.html",
   "./404.html",
+  "./privacy.html",
+  "./terms.html",
+  "./community-guidelines.html",
   "./firebase-config.js",
   "./site.webmanifest",
   "./assets/lobbyrush-logo.svg"

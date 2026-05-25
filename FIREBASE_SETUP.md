@@ -102,6 +102,9 @@ That account will be able to view and clear the Mod Queue.
 Upload the updated project files to the `mka007-dev/squad-link` repository:
 
 - `preview.html`
+- `privacy.html`
+- `terms.html`
+- `community-guidelines.html`
 - `firebase-config.js`
 - `firebase.json`
 - `.firebaserc`

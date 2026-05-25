@@ -693,6 +693,46 @@
         opacity: 1;
       }
 
+      .status-banner {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(255, 189, 89, 0.42);
+        border-radius: 8px;
+        padding: 12px 14px;
+        background: rgba(255, 189, 89, 0.12);
+        color: var(--soft);
+      }
+
+      .status-banner.active {
+        display: flex;
+      }
+
+      .status-banner strong {
+        color: var(--text);
+      }
+
+      .legal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        padding: 26px 0 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .legal-footer a {
+        color: var(--soft);
+        text-decoration: none;
+      }
+
+      .legal-footer a:hover {
+        color: var(--lime);
+      }
+
       dialog {
         width: min(620px, calc(100vw - 32px));
         border: 1px solid var(--line);
@@ -3299,6 +3339,13 @@
           </label>
           <button class="primary" id="openComposer">Create Post</button>
         </div>
+        <div class="status-banner" id="connectionBanner" role="status" aria-live="polite">
+          <div>
+            <strong id="connectionTitle">Connection issue</strong>
+            <div id="connectionMessage">Some live features may be temporarily unavailable.</div>
+          </div>
+          <button class="ghost compact-action" type="button" id="retryConnection">Retry</button>
+        </div>
         <div class="command-strip" aria-label="Community snapshot">
           <div class="command-stat">
             <span>Live Posts</span>
@@ -3507,7 +3554,7 @@
             <div class="panel">
               <div class="panel-header">
                 <h2>Community Chat</h2>
-                <span class="chip warzone-color" id="firebaseStatus">Local mode</span>
+                <span class="chip warzone-color" id="firebaseStatus">Firebase setup needed</span>
               </div>
               <div class="chat-list" id="chatList"></div>
               <form id="chatForm" style="margin-top: 14px">
@@ -3715,6 +3762,11 @@
             </div>
           </div>
         </section>
+        <footer class="legal-footer" aria-label="Legal and safety links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="community-guidelines.html">Community Guidelines</a>
+        </footer>
       </main>
     </div>
 
@@ -4059,6 +4111,7 @@
       let notificationsUnsubscribe = null;
       let publicProfilesUnsubscribe = null;
       let matchesUnsubscribe = null;
+      let connectionState = "";
       const firebaseState = {
         connected: false,
         usingCloud: false,
@@ -4355,6 +4408,7 @@
         } catch (error) {
           firebaseState.error = error.message;
           console.error(error);
+          updateConnectionBanner();
           render();
         }
       }
@@ -5076,6 +5130,27 @@
         showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
       }
 
+      function updateConnectionBanner(nextState = "") {
+        const banner = $("#connectionBanner");
+        const title = $("#connectionTitle");
+        const message = $("#connectionMessage");
+        if (!banner || !title || !message) return;
+
+        if (nextState) connectionState = nextState === "online" ? "" : nextState;
+        const isOffline = connectionState === "offline" || ("onLine" in navigator && !navigator.onLine);
+        const hasFirebaseError = Boolean(firebaseState.error) && !firebaseState.usingCloud;
+        banner.classList.toggle("active", isOffline || hasFirebaseError);
+
+        if (isOffline) {
+          title.textContent = "You are offline";
+          message.textContent = "LobbyRush is showing cached content. New posts, chat, and account actions will need a connection.";
+          return;
+        }
+
+        title.textContent = "Live backend unavailable";
+        message.textContent = firebaseState.error || "Some Firebase features could not start. Retry after checking your connection.";
+      }
+
       function safeGame(game) {
         return gameInfo[game] ? game : "warzone";
       }
@@ -5426,6 +5501,7 @@
           status.textContent = "Firebase setup needed";
           status.className = "chip warzone-color";
         }
+        updateConnectionBanner();
       }
 
       function bindDynamicActions() {
@@ -5645,6 +5721,22 @@
         }
         const permission = await Notification.requestPermission();
         showToast(permission === "granted" ? "Browser alerts enabled." : "Browser alerts not enabled.");
+      });
+      $("#retryConnection").addEventListener("click", () => {
+        if ("onLine" in navigator && !navigator.onLine) {
+          updateConnectionBanner("offline");
+          showToast("Still offline.");
+          return;
+        }
+        window.location.reload();
+      });
+      window.addEventListener("online", () => {
+        updateConnectionBanner("online");
+        showToast("Back online.");
+      });
+      window.addEventListener("offline", () => {
+        updateConnectionBanner("offline");
+        showToast("You are offline.");
       });
 
       $("#composerForm").addEventListener("submit", async (event) => {
@@ -5995,6 +6087,7 @@
       renderProfile();
       renderAuth();
       render();
+      updateConnectionBanner();
 
       if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
         window.addEventListener("load", () => {

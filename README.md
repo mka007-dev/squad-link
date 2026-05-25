@@ -3,7 +3,7 @@
 LobbyRush is a cross-platform React Native Expo app for gaming communities focused on FIFA, GTA, and Call of Duty: Warzone.
 
 The deploy-ready web app is in `preview.html` and can run on GitHub Pages as a static site.
-It includes Firebase Auth, Firestore-backed posts/chat/squads/events, profile sync, joins, invite requests, RSVPs, reports, admin moderation, and a mobile installable shell.
+It includes Firebase Auth, Firestore-backed posts/chat/squads/events, profile sync, joins, invite requests, RSVPs, reports, admin moderation, legal/compliance pages, and a mobile installable shell.
 
 For the full frontend, backend, database, and infrastructure map, see `APP_STACK.md`.
 
@@ -25,12 +25,15 @@ Firebase is the backend for the web app:
 - `firestore.rules` protects Cloud Firestore data.
 - `firestore.indexes.json` keeps database index deploys repeatable.
 - `firebase.json` and `.firebaserc` let the Firebase CLI deploy the database rules.
+- `functions/` contains the deploy-ready welcome and match email notification backend.
 
-Deploy Firestore rules and indexes with:
+Deploy Firestore rules, indexes, and functions with:
 
 ```bash
-firebase deploy --only firestore --project squad-link-aa29e
+firebase deploy --only firestore,functions --project squad-link-aa29e
 ```
+
+Cloud Functions require the Firebase Blaze plan and SMTP settings in `functions/.env`.
 
 ## Preview the static web app
 

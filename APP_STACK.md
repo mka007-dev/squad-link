@@ -6,6 +6,7 @@ This repository includes the frontend, backend integration, database rules, and 
 
 - `preview.html` is the production web app for GitHub Pages.
 - `index.html` redirects users into the web app.
+- `privacy.html`, `terms.html`, and `community-guidelines.html` cover launch compliance basics for a social app.
 - `assets/lobbyrush-logo.svg`, `site.webmanifest`, `service-worker.js`, `404.html`, `robots.txt`, and `sitemap.xml` support branding, installability, offline shell behavior, and search metadata.
 - The UI is responsive for mobile and desktop.
 
@@ -64,6 +65,7 @@ These one-time settings must exist in Firebase Console:
 - App Check: reCAPTCHA Enterprise configured for the web app.
 - API key restrictions: browser referrers include `mka007-dev.github.io/*`, `localhost/*`, and `127.0.0.1/*`.
 - Cloud Functions: SMTP environment variables configured before email delivery can send.
+- Compliance: Privacy Policy, Terms of Service, and Community Guidelines published.
 - Firestore Database: created in production mode.
 - Firestore Rules: deployed from `firestore.rules`.
 
