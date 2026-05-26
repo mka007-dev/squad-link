@@ -3661,6 +3661,506 @@
         accent-color: var(--lime);
       }
 
+      /* Thorough UI polish layer */
+      :root {
+        color-scheme: dark;
+        --bg: #07090d;
+        --panel: #101721;
+        --panel-2: #151e2b;
+        --panel-3: #1b2635;
+        --line: rgba(176, 193, 216, 0.18);
+        --text: #f7fbff;
+        --muted: #9aa8ba;
+        --soft: #c8d2df;
+        --lime: #dfff58;
+        --green: #31e28b;
+        --amber: #ffb84a;
+        --blue: #5eb6ff;
+        --rose: #ff5f8f;
+        --mint: #31e1d0;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      }
+
+      body {
+        color: var(--text);
+        background:
+          radial-gradient(circle at 9% 8%, rgba(255, 95, 143, 0.2), transparent 28%),
+          radial-gradient(circle at 92% 4%, rgba(94, 182, 255, 0.22), transparent 32%),
+          radial-gradient(circle at 50% 100%, rgba(223, 255, 88, 0.1), transparent 28%),
+          linear-gradient(180deg, #080b11 0%, #0b1018 48%, #07090d 100%);
+      }
+
+      body::before {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 38px 38px;
+        opacity: 0.42;
+      }
+
+      h1,
+      h2,
+      h3,
+      .brand-name,
+      .mobile-title,
+      .nav-button,
+      .primary,
+      .ghost,
+      .pill-button,
+      .command-stat,
+      .stat-value,
+      .leader-name,
+      .message-author,
+      .user-result-copy strong {
+        letter-spacing: 0;
+      }
+
+      .sidebar,
+      .mobile-header,
+      .search-wrap,
+      .command-stat,
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card,
+      .user-result,
+      .thread-message {
+        border-color: var(--line);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+          rgba(13, 18, 27, 0.9);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+      }
+
+      .panel,
+      .profile-panel {
+        padding: clamp(16px, 2vw, 22px);
+      }
+
+      .panel-header {
+        gap: 12px;
+        align-items: flex-start;
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .panel-header h2 {
+        font-size: clamp(20px, 2vw, 25px);
+      }
+
+      .meta,
+      .post-body,
+      .avatar-upload-copy span {
+        color: var(--muted);
+      }
+
+      .primary,
+      .ghost,
+      .pill-button,
+      .icon-button {
+        min-width: 0;
+        min-height: 40px;
+      }
+
+      .primary {
+        color: #07100b;
+        background: linear-gradient(135deg, var(--lime), #8fffba);
+        box-shadow: 0 14px 32px rgba(223, 255, 88, 0.18);
+      }
+
+      .ghost,
+      .pill-button,
+      .icon-button {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.055);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .field input,
+      .field select,
+      .field textarea,
+      .code-box {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.13);
+        background: rgba(4, 7, 12, 0.62);
+      }
+
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: rgba(200, 210, 223, 0.54);
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: rgba(223, 255, 88, 0.72);
+        box-shadow: 0 0 0 3px rgba(223, 255, 88, 0.13);
+      }
+
+      .chip {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .fifa-color {
+        color: #092113;
+        background: linear-gradient(135deg, #dfff58, #31e28b);
+      }
+
+      .gta-color {
+        color: #190d04;
+        background: linear-gradient(135deg, #ffb84a, #ff7a45);
+      }
+
+      .warzone-color,
+      .rose-color {
+        color: #110714;
+        background: linear-gradient(135deg, #5eb6ff, #ff5f8f);
+      }
+
+      .brand-name,
+      .mobile-title {
+        color: var(--text);
+        background: none;
+      }
+
+      .brand-mark,
+      .mobile-logo,
+      .hero-logo {
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 0 1px rgba(223, 255, 88, 0.2), 0 18px 42px rgba(0, 0, 0, 0.28);
+      }
+
+      .nav-button {
+        color: var(--soft);
+        background: rgba(255, 255, 255, 0.045);
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        color: var(--text);
+        border-color: rgba(223, 255, 88, 0.36);
+        background: linear-gradient(90deg, rgba(223, 255, 88, 0.12), rgba(94, 182, 255, 0.08));
+        box-shadow: none;
+      }
+
+      .nav-icon {
+        color: var(--lime);
+        background: rgba(223, 255, 88, 0.08);
+        border-color: rgba(223, 255, 88, 0.2);
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon {
+        color: #07100b;
+        background: var(--lime);
+      }
+
+      .side-card {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.12);
+        background:
+          linear-gradient(180deg, rgba(223, 255, 88, 0.08), rgba(255, 255, 255, 0.035)),
+          rgba(12, 17, 25, 0.92);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .side-card strong {
+        color: var(--text);
+      }
+
+      .mini-stat {
+        color: var(--muted);
+        border-top-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .mini-stat b {
+        color: var(--lime);
+      }
+
+      .game-tile {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .community-layout {
+        grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+        gap: 18px;
+      }
+
+      .community-primary .chat-list {
+        max-height: min(620px, 58vh);
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .community-side {
+        position: sticky;
+        top: 86px;
+        gap: 14px;
+      }
+
+      .user-directory-card,
+      .direct-chat-card {
+        overflow: hidden;
+      }
+
+      .user-search-results {
+        max-height: 430px;
+        padding-right: 4px;
+      }
+
+      .user-result {
+        position: relative;
+        gap: 12px;
+        padding: 13px;
+        overflow: hidden;
+      }
+
+      .user-result::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--blue), var(--rose));
+        opacity: 0.72;
+      }
+
+      .user-result.active {
+        border-color: rgba(223, 255, 88, 0.7);
+        background:
+          linear-gradient(135deg, rgba(223, 255, 88, 0.12), rgba(94, 182, 255, 0.06)),
+          rgba(13, 18, 27, 0.94);
+        box-shadow: 0 0 0 3px rgba(223, 255, 88, 0.12), 0 18px 44px rgba(0, 0, 0, 0.26);
+      }
+
+      .user-result .player-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+      }
+
+      .user-result-copy {
+        display: grid;
+        gap: 5px;
+      }
+
+      .user-result-copy strong {
+        color: var(--text);
+        font-size: 15px;
+      }
+
+      .user-handle-row,
+      .user-result-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .username-pill,
+      .source-badge,
+      .message-count-pill {
+        min-height: 24px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        color: var(--soft);
+        background: rgba(255, 255, 255, 0.055);
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .username-pill {
+        color: var(--lime);
+        border-color: rgba(223, 255, 88, 0.22);
+        background: rgba(223, 255, 88, 0.08);
+      }
+
+      .player-copy .username-pill {
+        width: fit-content;
+        margin: 4px 0 2px;
+        color: #07100b;
+        background: rgba(223, 255, 88, 0.92);
+      }
+
+      .source-badge.live {
+        color: #07100b;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--lime), var(--green));
+      }
+
+      .source-badge.you {
+        color: #07100b;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--blue), var(--lime));
+      }
+
+      .source-badge.demo {
+        color: var(--soft);
+      }
+
+      .user-result-actions {
+        align-items: flex-end;
+      }
+
+      .user-result-actions .primary,
+      .user-result-actions .ghost {
+        min-height: 36px;
+        padding: 0 12px;
+      }
+
+      .direct-chat-card {
+        min-height: 520px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dm-thread {
+        flex: 1;
+        align-content: start;
+        min-height: 300px;
+        max-height: 450px;
+        border-color: rgba(255, 255, 255, 0.1);
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          rgba(4, 7, 12, 0.48);
+        background-size: 100% 34px;
+      }
+
+      .thread-message {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.11);
+        background: rgba(255, 255, 255, 0.065);
+      }
+
+      .thread-message.own {
+        color: #07100b;
+        border-color: rgba(223, 255, 88, 0.6);
+        background: linear-gradient(135deg, var(--lime), #9cffbd);
+      }
+
+      .thread-message strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .message-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        margin-top: 6px;
+        color: inherit;
+        opacity: 0.74;
+        font-size: 11px;
+      }
+
+      .direct-dm-composer {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .direct-dm-composer .field {
+        margin: 0;
+      }
+
+      .direct-dm-composer .primary {
+        min-height: 46px;
+      }
+
+      .profile-username {
+        display: inline-flex;
+        width: fit-content;
+        min-height: 26px;
+        align-items: center;
+        margin: -2px 0 8px;
+        padding: 0 9px;
+        border: 1px solid rgba(223, 255, 88, 0.22);
+        border-radius: 999px;
+        color: var(--lime);
+        background: rgba(223, 255, 88, 0.08);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .avatar-picker,
+      .voice-note-composer {
+        border-color: rgba(255, 255, 255, 0.12);
+        background:
+          radial-gradient(circle at 18% 16%, rgba(223, 255, 88, 0.14), transparent 34%),
+          rgba(255, 255, 255, 0.055);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 38px rgba(0, 0, 0, 0.2);
+      }
+
+      .avatar-upload-copy strong {
+        color: var(--text);
+      }
+
+      .profile-avatar-preview {
+        color: #07100b;
+        border-color: rgba(223, 255, 88, 0.3);
+        background: linear-gradient(135deg, var(--lime), var(--blue));
+      }
+
+      .avatar-plus {
+        border-color: #101721;
+        background: linear-gradient(135deg, var(--lime), var(--green));
+      }
+
+      .voice-note-preview,
+      .voice-note-player {
+        border-color: rgba(255, 255, 255, 0.12);
+        background:
+          linear-gradient(135deg, rgba(19, 28, 41, 0.96), rgba(10, 14, 22, 0.96)),
+          rgba(16, 18, 23, 0.9);
+      }
+
+      @media (max-width: 1080px) {
+        .community-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .community-side {
+          position: static;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .direct-dm-composer {
+          grid-template-columns: 1fr;
+        }
+
+        .direct-dm-composer .primary,
+        .user-result-actions .primary,
+        .user-result-actions .ghost {
+          width: 100%;
+        }
+
+        .user-result-actions {
+          align-items: stretch;
+        }
+
+        .direct-chat-card {
+          min-height: auto;
+        }
+
+        .dm-thread {
+          min-height: 240px;
+          max-height: 380px;
+        }
+      }
+
       @media (max-width: 680px) {
         .avatar-picker,
         .profile-preview-head {
@@ -3963,8 +4463,8 @@
         </section>
 
         <section class="section" id="community">
-          <div class="grid dashboard">
-            <div class="panel">
+          <div class="grid dashboard community-layout">
+            <div class="panel community-primary">
               <div class="panel-header">
                 <h2>Community Chat</h2>
                 <span class="chip warzone-color" id="firebaseStatus">Firebase setup needed</span>
@@ -3997,8 +4497,8 @@
                 <button class="primary" type="submit">Send Chat</button>
               </form>
             </div>
-            <aside class="grid">
-              <div class="panel user-search-panel">
+            <aside class="grid community-side">
+              <div class="panel user-search-panel user-directory-card">
                 <div class="panel-header">
                   <div>
                     <h2>Find Players</h2>
@@ -4008,11 +4508,11 @@
                 </div>
                 <div class="field">
                   <label for="playerSearchInput">Search users</label>
-                  <input id="playerSearchInput" type="search" placeholder="Search a username, game, rank, region..." autocomplete="off" />
+                  <input id="playerSearchInput" type="search" placeholder="Search @username, game, rank, region..." autocomplete="off" />
                 </div>
                 <div class="mini-list user-search-results" id="playerSearchResults"></div>
               </div>
-              <div class="panel direct-message-panel">
+              <div class="panel direct-message-panel direct-chat-card">
                 <div class="panel-header">
                   <div>
                     <h2>Direct Messages</h2>
@@ -4020,7 +4520,7 @@
                   </div>
                 </div>
                 <div class="dm-thread" id="directThread"></div>
-                <form class="dm-composer" id="directDmForm">
+                <form class="dm-composer direct-dm-composer" id="directDmForm">
                   <div class="field">
                     <label for="directDmMessage">Message</label>
                     <input id="directDmMessage" name="message" maxlength="160" placeholder="Send a private squad invite." required disabled />
@@ -4087,9 +4587,15 @@
               <div class="panel-header">
                 <h2>Your Player Card</h2>
               </div>
-              <div class="field">
-                <label for="displayName">Display name</label>
-                <input id="displayName" name="displayName" required />
+              <div class="account-grid">
+                <div class="field">
+                  <label for="displayName">Display name</label>
+                  <input id="displayName" name="displayName" required />
+                </div>
+                <div class="field">
+                  <label for="username">Username</label>
+                  <input id="username" name="username" maxlength="24" inputmode="text" autocomplete="username" placeholder="rotateking" />
+                </div>
               </div>
               <div class="avatar-upload">
                 <label class="avatar-picker" for="avatarFile">
@@ -4224,6 +4730,7 @@
                 <div class="profile-avatar-preview large" id="profileAvatarPreview" aria-hidden="true">NP</div>
                 <div class="profile-preview-copy">
                   <h3 id="profileName">New Player</h3>
+                  <span class="profile-username" id="profileUsername">@newplayer</span>
                   <p class="post-body" id="profileBio">Add your vibe, rank, play style, and what kind of teammates you want.</p>
                   <span class="chip rose-color" id="profileAvailability">Evenings</span>
                 </div>
@@ -4411,6 +4918,7 @@
         {
           id: "player-rotateking",
           name: "RotateKing",
+          username: "rotateking",
           game: "warzone",
           platform: "Crossplay",
           region: "NA East",
@@ -4429,6 +4937,7 @@
         {
           id: "player-ximaestro",
           name: "XI Maestro",
+          username: "ximaestro",
           game: "fifa",
           platform: "PS5",
           region: "UK/EU",
@@ -4447,6 +4956,7 @@
         {
           id: "player-viceroute",
           name: "ViceRoute",
+          username: "viceroute",
           game: "gta",
           platform: "PC",
           region: "Global",
@@ -4465,6 +4975,7 @@
         {
           id: "player-clutchnine",
           name: "ClutchNine",
+          username: "clutchnine",
           game: "warzone",
           platform: "Xbox",
           region: "NA West",
@@ -4483,6 +4994,7 @@
         {
           id: "player-losastra",
           name: "LosAstra",
+          username: "losastra",
           game: "gta",
           platform: "PS5",
           region: "NA East",
@@ -4501,6 +5013,7 @@
         {
           id: "player-presslab",
           name: "PressLab",
+          username: "presslab",
           game: "fifa",
           platform: "Crossplay",
           region: "Global",
@@ -4535,6 +5048,7 @@
         events: load("squadlink-events", events),
         profile: load("squadlink-profile", {
           displayName: "New Player",
+          username: "newplayer",
           mainGame: "warzone",
           platform: "PS5",
           region: "Global",
@@ -4638,6 +5152,45 @@
 
       function cleanText(value, fallback = "") {
         return String(value || "").trim() || fallback;
+      }
+
+      function normalizeUsername(value, fallback = "player") {
+        const cleanUsername = (input) => String(input || "")
+          .trim()
+          .replace(/^@+/, "")
+          .toLowerCase()
+          .replace(/\s+/g, ".")
+          .replace(/[^a-z0-9_.]/g, "");
+        const raw = cleanUsername(value) || cleanUsername(fallback) || "player";
+        return raw.slice(0, 24);
+      }
+
+      function usernameForProfile(profile = state.profile) {
+        const emailPrefix = currentUser?.email ? currentUser.email.split("@")[0] : "";
+        return normalizeUsername(profile?.username, profile?.displayName || emailPrefix || "newplayer");
+      }
+
+      function usernameForPlayer(player) {
+        return normalizeUsername(player?.username, player?.name || player?.id || "player");
+      }
+
+      function displayUsername(value, fallback = "player") {
+        return `@${normalizeUsername(value, fallback)}`;
+      }
+
+      function playerSource(player) {
+        if (!player?.id) return "demo";
+        if (player.id === currentUid()) return "you";
+        if (state.publicPlayers.some((item) => item.id === player.id)) return "live";
+        if (player.id === "local-preview") return "you";
+        return "demo";
+      }
+
+      function playerSourceLabel(player) {
+        const source = playerSource(player);
+        if (source === "you") return "You";
+        if (source === "live") return "Live";
+        return "Demo";
       }
 
       function isAuthSetupError(error) {
@@ -4811,7 +5364,7 @@
       }
 
       const profileFieldIds = [
-        "displayName", "mainGame", "platform", "region", "status", "playStyle",
+        "displayName", "username", "mainGame", "platform", "region", "status", "playStyle",
         "rank", "availability", "lookingFor", "statsSummary", "bio",
         "psn", "xbox", "activision", "ea", "discord", "twitch", "highlightUrl"
       ];
@@ -4820,6 +5373,7 @@
         const form = new FormData($("#profileForm"));
         return {
           displayName: cleanText(form.get("displayName"), "New Player"),
+          username: normalizeUsername(form.get("username"), form.get("displayName") || "newplayer"),
           mainGame: safeGame(form.get("mainGame")),
           platform: cleanText(form.get("platform"), "PS5"),
           region: cleanText(form.get("region"), "Global"),
@@ -5071,6 +5625,11 @@
       async function syncProfileToCloud() {
         if (!firebaseState.usingCloud || !currentUser) return;
 
+        state.profile = {
+          ...state.profile,
+          username: usernameForProfile(state.profile)
+        };
+
         await firebaseApi.setDoc(firebaseApi.doc(db, "profiles", currentUser.uid), {
           ...state.profile,
           uid: currentUser.uid,
@@ -5244,6 +5803,7 @@
         return {
           id: currentUid() || "local-preview",
           name: getDisplayName(),
+          username: usernameForProfile(state.profile),
           game: safeGame(state.profile.mainGame),
           platform: cleanText(state.profile.platform, "Crossplay"),
           region: cleanText(state.profile.region, "Global"),
@@ -5277,6 +5837,7 @@
         return {
           id: uid,
           name,
+          username: normalizeUsername(profile.username, name),
           game: safeGame(profile.mainGame),
           platform: cleanText(profile.platform, "Crossplay"),
           region: cleanText(profile.region, "Global"),
@@ -5417,8 +5978,10 @@
           id: `dm${Date.now()}`,
           uid: account.uid,
           senderName: getDisplayName(),
+          senderUsername: usernameForProfile(state.profile),
           targetId: target.id,
           targetName: target.name,
+          targetUsername: usernameForPlayer(target),
           participants: [account.uid, target.id],
           text: cleanText(text),
           createdAt: Date.now()
@@ -5438,8 +6001,10 @@
         await firebaseApi.addDoc(firebaseApi.collection(db, "privateMessages"), {
           uid: currentUser.uid,
           senderName: getDisplayName(),
+          senderUsername: usernameForProfile(state.profile),
           targetId: target.id,
           targetName: target.name,
+          targetUsername: usernameForPlayer(target),
           participants: [currentUser.uid, target.id],
           text: message.text,
           createdAt: firebaseApi.serverTimestamp()
@@ -6064,9 +6629,9 @@
 
       function playerSearchText(player) {
         return [
-          player.name, player.game, player.platform, player.region, player.status,
+          player.name, usernameForPlayer(player), player.game, player.platform, player.region, player.status,
           player.current, player.playStyle, player.rank, player.statsSummary,
-          player.lookingFor, player.bio, ...(player.tags || [])
+          player.lookingFor, player.bio, ...(player.tags || []), ...Object.values(player.links || {})
         ].join(" ").toLowerCase();
       }
 
@@ -6119,9 +6684,17 @@
       }
 
       function userSearchResults() {
-        const query = state.userSearch.toLowerCase();
+        const rawQuery = state.userSearch.toLowerCase().trim();
+        const query = rawQuery ? normalizeUsername(state.userSearch, "").toLowerCase() : "";
         return searchablePlayers()
-          .filter((player) => !query || playerSearchText(player).includes(query))
+          .filter((player) => !rawQuery || playerSearchText(player).includes(rawQuery) || usernameForPlayer(player).includes(query))
+          .sort((a, b) => {
+            const aUser = usernameForPlayer(a);
+            const bUser = usernameForPlayer(b);
+            const aScore = !query ? (playerSource(a) === "live" ? 0 : 1) : (aUser === query ? 0 : aUser.startsWith(query) ? 1 : a.name.toLowerCase().startsWith(rawQuery) ? 2 : playerSource(a) === "live" ? 3 : 4);
+            const bScore = !query ? (playerSource(b) === "live" ? 0 : 1) : (bUser === query ? 0 : bUser.startsWith(query) ? 1 : b.name.toLowerCase().startsWith(rawQuery) ? 2 : playerSource(b) === "live" ? 3 : 4);
+            return aScore - bScore || a.name.localeCompare(b.name);
+          })
           .slice(0, 12);
       }
 
@@ -6129,6 +6702,14 @@
         const game = safeGame(player.game);
         const active = player.id === state.activeDmTargetId;
         const messageCount = privateMessagesFor(player.id).length;
+        const source = playerSource(player);
+        const username = usernameForPlayer(player);
+        const meta = [
+          gameInfo[game].label,
+          player.platform,
+          player.region,
+          player.rank || player.playStyle
+        ].filter(Boolean).join(" - ");
 
         return `
           <article class="user-result ${active ? "active" : ""}">
@@ -6136,11 +6717,20 @@
               ${playerAvatarMarkup(player)}
               <div class="user-result-copy">
                 <strong>${escapeHtml(player.name)}</strong>
-                <p class="meta">${gameInfo[game].label} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
+                <div class="user-handle-row">
+                  <span class="username-pill">${escapeHtml(displayUsername(username, player.name))}</span>
+                  <span class="source-badge ${source}">${escapeHtml(playerSourceLabel(player))}</span>
+                  ${messageCount ? `<span class="message-count-pill">${messageCount} DM${messageCount === 1 ? "" : "s"}</span>` : ""}
+                </div>
+                <p class="meta">${escapeHtml(meta)}</p>
+                <div class="user-result-meta">
+                  <span>${escapeHtml(player.status || "Available")}</span>
+                  <span>${escapeHtml(player.lookingFor || player.current || "Finding a squad")}</span>
+                </div>
               </div>
             </div>
             <div class="user-result-actions">
-              <span class="meta">${escapeHtml(player.rank || player.playStyle || "Player")} ${messageCount ? `- ${messageCount} DM${messageCount === 1 ? "" : "s"}` : ""}</span>
+              <span class="meta">${escapeHtml(player.playStyle || "Player")}</span>
               <button class="${active ? "primary" : "ghost"}" type="button" data-user-message="${player.id}">${active ? "Selected" : "Message"}</button>
             </div>
           </article>
@@ -6150,11 +6740,15 @@
       function directThreadCard(message) {
         const own = message.uid === currentUid();
         const sentAt = createdValue(message) ? new Date(createdValue(message)).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Just now";
+        const senderName = own ? "You" : (message.senderName || "Player");
+        const senderUsername = own
+          ? usernameForProfile(state.profile)
+          : normalizeUsername(message.senderUsername, message.senderName || "player");
         return `
           <article class="thread-message ${own ? "own" : ""}">
-            <strong>${escapeHtml(own ? "You" : (message.senderName || "Player"))}</strong>
+            <strong>${escapeHtml(senderName)}</strong>
             <p>${escapeHtml(message.text)}</p>
-            <span class="meta">${escapeHtml(sentAt)}</span>
+            <span class="message-meta"><span>${escapeHtml(displayUsername(senderUsername, senderName))}</span><span>${escapeHtml(sentAt)}</span></span>
           </article>
         `;
       }
@@ -6186,6 +6780,7 @@
               <div class="player-copy">
                 <span class="chip ${gameInfo[game].colorClass} status-pill"><span class="status-dot"></span>${escapeHtml(player.status)}</span>
                 <h3>${escapeHtml(player.name)}</h3>
+                <span class="username-pill">${escapeHtml(displayUsername(usernameForPlayer(player), player.name))}</span>
                 <p class="meta">${gameInfo[game].label} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
               </div>
               <div class="compatibility-ring" style="--score: ${score}">${score}%</div>
@@ -6218,7 +6813,7 @@
               <strong>${escapeHtml(player.name)}</strong>
               ${gameChip(player.game)}
             </div>
-            <p class="meta">${escapeHtml(player.current)} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
+            <p class="meta">${escapeHtml(displayUsername(usernameForPlayer(player), player.name))} - ${escapeHtml(player.current)} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
           </article>
         `;
       }
@@ -6233,7 +6828,7 @@
               <strong>${escapeHtml(player.name)}</strong>
               <span class="chip ${mutual ? "fifa-color" : "rose-color"}">${mutual ? "Mutual" : "Saved"}</span>
             </div>
-            <p class="meta">${gameInfo[safeGame(player.game)].label} - ${escapeHtml(player.lookingFor)}</p>
+            <p class="meta">${escapeHtml(displayUsername(usernameForPlayer(player), player.name))} - ${gameInfo[safeGame(player.game)].label} - ${escapeHtml(player.lookingFor)}</p>
             <div class="social-actions">
               <button class="ghost" type="button" data-player-dm="${player.id}">Message</button>
             </div>
@@ -6245,6 +6840,7 @@
         return `
           <article class="dm-message">
             <strong>${escapeHtml(message.senderName || "Player")} to ${escapeHtml(message.targetName || "Squadmate")}</strong>
+            <div class="meta">${escapeHtml(displayUsername(message.senderUsername, message.senderName || "player"))} to ${escapeHtml(displayUsername(message.targetUsername, message.targetName || "squadmate"))}</div>
             <p class="post-body" style="margin: 6px 0">${escapeHtml(message.text)}</p>
             <span class="meta">${createdValue(message) ? new Date(createdValue(message)).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Just now"}</span>
           </article>
@@ -6276,7 +6872,7 @@
         $("#matchesList").innerHTML = likedActions.length ? likedActions.map(matchListCard).join("") : `<p class="empty">Use Squad Up to save players and build matches.</p>`;
 
         const players = allPlayers().filter((player) => player.id !== currentUid());
-        $("#dmTarget").innerHTML = players.map((player) => `<option value="${escapeHtml(player.id)}">${escapeHtml(player.name)} - ${gameInfo[safeGame(player.game)].label}</option>`).join("");
+        $("#dmTarget").innerHTML = players.map((player) => `<option value="${escapeHtml(player.id)}">${escapeHtml(displayUsername(usernameForPlayer(player), player.name))} - ${escapeHtml(player.name)} - ${gameInfo[safeGame(player.game)].label}</option>`).join("");
         $("#dmList").innerHTML = state.privateMessages.length ? sortedRecent(state.privateMessages).slice(0, 6).map(dmCard).join("") : `<p class="empty">No private messages yet.</p>`;
 
         const unread = state.notifications.filter((note) => note.unread).length;
@@ -6302,12 +6898,16 @@
         const thread = target ? privateMessagesFor(target.id) : [];
         const directInput = $("#directDmMessage");
         const directSend = $("#directDmSend");
+        const directThread = $("#directThread");
         $("#directChatMeta").textContent = target
-          ? `Chatting with ${target.name} on ${gameInfo[safeGame(target.game)].label}.`
+          ? `${displayUsername(usernameForPlayer(target), target.name)} - ${target.name} - ${gameInfo[safeGame(target.game)].label}`
           : "Select a player to start chatting.";
-        $("#directThread").innerHTML = target
+        directThread.innerHTML = target
           ? (thread.length ? thread.map(directThreadCard).join("") : `<p class="empty">No messages with ${escapeHtml(target.name)} yet.</p>`)
           : `<p class="empty">Search for a player, then tap Message.</p>`;
+        window.requestAnimationFrame(() => {
+          directThread.scrollTop = directThread.scrollHeight;
+        });
         if (directInput) {
           directInput.disabled = !target;
           directInput.placeholder = target ? `Message ${target.name}` : "Select a player first.";
@@ -6885,6 +7485,7 @@
       function renderProfile() {
         const profile = {
           displayName: cleanText(state.profile.displayName, "New Player"),
+          username: usernameForProfile(state.profile),
           mainGame: safeGame(state.profile.mainGame),
           platform: cleanText(state.profile.platform, "PS5"),
           region: cleanText(state.profile.region, "Global"),
@@ -6915,6 +7516,7 @@
         setAvatarPreview($("#avatarFormPreview"), avatarPreviewUrl, profile.displayName);
         setAvatarPreview($("#profileAvatarPreview"), avatarPreviewUrl, profile.displayName);
         $("#profileName").textContent = profile.displayName;
+        $("#profileUsername").textContent = displayUsername(profile.username, profile.displayName);
         $("#profileMain").textContent = gameInfo[profile.mainGame].label;
         $("#profilePlatform").textContent = profile.platform;
         $("#profileRegion").textContent = profile.region;
