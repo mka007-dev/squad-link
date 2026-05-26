@@ -5009,14 +5009,17 @@
         }
 
         try {
-          const [{ initializeApp }, firestore, authSdk, storageSdk, appCheckSdk] = await Promise.all([
+          const [{ initializeApp }, firestore, authSdk, appCheckSdk] = await Promise.all([
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"),
-            import("https://www.gstatic.com/firebasejs/12.7.0/firebase-storage.js"),
             import("https://www.gstatic.com/firebasejs/12.7.0/firebase-app-check.js").catch(() => null)
           ]);
-          firebaseApi = { ...firestore, ...authSdk, ...storageSdk };
+          const storageSdk = await import("https://www.gstatic.com/firebasejs/12.7.0/firebase-storage.js").catch((error) => {
+            console.warn("Firebase Storage SDK unavailable. Auth and Firestore will continue.", error);
+            return null;
+          });
+          firebaseApi = { ...firestore, ...authSdk, ...(storageSdk || {}) };
           const app = initializeApp(firebaseConfig);
           const appCheckSiteKey = window.LOBBYRUSH_APP_CHECK_SITE_KEY || window.SQUADLINK_APP_CHECK_SITE_KEY;
           if (appCheckSiteKey && appCheckSdk?.initializeAppCheck && appCheckSdk?.ReCaptchaEnterpriseProvider) {
@@ -5027,7 +5030,10 @@
           }
           db = firestore.getFirestore(app);
           auth = authSdk.getAuth(app);
-          storage = storageSdk.getStorage(app);
+          storage = typeof storageSdk?.getStorage === "function" ? storageSdk.getStorage(app) : null;
+          if (!storage) {
+            console.warn("Firebase Storage is unavailable. Profile pictures and voice notes will use fallback behavior.");
+          }
           firebaseState.connected = true;
           firebaseState.usingCloud = true;
           subscribeToSharedData();
