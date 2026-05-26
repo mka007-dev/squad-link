@@ -11,7 +11,7 @@ function LoadingView() {
   return (
     <View style={styles.overlay}>
       <ActivityIndicator size="large" color="#baff29" />
-      <Text style={styles.overlayText}>Loading LobbyRush</Text>
+      <Text style={styles.overlayText}>Loading GameHub</Text>
     </View>
   );
 }
@@ -67,7 +67,7 @@ export default function App() {
               <Ionicons name="game-controller" size={18} color="#07100b" />
             </View>
             <View>
-              <Text style={styles.brandName}>LobbyRush</Text>
+              <Text style={styles.brandName}>GameHub</Text>
               <Text style={styles.brandStatus}>iPhone preview</Text>
             </View>
           </View>
@@ -104,7 +104,7 @@ export default function App() {
                 mediaPlaybackRequiresUserAction={false}
                 pullToRefreshEnabled={Platform.OS === "android"}
                 setSupportMultipleWindows={false}
-                applicationNameForUserAgent="LobbyRush iOS"
+                applicationNameForUserAgent="GameHub iOS"
                 onShouldStartLoadWithRequest={handleShouldStartLoad}
                 onNavigationStateChange={handleNavigationStateChange}
                 onLoadStart={() => {

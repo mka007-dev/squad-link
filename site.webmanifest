@@ -1,6 +1,6 @@
 {
-  "name": "LobbyRush",
-  "short_name": "LobbyRush",
+  "name": "GameHub",
+  "short_name": "GameHub",
   "description": "A gamer community web app for FIFA, GTA, and Call of Duty Warzone.",
   "start_url": "./",
   "scope": "./",
@@ -9,7 +9,7 @@
   "theme_color": "#ff5a2b",
   "icons": [
     {
-      "src": "assets/lobbyrush-logo.svg",
+      "src": "assets/gamehub-logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">GameHub logo</title>
+  <desc id="desc">A minimal purple gamepad icon for a gaming community app.</desc>
+  <defs>
+    <linearGradient id="pad" x1="96" y1="400" x2="416" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C3AED"/>
+      <stop offset="0.5" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0.5 0 0 0 0.48  0 0.4 0 0 0.16  0 0 0.9 0 0.93  0 0 0 0.38 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="130" fill="#0B0D14"/>
+  <path filter="url(#glow)" d="M141 202c12-37 42-58 79-47 13 4 26 9 36 9s23-5 36-9c37-11 67 10 79 47l37 111c17 52-31 89-73 54l-42-35a58 58 0 0 0-37-13 58 58 0 0 0-37 13l-42 35c-42 35-90-2-73-54l37-111Z" fill="url(#pad)"/>
+  <path d="M177 245h70M212 210v70" stroke="#12091F" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="318" cy="236" r="18" fill="#12091F"/>
+  <circle cx="360" cy="274" r="18" fill="#12091F"/>
+</svg>

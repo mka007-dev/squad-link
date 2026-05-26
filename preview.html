@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ff5a2b" />
-    <meta name="description" content="LobbyRush is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
-    <meta property="og:title" content="LobbyRush | Gamer Community" />
+    <meta name="theme-color" content="#090B12" />
+    <meta name="description" content="GameHub is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
+    <meta property="og:title" content="GameHub | Gaming Community App" />
     <meta property="og:description" content="Find squads, post clips, join events, and chat with FIFA, GTA, and Warzone players." />
-    <meta property="og:image" content="assets/lobbyrush-logo.svg" />
+    <meta property="og:image" content="assets/gamehub-logo.svg" />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="assets/lobbyrush-logo.svg" />
-    <link rel="apple-touch-icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="icon" href="assets/gamehub-logo.svg" />
+    <link rel="apple-touch-icon" href="assets/gamehub-logo.svg" />
     <link rel="manifest" href="site.webmanifest" />
-    <title>LobbyRush | Gamer Community</title>
+    <title>GameHub | Gaming Community App</title>
     <style>
       :root {
         color-scheme: dark;
@@ -1000,7 +1000,7 @@
         }
       }
 
-      /* LobbyRush redesign layer */
+      /* Base redesign layer */
       :root {
         --bg: #07090d;
         --panel: rgba(15, 20, 30, 0.94);
@@ -2361,7 +2361,7 @@
         }
       }
 
-      /* LobbyRush high-energy polish */
+      /* Previous high-energy polish layer */
       :root {
         --bg: #fff5e8;
         --panel: #fffdf8;
@@ -3764,6 +3764,540 @@
         }
       }
 
+      /* GameHub reference UI layer */
+      :root {
+        color-scheme: dark;
+        --bg: #080a12;
+        --panel: #11141f;
+        --panel-2: #171b28;
+        --panel-3: #202537;
+        --line: rgba(255, 255, 255, 0.09);
+        --text: #f7f7ff;
+        --muted: #9ca3b6;
+        --soft: #c7cce0;
+        --lime: #8b3dff;
+        --green: #31d56a;
+        --amber: #f6a92d;
+        --blue: #35d1f4;
+        --rose: #b94dff;
+        --mint: #25d2c5;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        font-family: "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      html,
+      body {
+        background: var(--bg);
+      }
+
+      body {
+        color: var(--text);
+        background:
+          radial-gradient(circle at 12% 8%, rgba(139, 61, 255, 0.2), transparent 32%),
+          radial-gradient(circle at 88% 14%, rgba(53, 209, 244, 0.12), transparent 30%),
+          linear-gradient(180deg, #0b0d18 0%, #080a12 46%, #05060b 100%);
+        animation: none;
+      }
+
+      body::before {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.28;
+      }
+
+      .app {
+        background: transparent;
+      }
+
+      .sidebar {
+        border-right-color: var(--line);
+        background:
+          linear-gradient(180deg, rgba(19, 23, 35, 0.94), rgba(9, 11, 19, 0.96)),
+          #0b0d14;
+        box-shadow: 18px 0 70px rgba(0, 0, 0, 0.28);
+      }
+
+      .brand {
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .brand-mark,
+      .mobile-logo {
+        border-radius: 8px;
+        background: transparent;
+        box-shadow: 0 0 0 1px rgba(139, 61, 255, 0.24), 0 14px 34px rgba(139, 61, 255, 0.28);
+      }
+
+      .brand-name,
+      .mobile-title {
+        color: var(--text);
+        background: none;
+      }
+
+      .brand-name::first-letter,
+      .mobile-title::first-letter {
+        color: #ffffff;
+      }
+
+      .brand-sub,
+      .mobile-subtitle {
+        color: var(--muted);
+      }
+
+      .nav-button {
+        min-height: 50px;
+        border: 1px solid transparent;
+        color: var(--muted);
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        color: var(--text);
+        border-color: rgba(139, 61, 255, 0.26);
+        background: rgba(139, 61, 255, 0.11);
+        box-shadow: none;
+        transform: none;
+      }
+
+      .nav-button::after {
+        background: linear-gradient(180deg, #8b3dff, #b94dff);
+      }
+
+      .nav-icon {
+        color: var(--muted);
+        border-color: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon {
+        color: #ffffff;
+        border-color: rgba(139, 61, 255, 0.5);
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .side-card,
+      .command-stat,
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card,
+      .mini-player,
+      .dm-message,
+      .notification-item,
+      .user-result,
+      .thread-message {
+        color: var(--text);
+        border-color: var(--line);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+          rgba(17, 20, 31, 0.92);
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+      }
+
+      .panel,
+      .profile-panel {
+        padding: clamp(16px, 2vw, 20px);
+      }
+
+      .panel-header {
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .panel-header h2 {
+        color: var(--text);
+        font-size: clamp(20px, 2vw, 25px);
+      }
+
+      .meta,
+      .post-body,
+      .brand-sub,
+      .mini-stat,
+      .avatar-upload-copy span,
+      .game-tile-copy small {
+        color: var(--muted);
+      }
+
+      .topbar {
+        background: transparent;
+      }
+
+      .search-wrap,
+      .field input,
+      .field select,
+      .field textarea,
+      .code-box {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.055);
+        box-shadow: none;
+      }
+
+      .field input::placeholder,
+      .field textarea::placeholder,
+      .search-wrap input::placeholder {
+        color: rgba(199, 204, 224, 0.52);
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: rgba(139, 61, 255, 0.72);
+        box-shadow: 0 0 0 3px rgba(139, 61, 255, 0.18);
+      }
+
+      .primary {
+        min-height: 42px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+        box-shadow: 0 16px 34px rgba(139, 61, 255, 0.28);
+      }
+
+      .ghost,
+      .pill-button,
+      .icon-button {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.055);
+        box-shadow: none;
+      }
+
+      .chip {
+        color: var(--soft);
+        border-color: rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .fifa-color {
+        color: #ffffff;
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .gta-color {
+        color: #11141f;
+        background: linear-gradient(135deg, #f6a92d, #31d56a);
+      }
+
+      .warzone-color,
+      .rose-color {
+        color: #ffffff;
+        background: linear-gradient(135deg, #35d1f4, #8b3dff);
+      }
+
+      .command-strip {
+        grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
+      }
+
+      .command-stat span,
+      .stat-label {
+        color: var(--muted);
+      }
+
+      .command-stat strong,
+      .stat-value,
+      .mini-stat b {
+        color: var(--text);
+      }
+
+      .status-banner {
+        border-color: rgba(246, 169, 45, 0.34);
+        color: var(--soft);
+        background: rgba(246, 169, 45, 0.1);
+      }
+
+      .hero {
+        min-height: 430px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background:
+          linear-gradient(90deg, rgba(8, 10, 18, 0.76), rgba(8, 10, 18, 0.18) 62%, rgba(8, 10, 18, 0.72)),
+          url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=86") center/cover;
+        box-shadow: var(--shadow);
+      }
+
+      .hero::before,
+      .hero::after {
+        display: none;
+      }
+
+      .hero-logo,
+      .hero-art {
+        display: none;
+      }
+
+      .eyebrow {
+        color: #b94dff;
+        text-shadow: none;
+      }
+
+      .hero h1 {
+        max-width: 620px;
+        color: var(--text);
+        font-size: clamp(36px, 4.2vw, 56px);
+        line-height: 1.04;
+        text-shadow: 0 8px 30px rgba(0, 0, 0, 0.44);
+      }
+
+      .hero-subtitle {
+        max-width: 560px;
+        color: var(--soft);
+        font-size: 16px;
+        text-shadow: none;
+      }
+
+      .hero .ghost {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .game-tile {
+        min-height: 190px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+      }
+
+      .game-tile.fifa {
+        background-image: linear-gradient(180deg, rgba(9, 10, 18, 0.08), rgba(9, 10, 18, 0.88)), url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile.gta {
+        background-image: linear-gradient(180deg, rgba(9, 10, 18, 0.08), rgba(9, 10, 18, 0.9)), url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile.warzone {
+        background-image: linear-gradient(180deg, rgba(9, 10, 18, 0.08), rgba(9, 10, 18, 0.9)), url("https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=86");
+      }
+
+      .game-tile .chip,
+      .tile-count {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(8, 10, 18, 0.62);
+        box-shadow: none;
+      }
+
+      .game-tile-copy strong {
+        color: #ffffff;
+        font-size: 24px;
+        text-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
+      }
+
+      .post-card::before,
+      .chat-message::before,
+      .leaderboard-row::before {
+        background: linear-gradient(180deg, #8b3dff, #35d1f4);
+      }
+
+      .event-date,
+      .rank {
+        color: #ffffff;
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .username-pill,
+      .source-badge,
+      .message-count-pill,
+      .profile-username {
+        color: #d7c4ff;
+        border-color: rgba(139, 61, 255, 0.32);
+        background: rgba(139, 61, 255, 0.12);
+      }
+
+      .source-badge.live,
+      .source-badge.you,
+      .player-copy .username-pill {
+        color: #ffffff;
+        border-color: transparent;
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .dm-thread {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .thread-message.own {
+        color: #ffffff;
+        border-color: rgba(139, 61, 255, 0.55);
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .avatar-picker,
+      .voice-note-composer {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.055);
+        box-shadow: none;
+      }
+
+      .avatar-upload-copy strong {
+        color: var(--text);
+      }
+
+      .profile-avatar-preview {
+        color: #ffffff;
+        border-color: rgba(139, 61, 255, 0.3);
+        background: linear-gradient(135deg, #8b3dff, #35d1f4);
+      }
+
+      .avatar-plus,
+      .voice-button-icon,
+      .voice-note-icon {
+        color: #ffffff;
+        background: linear-gradient(135deg, #8b3dff, #b94dff);
+      }
+
+      .voice-note-preview,
+      .voice-note-player {
+        border-color: var(--line);
+        background: rgba(8, 10, 18, 0.86);
+      }
+
+      .toast,
+      dialog {
+        color: var(--text);
+        border-color: var(--line);
+        background: #11141f;
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.72);
+      }
+
+      @media (max-width: 980px) {
+        .mobile-header {
+          border-bottom: 1px solid var(--line);
+          background: rgba(8, 10, 18, 0.88);
+          backdrop-filter: blur(18px);
+        }
+
+        .mobile-logo {
+          width: 56px;
+          height: 56px;
+        }
+
+        .main {
+          padding: 20px 18px calc(120px + env(safe-area-inset-bottom));
+        }
+
+        .topbar {
+          position: static;
+        }
+
+        .command-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .sidebar {
+          inset: auto 10px max(10px, env(safe-area-inset-bottom));
+          border-color: rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          background:
+            linear-gradient(135deg, rgba(22, 19, 39, 0.96), rgba(57, 22, 91, 0.94)),
+            #0e1019;
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+        }
+
+        .sidebar::before {
+          background: linear-gradient(90deg, rgba(139, 61, 255, 0.24), transparent 42%, rgba(185, 77, 255, 0.2));
+          opacity: 1;
+        }
+
+        .nav {
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+
+        .nav-button {
+          min-height: 72px;
+          border-radius: 18px;
+          color: rgba(255, 255, 255, 0.58);
+          background: transparent;
+        }
+
+        .nav-button.active,
+        .nav-button:hover {
+          color: #ffffff;
+          border-color: rgba(255, 255, 255, 0.12);
+          background: rgba(139, 61, 255, 0.22);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-icon {
+          width: 34px;
+          height: 34px;
+          color: rgba(255, 255, 255, 0.68);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-button.active .nav-icon,
+        .nav-button:hover .nav-icon {
+          color: #ffffff;
+          background: linear-gradient(135deg, #8b3dff, #b94dff);
+        }
+
+        .nav-button span:last-child {
+          color: inherit;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .main {
+          padding-inline: 16px;
+        }
+
+        .search-wrap {
+          min-height: 58px;
+        }
+
+        .hero {
+          min-height: 256px;
+          padding: 18px;
+        }
+
+        .hero h1 {
+          font-size: 34px;
+          line-height: 1.04;
+        }
+
+        .hero-subtitle {
+          font-size: 14px;
+        }
+
+        .hero-actions {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .game-grid {
+          grid-template-columns: repeat(3, minmax(132px, 1fr));
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scroll-snap-type: x proximity;
+        }
+
+        .game-tile {
+          min-height: 150px;
+          scroll-snap-align: start;
+        }
+
+        .command-stat {
+          min-height: 76px;
+          background: rgba(255, 255, 255, 0.055);
+        }
+
+        .panel,
+        .profile-panel {
+          padding: 16px;
+        }
+      }
+
       @media (max-width: 680px) {
         .avatar-picker,
         .profile-preview-head {
@@ -3786,10 +4320,10 @@
     <div class="app">
       <aside class="sidebar">
         <div class="brand">
-          <img class="brand-mark" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
+          <img class="brand-mark" src="assets/gamehub-logo.svg" alt="GameHub logo" />
           <div>
-            <div class="brand-name">LobbyRush</div>
-            <div class="brand-sub">FIFA. GTA. Warzone.</div>
+            <div class="brand-name">GameHub</div>
+            <div class="brand-sub">Gaming Community App</div>
           </div>
         </div>
         <nav class="nav" aria-label="Main navigation">
@@ -3847,9 +4381,9 @@
       <main class="main">
         <header class="mobile-header">
           <div class="mobile-brand">
-            <img class="mobile-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
+            <img class="mobile-logo" src="assets/gamehub-logo.svg" alt="GameHub logo" />
             <div>
-              <div class="mobile-title">LobbyRush</div>
+              <div class="mobile-title">GameHub</div>
               <div class="mobile-subtitle">Queue your squad</div>
             </div>
           </div>
@@ -3890,10 +4424,10 @@
             <div class="grid">
               <div class="hero">
                 <div class="hero-copy">
-                  <img class="hero-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush" />
-                  <div class="eyebrow">LobbyRush Picks</div>
-                  <h1>Jump into a better lobby.</h1>
-                  <p class="hero-subtitle">A bold way to find FIFA grinders, GTA crews, and Warzone teammates before the match starts.</p>
+                  <img class="hero-logo" src="assets/gamehub-logo.svg" alt="GameHub" />
+                  <div class="eyebrow">GameHub Community</div>
+                  <h1>Connect. Play. Win Together.</h1>
+                  <p class="hero-subtitle">Find squads, join communities, and keep your gamer circle moving across FIFA, GTA, and Warzone.</p>
                   <div class="hero-actions">
                     <button class="primary" data-section-jump="match">Match Me</button>
                     <button class="ghost" data-section-jump="events">See Sessions</button>
@@ -5517,7 +6051,7 @@
         state.notifications = state.notifications.slice(0, 80);
         save("lobbyrush-notifications", state.notifications);
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification(`LobbyRush: ${title}`, { body });
+          new Notification(`GameHub: ${title}`, { body });
         }
 
         if (firebaseState.usingCloud && currentUser) {
@@ -5781,7 +6315,7 @@
 
         if (isOffline) {
           title.textContent = "You are offline";
-          message.textContent = "LobbyRush is showing cached content. New posts, chat, and account actions will need a connection.";
+          message.textContent = "GameHub is showing cached content. New posts, chat, and account actions will need a connection.";
           return;
         }
 
