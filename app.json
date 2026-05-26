@@ -2,26 +2,42 @@
   "expo": {
     "name": "LobbyRush",
     "slug": "lobbyrush",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "scheme": "lobbyrush",
+    "icon": "./assets/squadlink-logo.png",
+    "splash": {
+      "image": "./assets/squadlink-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#07090d"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lobbyrush.app",
-      "buildNumber": "1",
+      "bundleIdentifier": "com.mka007dev.lobbyrush",
+      "buildNumber": "2",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "LobbyRush uses the microphone so you can record voice notes in chat.",
+        "NSCameraUsageDescription": "LobbyRush can use the camera when you choose to add a profile picture.",
+        "NSPhotoLibraryUsageDescription": "LobbyRush can access selected photos when you upload a profile picture.",
+        "NSPhotoLibraryAddUsageDescription": "LobbyRush can save shared images only when you choose to download them."
       }
     },
     "android": {
-      "package": "com.lobbyrush.app",
+      "package": "com.mka007dev.lobbyrush",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/squadlink-logo.png",
         "backgroundColor": "#111318"
       },
-      "versionCode": 3
+      "versionCode": 4,
+      "permissions": [
+        "RECORD_AUDIO",
+        "READ_MEDIA_IMAGES"
+      ]
     },
     "extra": {
       "eas": {

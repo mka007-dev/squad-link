@@ -64,6 +64,32 @@ npm run ios
 npm run android
 ```
 
+## Test on an iPhone
+
+The Expo app is an iOS-ready native shell that loads the live LobbyRush web app from:
+
+```text
+https://mka007-dev.github.io/squad-link/preview.html
+```
+
+For quick device testing:
+
+```bash
+npm install
+npx expo start --tunnel
+```
+
+Install Expo Go on the iPhone, then scan the QR code. The native shell includes iOS permission text for profile picture uploads and chat voice notes.
+
+For TestFlight or an installable iPhone build:
+
+```bash
+npx eas login
+npx eas build --platform ios --profile preview
+```
+
+You need an Apple Developer account before EAS can create signing credentials for a real iPhone build.
+
 ## Build iPhone and Android apps
 
 ```bash
@@ -73,7 +99,7 @@ eas build --platform ios
 eas build --platform android
 ```
 
-The app identifiers are placeholders in `app.json` and should be changed before store submission.
+The app identifiers are configured in `app.json` as `com.mka007dev.lobbyrush`.
 
 For the first iOS production build, run EAS in interactive mode so it can create or validate Apple signing credentials:
 

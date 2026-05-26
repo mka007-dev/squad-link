@@ -3214,6 +3214,95 @@
         gap: 10px;
       }
 
+      .user-search-results {
+        max-height: 390px;
+        overflow: auto;
+        padding-right: 2px;
+      }
+
+      .user-result {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid rgba(234, 209, 173, 0.86);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .user-result.active {
+        border-color: rgba(217, 255, 102, 0.86);
+        box-shadow: 0 0 0 3px rgba(217, 255, 102, 0.18);
+      }
+
+      .user-result-main {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .user-result .player-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        font-size: 15px;
+        box-shadow: none;
+      }
+
+      .user-result-copy {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .user-result-copy strong {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .user-result-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .dm-thread {
+        min-height: 190px;
+        max-height: 360px;
+        overflow: auto;
+        display: grid;
+        align-content: end;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid rgba(234, 209, 173, 0.86);
+        border-radius: 8px;
+        background: rgba(7, 9, 13, 0.26);
+      }
+
+      .thread-message {
+        max-width: 88%;
+        justify-self: start;
+        padding: 9px 11px;
+        border-radius: 8px;
+        border: 1px solid rgba(234, 209, 173, 0.86);
+        background: rgba(255, 255, 255, 0.76);
+      }
+
+      .thread-message.own {
+        justify-self: end;
+        color: #101217;
+        border-color: rgba(217, 255, 102, 0.72);
+        background: rgba(217, 255, 102, 0.9);
+      }
+
+      .thread-message p {
+        margin: 4px 0 6px;
+        color: inherit;
+      }
+
       .notification-item.unread {
         border-color: rgba(255, 90, 43, 0.44);
         background: rgba(255, 245, 232, 0.92);
@@ -3251,6 +3340,15 @@
         .social-actions .primary,
         .social-actions .ghost {
           width: 100%;
+        }
+
+        .user-result-actions {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .thread-message {
+          max-width: 100%;
         }
       }
 
@@ -3709,6 +3807,36 @@
               </form>
             </div>
             <aside class="grid">
+              <div class="panel user-search-panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Find Players</h2>
+                    <p class="meta">Search usernames, games, platforms, ranks, regions, and play styles.</p>
+                  </div>
+                  <span class="chip fifa-color" id="playerSearchCount">0</span>
+                </div>
+                <div class="field">
+                  <label for="playerSearchInput">Search users</label>
+                  <input id="playerSearchInput" type="search" placeholder="Search a username, game, rank, region..." autocomplete="off" />
+                </div>
+                <div class="mini-list user-search-results" id="playerSearchResults"></div>
+              </div>
+              <div class="panel direct-message-panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Direct Messages</h2>
+                    <p class="meta" id="directChatMeta">Select a player to start chatting.</p>
+                  </div>
+                </div>
+                <div class="dm-thread" id="directThread"></div>
+                <form class="dm-composer" id="directDmForm">
+                  <div class="field">
+                    <label for="directDmMessage">Message</label>
+                    <input id="directDmMessage" name="message" maxlength="160" placeholder="Send a private squad invite." required disabled />
+                  </div>
+                  <button class="primary" type="submit" id="directDmSend" disabled>Send DM</button>
+                </form>
+              </div>
               <div class="panel">
                 <div class="panel-header">
                   <h2>Leaderboard</h2>
@@ -4251,6 +4379,8 @@
         activeGame: "all",
         squadGame: "all",
         eventGame: "all",
+        userSearch: "",
+        activeDmTargetId: "",
         query: ""
       };
 
@@ -5084,7 +5214,11 @@
       async function sendPrivateMessage(targetId, text) {
         const account = await requireAccount("send private messages");
         if (!account) return false;
-        const target = allPlayers().find((player) => player.id === targetId) || playerDirectory[0];
+        const target = playerById(targetId);
+        if (!target || target.id === account.uid) {
+          showToast("Select another player to message.");
+          return false;
+        }
         const message = {
           id: `dm${Date.now()}`,
           uid: account.uid,
@@ -5100,6 +5234,7 @@
 
         if (!firebaseState.usingCloud || !currentUser) {
           state.privateMessages.unshift(message);
+          state.activeDmTargetId = target.id;
           save("lobbyrush-private-messages", state.privateMessages);
           await addNotification("DM sent", `Message sent to ${target.name}.`);
           render();
@@ -5116,6 +5251,7 @@
           createdAt: firebaseApi.serverTimestamp()
         });
         await addNotification("DM sent", `Message sent to ${target.name}.`);
+        state.activeDmTargetId = target.id;
         return true;
       }
 
@@ -5722,6 +5858,95 @@
         ].join(" ").toLowerCase();
       }
 
+      function searchablePlayers() {
+        const uid = currentUid();
+        return allPlayers()
+          .filter((player) => player.id !== uid)
+          .filter((player) => cleanText(player.name));
+      }
+
+      function playerById(playerId) {
+        return allPlayers().find((player) => player.id === playerId) || null;
+      }
+
+      function privateMessagePeerId(message) {
+        const uid = currentUid();
+        if (!uid) return message.targetId || message.uid || "";
+        return message.uid === uid ? message.targetId : message.uid;
+      }
+
+      function privateMessagesFor(playerId) {
+        const uid = currentUid();
+        if (!playerId) return [];
+        return sortedRecent(state.privateMessages.filter((message) => {
+          const participants = Array.isArray(message.participants) ? message.participants : [];
+          if (uid && participants.length) return participants.includes(uid) && participants.includes(playerId);
+          if (uid) return (message.uid === uid && message.targetId === playerId) || (message.uid === playerId && message.targetId === uid);
+          return message.targetId === playerId || message.uid === playerId;
+        })).reverse();
+      }
+
+      function ensureActiveDmTarget(players = searchablePlayers()) {
+        if (state.activeDmTargetId && players.some((player) => player.id === state.activeDmTargetId)) return;
+        const recentPeer = sortedRecent(state.privateMessages)
+          .map(privateMessagePeerId)
+          .find((peerId) => players.some((player) => player.id === peerId));
+        state.activeDmTargetId = recentPeer || "";
+      }
+
+      function selectDmTarget(playerId, focus = false) {
+        if (!playerById(playerId)) return;
+        state.activeDmTargetId = playerId;
+        const select = $("#dmTarget");
+        if (select) select.value = playerId;
+        showSection("community");
+        render();
+        if (focus) {
+          window.setTimeout(() => $("#directDmMessage")?.focus(), 80);
+        }
+      }
+
+      function userSearchResults() {
+        const query = state.userSearch.toLowerCase();
+        return searchablePlayers()
+          .filter((player) => !query || playerSearchText(player).includes(query))
+          .slice(0, 12);
+      }
+
+      function userSearchCard(player) {
+        const game = safeGame(player.game);
+        const active = player.id === state.activeDmTargetId;
+        const messageCount = privateMessagesFor(player.id).length;
+
+        return `
+          <article class="user-result ${active ? "active" : ""}">
+            <div class="user-result-main">
+              ${playerAvatarMarkup(player)}
+              <div class="user-result-copy">
+                <strong>${escapeHtml(player.name)}</strong>
+                <p class="meta">${gameInfo[game].label} - ${escapeHtml(player.platform)} - ${escapeHtml(player.region)}</p>
+              </div>
+            </div>
+            <div class="user-result-actions">
+              <span class="meta">${escapeHtml(player.rank || player.playStyle || "Player")} ${messageCount ? `- ${messageCount} DM${messageCount === 1 ? "" : "s"}` : ""}</span>
+              <button class="${active ? "primary" : "ghost"}" type="button" data-user-message="${player.id}">${active ? "Selected" : "Message"}</button>
+            </div>
+          </article>
+        `;
+      }
+
+      function directThreadCard(message) {
+        const own = message.uid === currentUid();
+        const sentAt = createdValue(message) ? new Date(createdValue(message)).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Just now";
+        return `
+          <article class="thread-message ${own ? "own" : ""}">
+            <strong>${escapeHtml(own ? "You" : (message.senderName || "Player"))}</strong>
+            <p>${escapeHtml(message.text)}</p>
+            <span class="meta">${escapeHtml(sentAt)}</span>
+          </article>
+        `;
+      }
+
       function playerLinkChips(player) {
         const links = player.links || {
           PSN: player.psn,
@@ -5847,6 +6072,37 @@
         $("#notificationList").innerHTML = state.notifications.length ? sortedRecent(state.notifications).slice(0, 6).map(notificationCard).join("") : `<p class="empty">No notifications yet.</p>`;
       }
 
+      function renderUserDirectory() {
+        const searchInput = $("#playerSearchInput");
+        const resultsEl = $("#playerSearchResults");
+        if (!searchInput || !resultsEl) return;
+
+        if (document.activeElement !== searchInput) searchInput.value = state.userSearch;
+        const players = searchablePlayers();
+        ensureActiveDmTarget(players);
+        const results = userSearchResults();
+        $("#playerSearchCount").textContent = `${results.length}/${players.length}`;
+        resultsEl.innerHTML = results.length
+          ? results.map(userSearchCard).join("")
+          : `<p class="empty">No players found. Try a username, platform, game, region, or rank.</p>`;
+
+        const target = playerById(state.activeDmTargetId);
+        const thread = target ? privateMessagesFor(target.id) : [];
+        const directInput = $("#directDmMessage");
+        const directSend = $("#directDmSend");
+        $("#directChatMeta").textContent = target
+          ? `Chatting with ${target.name} on ${gameInfo[safeGame(target.game)].label}.`
+          : "Select a player to start chatting.";
+        $("#directThread").innerHTML = target
+          ? (thread.length ? thread.map(directThreadCard).join("") : `<p class="empty">No messages with ${escapeHtml(target.name)} yet.</p>`)
+          : `<p class="empty">Search for a player, then tap Message.</p>`;
+        if (directInput) {
+          directInput.disabled = !target;
+          directInput.placeholder = target ? `Message ${target.name}` : "Select a player first.";
+        }
+        if (directSend) directSend.disabled = !target;
+      }
+
       function renderFilters(containerId, active, attr) {
         const labels = [["all", "All"], ["warzone", "Warzone"], ["fifa", "FIFA"], ["gta", "GTA"]];
         $(containerId).innerHTML = labels.map(([value, label]) => `<button class="pill-button ${active === value ? "active" : ""}" data-${attr}="${value}">${label}</button>`).join("");
@@ -5873,6 +6129,7 @@
 
         const visibleMessages = state.messages.filter(matchesSearch);
         $("#chatList").innerHTML = visibleMessages.length ? visibleMessages.map(chatCard).join("") : `<p class="empty">No chat messages match your search.</p>`;
+        renderUserDirectory();
         $("#leaderboardList").innerHTML = leaderboard.map(leaderboardCard).join("");
         $("#reportList").innerHTML = state.isAdmin || !firebaseState.usingCloud
           ? (state.reports.length ? state.reports.map(reportCard).join("") : `<p class="empty">No reports in the queue.</p>`)
@@ -6028,10 +6285,15 @@
 
         $$("[data-player-dm]").forEach((button) => {
           button.onclick = () => {
-            const target = $("#dmTarget");
-            if (target) target.value = button.dataset.playerDm;
-            $("#dmMessage")?.focus();
-            showToast("Message target selected.");
+            selectDmTarget(button.dataset.playerDm, true);
+            showToast("Direct chat opened.");
+          };
+        });
+
+        $$("[data-user-message]").forEach((button) => {
+          button.onclick = () => {
+            selectDmTarget(button.dataset.userMessage, true);
+            showToast("Direct chat opened.");
           };
         });
 
@@ -6209,6 +6471,34 @@
           render();
         } catch (error) {
           showToast("Private message could not be sent.");
+          console.error(error);
+        }
+      });
+
+      $("#playerSearchInput").addEventListener("input", (event) => {
+        state.userSearch = event.target.value;
+        render();
+      });
+
+      $("#directDmForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = cleanText(new FormData(event.currentTarget).get("message"));
+        if (!state.activeDmTargetId) {
+          showToast("Select a player first.");
+          return;
+        }
+        if (!message) {
+          showToast("Type a message first.");
+          return;
+        }
+        try {
+          const sent = await sendPrivateMessage(state.activeDmTargetId, message);
+          if (!sent) return;
+          $("#directDmMessage").value = "";
+          showToast(firebaseState.usingCloud ? "Direct message synced." : "Direct message saved locally.");
+          render();
+        } catch (error) {
+          showToast("Direct message could not be sent.");
           console.error(error);
         }
       });
