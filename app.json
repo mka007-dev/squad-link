@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LobbyRush",
-    "slug": "lobbyrush",
+    "slug": "respawn",
     "version": "0.2.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -43,6 +43,7 @@
       "eas": {
         "projectId": "c1bcc6c9-6c49-4da3-9a2e-2886cc0da8b4"
       }
-    }
+    },
+    "owner": "mka009s-organization"
   }
 }

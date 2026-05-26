@@ -6,15 +6,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { WebView, type WebViewNavigation, type WebViewProps } from "react-native-webview";
 
 const APP_URL = "https://mka007-dev.github.io/squad-link/preview.html?ios=1";
-const TRUSTED_HOSTS = new Set(["mka007-dev.github.io"]);
-
-function hostnameFrom(url: string) {
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return "";
-  }
-}
 
 function LoadingView() {
   return (
@@ -58,12 +49,12 @@ export default function App() {
   };
 
   const handleShouldStartLoad: NonNullable<WebViewProps["onShouldStartLoadWithRequest"]> = (request) => {
-    const host = hostnameFrom(request.url);
-    if (!request.url.startsWith("http")) return true;
-    if (TRUSTED_HOSTS.has(host)) return true;
-
-    Linking.openURL(request.url).catch(() => undefined);
-    return false;
+    if (request.url.startsWith("http://") || request.url.startsWith("https://")) return true;
+    if (request.url.startsWith("mailto:") || request.url.startsWith("tel:")) {
+      Linking.openURL(request.url).catch(() => undefined);
+      return false;
+    }
+    return true;
   };
 
   return (

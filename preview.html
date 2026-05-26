@@ -3085,6 +3085,7 @@
         display: grid;
         place-items: center;
         flex: 0 0 auto;
+        overflow: hidden;
         color: #171221;
         font-weight: 950;
         font-size: 25px;
@@ -3355,24 +3356,54 @@
       /* Profile media and voice notes layer */
       .avatar-upload {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 14px;
-        align-items: center;
+        gap: 10px;
         margin-bottom: 12px;
       }
 
-      .avatar-field {
-        margin-bottom: 0;
+      .avatar-picker {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 112px;
+        padding: 12px;
+        border: 1px solid rgba(217, 255, 102, 0.36);
+        border-radius: 8px;
+        cursor: pointer;
+        background:
+          radial-gradient(circle at 18% 16%, rgba(217, 255, 102, 0.18), transparent 34%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 246, 232, 0.62));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 16px 34px rgba(14, 18, 12, 0.12);
+        transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      }
+
+      .avatar-picker:hover,
+      .avatar-picker:focus-within {
+        border-color: rgba(217, 255, 102, 0.86);
+        box-shadow: 0 0 0 4px rgba(217, 255, 102, 0.18), 0 18px 36px rgba(14, 18, 12, 0.16);
+        transform: translateY(-1px);
+      }
+
+      .avatar-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
 
       .profile-avatar-preview {
+        position: relative;
+        flex: 0 0 auto;
         width: 86px;
         height: 86px;
         border: 1px solid rgba(217, 255, 102, 0.34);
         border-radius: 22px;
         display: grid;
         place-items: center;
-        overflow: hidden;
+        overflow: visible;
         color: #0b0d12;
         font-size: 25px;
         font-weight: 950;
@@ -3380,6 +3411,44 @@
           linear-gradient(135deg, rgba(217, 255, 102, 0.92), rgba(93, 183, 255, 0.88)),
           var(--panel-2);
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .avatar-plus {
+        position: absolute;
+        right: -8px;
+        bottom: -8px;
+        width: 34px;
+        height: 34px;
+        border: 3px solid rgba(255, 250, 243, 0.98);
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #09100b;
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 950;
+        background: var(--lime);
+        box-shadow: 0 10px 22px rgba(5, 10, 6, 0.24);
+        pointer-events: none;
+      }
+
+      .avatar-upload-copy {
+        min-width: 0;
+        display: grid;
+        gap: 5px;
+      }
+
+      .avatar-upload-copy strong {
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.15;
+        font-weight: 950;
+      }
+
+      .avatar-upload-copy span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
       }
 
       .profile-avatar-preview.large {
@@ -3397,13 +3466,17 @@
         object-fit: cover;
       }
 
+      .profile-avatar-preview img {
+        border-radius: inherit;
+      }
+
       .profile-avatar-preview.has-image,
       .player-avatar.has-image {
         background: rgba(255, 255, 255, 0.08);
       }
 
       .avatar-status {
-        margin: -2px 0 0;
+        margin: 0;
       }
 
       .avatar-status[data-tone="error"] {
@@ -3438,6 +3511,12 @@
         display: grid;
         gap: 10px;
         margin-bottom: 12px;
+        padding: 12px;
+        border: 1px solid rgba(234, 209, 173, 0.82);
+        border-radius: 8px;
+        background:
+          radial-gradient(circle at 10% 20%, rgba(93, 183, 255, 0.16), transparent 34%),
+          rgba(255, 255, 255, 0.62);
       }
 
       .voice-note-actions {
@@ -3445,6 +3524,23 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 8px;
+      }
+
+      .voice-button {
+        min-height: 38px;
+        gap: 7px;
+      }
+
+      .voice-button-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        display: inline-grid;
+        place-items: center;
+        color: #09100b;
+        font-size: 14px;
+        font-weight: 950;
+        background: var(--lime);
       }
 
       .voice-note-actions .meta[data-tone="recording"] {
@@ -3465,26 +3561,111 @@
       .voice-note-player {
         border: 1px solid rgba(234, 209, 173, 0.92);
         border-radius: 8px;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.74);
+        padding: 12px;
+        background:
+          linear-gradient(135deg, rgba(16, 18, 23, 0.92), rgba(35, 45, 40, 0.9)),
+          rgba(16, 18, 23, 0.9);
+        color: #f7fff5;
+      }
+
+      .voice-note-preview[hidden] {
+        display: none;
       }
 
       .voice-note-player {
         display: grid;
-        gap: 7px;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
         margin: 0 0 10px;
+      }
+
+      .voice-note-preview {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .voice-note-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #09100b;
+        background: var(--lime);
+        box-shadow: 0 0 0 7px rgba(217, 255, 102, 0.1);
+      }
+
+      .voice-note-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      .voice-note-copy {
+        min-width: 0;
+        display: grid;
+        gap: 7px;
+      }
+
+      .voice-note-copy strong {
+        overflow: hidden;
+        color: #f7fff5;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+        line-height: 1.15;
+      }
+
+      .voice-wave {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        height: 22px;
+      }
+
+      .voice-wave span {
+        width: 4px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--lime), rgba(93, 183, 255, 0.92));
+        opacity: 0.96;
+      }
+
+      .voice-wave span:nth-child(1) { height: 9px; }
+      .voice-wave span:nth-child(2) { height: 17px; }
+      .voice-wave span:nth-child(3) { height: 12px; }
+      .voice-wave span:nth-child(4) { height: 21px; }
+      .voice-wave span:nth-child(5) { height: 14px; }
+      .voice-wave span:nth-child(6) { height: 18px; }
+      .voice-wave span:nth-child(7) { height: 10px; }
+      .voice-wave span:nth-child(8) { height: 16px; }
+
+      .voice-duration-pill {
+        justify-self: end;
+        padding: 5px 8px;
+        border: 1px solid rgba(217, 255, 102, 0.28);
+        border-radius: 999px;
+        color: var(--lime);
+        font-size: 11px;
+        font-weight: 950;
+        background: rgba(217, 255, 102, 0.08);
       }
 
       .voice-note-player audio,
       #voiceNotePreview {
+        grid-column: 1 / -1;
         width: 100%;
+        height: 34px;
+        accent-color: var(--lime);
       }
 
       @media (max-width: 680px) {
-        .avatar-upload,
+        .avatar-picker,
         .profile-preview-head {
-          grid-template-columns: 1fr;
           align-items: flex-start;
+          flex-direction: column;
         }
 
         .profile-preview-head {
@@ -3796,12 +3977,22 @@
                 </div>
                 <div class="voice-note-composer" id="voiceNoteComposer">
                   <div class="voice-note-actions">
-                    <button class="ghost" type="button" id="recordVoiceNote">Record Voice Note</button>
-                    <button class="ghost" type="button" id="stopVoiceNote" hidden disabled>Stop</button>
-                    <button class="ghost" type="button" id="clearVoiceNote" hidden>Remove</button>
+                    <button class="ghost voice-button" type="button" id="recordVoiceNote"><span class="voice-button-icon" aria-hidden="true">R</span><span>Record</span></button>
+                    <button class="ghost voice-button" type="button" id="stopVoiceNote" hidden disabled><span class="voice-button-icon" aria-hidden="true">S</span><span>Stop</span></button>
+                    <button class="ghost voice-button" type="button" id="clearVoiceNote" hidden><span class="voice-button-icon" aria-hidden="true">X</span><span>Remove</span></button>
                     <span class="meta" id="voiceNoteStatus">Voice notes can be up to 30 seconds.</span>
                   </div>
-                  <audio id="voiceNotePreview" controls hidden></audio>
+                  <div class="voice-note-preview" id="voiceNotePreviewShell" hidden>
+                    <div class="voice-note-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg>
+                    </div>
+                    <div class="voice-note-copy">
+                      <strong>Voice note ready</strong>
+                      <div class="voice-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <span class="voice-duration-pill" id="voiceNotePreviewDuration">0:00</span>
+                    <audio id="voiceNotePreview" controls preload="metadata"></audio>
+                  </div>
                 </div>
                 <button class="primary" type="submit">Send Chat</button>
               </form>
@@ -3901,12 +4092,15 @@
                 <input id="displayName" name="displayName" required />
               </div>
               <div class="avatar-upload">
-                <div class="profile-avatar-preview" id="avatarFormPreview" aria-hidden="true">NP</div>
-                <div class="field avatar-field">
-                  <label for="avatarFile">Profile picture</label>
-                  <input id="avatarFile" name="avatarFile" type="file" accept="image/png,image/jpeg,image/webp" />
-                  <p class="meta avatar-status" id="avatarStatus">PNG, JPG, or WebP under 2 MB. Save Profile uploads it to your account.</p>
-                </div>
+                <label class="avatar-picker" for="avatarFile">
+                  <span class="profile-avatar-preview" id="avatarFormPreview" aria-hidden="true">NP<span class="avatar-plus" aria-hidden="true">+</span></span>
+                  <span class="avatar-upload-copy">
+                    <strong>Upload profile picture</strong>
+                    <span>Tap the plus to choose a PNG, JPG, or WebP under 2 MB.</span>
+                  </span>
+                  <input class="avatar-file-input" id="avatarFile" name="avatarFile" type="file" accept="image/png,image/jpeg,image/webp" />
+                </label>
+                <p class="meta avatar-status" id="avatarStatus">Save Profile uploads it to your account.</p>
               </div>
               <div class="field">
                 <label for="mainGame">Main game</label>
@@ -5456,10 +5650,11 @@
       function setAvatarPreview(element, url, name) {
         if (!element) return;
         const avatarUrl = cleanText(url);
+        const uploadBadge = element.id === "avatarFormPreview" ? `<span class="avatar-plus" aria-hidden="true">+</span>` : "";
         element.classList.toggle("has-image", Boolean(avatarUrl));
         element.innerHTML = avatarUrl
-          ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(cleanText(name, "Player"))} profile picture" />`
-          : escapeHtml(avatarInitials(name));
+          ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(cleanText(name, "Player"))} profile picture" />${uploadBadge}`
+          : `${escapeHtml(avatarInitials(name))}${uploadBadge}`;
       }
 
       function playerAvatarMarkup(player) {
@@ -5578,11 +5773,14 @@
       function clearPendingVoiceNote() {
         if (pendingVoiceNote?.previewUrl) URL.revokeObjectURL(pendingVoiceNote.previewUrl);
         pendingVoiceNote = null;
+        const shell = $("#voiceNotePreviewShell");
         const preview = $("#voiceNotePreview");
+        const duration = $("#voiceNotePreviewDuration");
+        if (shell) shell.hidden = true;
+        if (duration) duration.textContent = "0:00";
         if (preview) {
           preview.pause();
           preview.removeAttribute("src");
-          preview.hidden = true;
           preview.load();
         }
         setVoiceNoteStatus("Voice notes can be up to 30 seconds.");
@@ -5640,10 +5838,14 @@
               duration: Math.round(duration),
               mimeType: blob.type || "audio/webm"
             };
+            const shell = $("#voiceNotePreviewShell");
             const preview = $("#voiceNotePreview");
+            const previewDuration = $("#voiceNotePreviewDuration");
+            if (shell) shell.hidden = false;
+            if (previewDuration) previewDuration.textContent = formatVoiceDuration(duration);
             if (preview) {
               preview.src = previewUrl;
-              preview.hidden = false;
+              preview.load();
             }
             setVoiceNoteStatus(`Voice note ready (${formatVoiceDuration(duration)}).`, "ready");
             setVoiceNoteControls(false);
@@ -5806,9 +6008,19 @@
         const game = safeGame(message.game);
         const audioSource = cleanText(message.audioUrl) || cleanText(message.audioDataUrl);
         const isVoiceNote = message.messageType === "voice" && audioSource;
-        const duration = Number(message.audioDuration) ? ` - ${formatVoiceDuration(message.audioDuration)}` : "";
+        const duration = Number(message.audioDuration) ? formatVoiceDuration(message.audioDuration) : "Audio";
         const voiceNoteMarkup = isVoiceNote
-          ? `<div class="voice-note-player"><strong>Voice note${duration}</strong><audio controls preload="metadata" src="${escapeHtml(audioSource)}"></audio></div>`
+          ? `<div class="voice-note-player">
+              <div class="voice-note-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg>
+              </div>
+              <div class="voice-note-copy">
+                <strong>Voice note</strong>
+                <div class="voice-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              </div>
+              <span class="voice-duration-pill">${escapeHtml(duration)}</span>
+              <audio controls preload="metadata" src="${escapeHtml(audioSource)}"></audio>
+            </div>`
           : "";
         const text = cleanText(message.text);
 
