@@ -4472,6 +4472,294 @@
         border-color: rgba(185, 77, 255, 0.55) !important;
         background: linear-gradient(135deg, rgba(139, 61, 255, 0.72), rgba(185, 77, 255, 0.72)) !important;
       }
+
+      /* High-contrast palette refresh */
+      :root {
+        --bg: #071018;
+        --panel: #101923;
+        --panel-2: #162230;
+        --panel-3: #1d2b3a;
+        --line: rgba(137, 193, 230, 0.22);
+        --text: #f8fbff;
+        --muted: #aebbd0;
+        --soft: #d6e1ef;
+        --lime: #17d6c2;
+        --green: #39df8b;
+        --amber: #ffbf43;
+        --blue: #4cc9ff;
+        --rose: #ff6b4a;
+        --mint: #25d2c5;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
+      }
+
+      body {
+        color: var(--text) !important;
+        background:
+          radial-gradient(circle at 10% 4%, rgba(23, 214, 194, 0.18), transparent 30%),
+          radial-gradient(circle at 90% 8%, rgba(255, 107, 74, 0.14), transparent 28%),
+          linear-gradient(180deg, #08131d 0%, #071018 52%, #050a10 100%) !important;
+      }
+
+      body::before {
+        background:
+          linear-gradient(rgba(137, 193, 230, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(137, 193, 230, 0.03) 1px, transparent 1px) !important;
+        background-size: 42px 42px !important;
+        opacity: 0.32 !important;
+      }
+
+      .sidebar,
+      .mobile-header {
+        color: var(--text) !important;
+        border-color: var(--line) !important;
+        background:
+          linear-gradient(180deg, rgba(13, 24, 35, 0.96), rgba(7, 14, 23, 0.98)),
+          #08111a !important;
+      }
+
+      .sidebar::before {
+        background: linear-gradient(90deg, rgba(23, 214, 194, 0.18), transparent 46%, rgba(255, 107, 74, 0.15)) !important;
+      }
+
+      .brand-name,
+      .mobile-title,
+      h1,
+      h2,
+      h3,
+      strong,
+      .stat-value,
+      .command-stat strong,
+      .mini-stat b {
+        color: var(--text) !important;
+      }
+
+      .brand-sub,
+      .mobile-subtitle,
+      .meta,
+      .post-body,
+      .empty,
+      .mini-stat,
+      .stat-label,
+      label {
+        color: var(--muted) !important;
+      }
+
+      .side-card,
+      .command-stat,
+      .panel,
+      .post-card,
+      .squad-card,
+      .event-card,
+      .profile-panel,
+      .chat-message,
+      .leaderboard-row,
+      .report-row,
+      .github-card,
+      .mini-player,
+      .dm-message,
+      .notification-item,
+      .user-result,
+      .thread-message,
+      .match-empty,
+      .stat-box,
+      .link-chip,
+      .code-box {
+        color: var(--text) !important;
+        border-color: var(--line) !important;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+          rgba(16, 25, 35, 0.94) !important;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      .panel-header {
+        border-bottom-color: rgba(137, 193, 230, 0.16) !important;
+      }
+
+      .search-wrap,
+      .field input,
+      .field select,
+      .field textarea,
+      .dm-thread,
+      .avatar-picker,
+      .voice-note-composer,
+      .voice-note-preview,
+      .voice-note-player {
+        color: var(--text) !important;
+        border-color: rgba(137, 193, 230, 0.24) !important;
+        background: rgba(8, 19, 29, 0.86) !important;
+        box-shadow: none !important;
+      }
+
+      .field input::placeholder,
+      .field textarea::placeholder,
+      .search-wrap input::placeholder {
+        color: rgba(214, 225, 239, 0.54) !important;
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: rgba(23, 214, 194, 0.78) !important;
+        box-shadow: 0 0 0 3px rgba(23, 214, 194, 0.18) !important;
+      }
+
+      .field select option {
+        color: var(--text) !important;
+        background: #101923 !important;
+      }
+
+      .primary {
+        color: #031014 !important;
+        border-color: transparent !important;
+        background: linear-gradient(135deg, #17d6c2, #4cc9ff) !important;
+        box-shadow: 0 16px 34px rgba(23, 214, 194, 0.2) !important;
+      }
+
+      .ghost,
+      .pill-button,
+      .icon-button {
+        color: var(--text) !important;
+        border-color: rgba(137, 193, 230, 0.24) !important;
+        background: rgba(255, 255, 255, 0.055) !important;
+        box-shadow: none !important;
+      }
+
+      .primary:hover,
+      .ghost:hover,
+      .pill-button:hover,
+      .pill-button.active {
+        color: #031014 !important;
+        border-color: rgba(23, 214, 194, 0.65) !important;
+        background: linear-gradient(135deg, #17d6c2, #ffbf43) !important;
+      }
+
+      .nav-button {
+        color: #9fb1c5 !important;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        color: #ffffff !important;
+        border-color: rgba(23, 214, 194, 0.36) !important;
+        background: rgba(23, 214, 194, 0.11) !important;
+      }
+
+      .nav-button.active .nav-icon,
+      .nav-button:hover .nav-icon,
+      .avatar-plus,
+      .voice-button-icon,
+      .voice-note-icon,
+      .profile-avatar-preview {
+        color: #031014 !important;
+        background: linear-gradient(135deg, #17d6c2, #4cc9ff) !important;
+      }
+
+      .chip,
+      .username-pill,
+      .source-badge,
+      .message-count-pill,
+      .profile-username {
+        color: #dffcff !important;
+        border-color: rgba(23, 214, 194, 0.26) !important;
+        background: rgba(23, 214, 194, 0.1) !important;
+      }
+
+      .fifa-color {
+        color: #031014 !important;
+        border-color: transparent !important;
+        background: linear-gradient(135deg, #39df8b, #17d6c2) !important;
+      }
+
+      .gta-color {
+        color: #120c02 !important;
+        border-color: transparent !important;
+        background: linear-gradient(135deg, #ffbf43, #ff6b4a) !important;
+      }
+
+      .warzone-color {
+        color: #031014 !important;
+        border-color: transparent !important;
+        background: linear-gradient(135deg, #4cc9ff, #17d6c2) !important;
+      }
+
+      .rose-color {
+        color: #ffffff !important;
+        border-color: transparent !important;
+        background: linear-gradient(135deg, #ff6b4a, #ff3d81) !important;
+      }
+
+      .hero {
+        border-color: rgba(137, 193, 230, 0.2) !important;
+        background:
+          linear-gradient(90deg, rgba(5, 10, 16, 0.84), rgba(5, 10, 16, 0.28) 62%, rgba(5, 10, 16, 0.8)),
+          url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=86") center/cover !important;
+      }
+
+      .eyebrow {
+        color: #17d6c2 !important;
+      }
+
+      .hero-subtitle,
+      .game-tile-copy small {
+        color: var(--soft) !important;
+      }
+
+      .game-tile {
+        border-color: rgba(137, 193, 230, 0.2) !important;
+      }
+
+      .game-tile .chip,
+      .tile-count {
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        background: rgba(5, 10, 16, 0.72) !important;
+      }
+
+      .event-date,
+      .rank,
+      .compatibility-ring {
+        color: #031014 !important;
+        background:
+          radial-gradient(circle at center, #f8fbff 0 52%, transparent 53%),
+          conic-gradient(#17d6c2 calc(var(--score, 82) * 1%), rgba(255, 255, 255, 0.22) 0) !important;
+      }
+
+      .event-date,
+      .rank {
+        background: linear-gradient(135deg, #17d6c2, #4cc9ff) !important;
+      }
+
+      #match .player-card,
+      #match .player-card-body,
+      #match .stat-box,
+      #match .link-chip,
+      #match .mini-player,
+      #match .dm-message,
+      #match .notification-item {
+        color: var(--text) !important;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+          #101923 !important;
+      }
+
+      #match .player-hero {
+        background:
+          linear-gradient(180deg, rgba(5, 10, 16, 0.18), rgba(5, 10, 16, 0.92)),
+          linear-gradient(90deg, rgba(23, 214, 194, 0.3), transparent 62%),
+          var(--match-art, linear-gradient(135deg, #17d6c2, #4cc9ff)) !important;
+      }
+
+      #match .social-actions .primary,
+      #match .social-actions .ghost:hover {
+        color: #031014 !important;
+        background: linear-gradient(135deg, #17d6c2, #4cc9ff) !important;
+      }
+
+      #match .social-actions .ghost {
+        color: var(--text) !important;
+        background: rgba(255, 255, 255, 0.075) !important;
+      }
     </style>
   </head>
   <body>
