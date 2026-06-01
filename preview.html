@@ -4103,6 +4103,106 @@
         background: linear-gradient(135deg, #8b3dff, #b94dff);
       }
 
+      #match .player-card,
+      #match .mini-player,
+      #match .dm-message,
+      #match .notification-item,
+      #match .match-empty {
+        color: var(--text);
+        border-color: rgba(139, 61, 255, 0.24);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+          rgba(13, 16, 27, 0.96);
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+      }
+
+      #match .player-card {
+        border-color: rgba(139, 61, 255, 0.32);
+        background: #0d101b;
+      }
+
+      #match .player-hero {
+        background:
+          linear-gradient(180deg, rgba(8, 10, 18, 0.22), rgba(8, 10, 18, 0.92)),
+          linear-gradient(90deg, rgba(139, 61, 255, 0.38), transparent 58%),
+          var(--match-art, linear-gradient(135deg, #8b3dff, #35d1f4));
+      }
+
+      #match .player-card-body {
+        color: var(--text);
+        background:
+          linear-gradient(180deg, rgba(23, 27, 42, 0.98), rgba(13, 16, 27, 0.98)),
+          #11141f;
+      }
+
+      #match .post-body,
+      #match .meta,
+      #match .empty,
+      #match .mini-player .meta,
+      #match .dm-message .meta,
+      #match .notification-item .meta {
+        color: var(--soft);
+      }
+
+      #match .player-copy .meta {
+        color: rgba(247, 247, 255, 0.9);
+      }
+
+      #match .stat-box,
+      #match .link-chip {
+        color: var(--text);
+        border-color: rgba(255, 255, 255, 0.11);
+        background: rgba(255, 255, 255, 0.065);
+      }
+
+      #match .stat-label,
+      #match .link-chip span {
+        color: #aeb6ce;
+      }
+
+      #match .stat-value,
+      #match .link-chip strong,
+      #match .mini-player strong,
+      #match .dm-message strong,
+      #match .notification-item strong {
+        color: #ffffff;
+      }
+
+      #match .field input,
+      #match .field select {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.13);
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      #match .field select option {
+        color: #ffffff;
+        background: #11141f;
+      }
+
+      #match .ghost,
+      #match .pill-button {
+        color: #f7f7ff;
+        border-color: rgba(255, 255, 255, 0.13);
+        background: rgba(255, 255, 255, 0.065);
+      }
+
+      #match .ghost:hover,
+      #match .pill-button:hover,
+      #match .pill-button.active {
+        color: #ffffff;
+        border-color: rgba(139, 61, 255, 0.5);
+        background: rgba(139, 61, 255, 0.22);
+      }
+
+      #match .notification-item.unread {
+        color: var(--text);
+        border-color: rgba(246, 169, 45, 0.4);
+        background:
+          linear-gradient(180deg, rgba(246, 169, 45, 0.13), rgba(255, 255, 255, 0.03)),
+          rgba(17, 20, 31, 0.96);
+      }
+
       .username-pill,
       .source-badge,
       .message-count-pill,
