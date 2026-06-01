@@ -4,18 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#090B12" />
-    <meta name="description" content="GameHub is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
-    <meta property="og:title" content="GameHub | Gaming Community App" />
+    <meta name="description" content="LobbyRush is a gamer community web app for FIFA, GTA, and Call of Duty Warzone squads, events, chat, and posts." />
+    <meta property="og:title" content="LobbyRush | Gaming Community App" />
     <meta property="og:description" content="Find squads, post clips, join events, and chat with FIFA, GTA, and Warzone players." />
-    <meta property="og:image" content="assets/gamehub-logo.svg" />
+    <meta property="og:image" content="assets/lobbyrush-logo.svg" />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="assets/gamehub-logo.svg" />
-    <link rel="apple-touch-icon" href="assets/gamehub-logo.svg" />
+    <link rel="icon" href="assets/lobbyrush-logo.svg" />
+    <link rel="apple-touch-icon" href="assets/lobbyrush-logo.svg" />
     <link rel="manifest" href="site.webmanifest" />
-    <title>GameHub | Gaming Community App</title>
+    <title>LobbyRush | Gaming Community App</title>
     <style>
       :root {
         color-scheme: dark;
@@ -3764,7 +3764,7 @@
         }
       }
 
-      /* GameHub reference UI layer */
+      /* Reference-inspired dark UI layer */
       :root {
         color-scheme: dark;
         --bg: #080a12;
@@ -4320,9 +4320,9 @@
     <div class="app">
       <aside class="sidebar">
         <div class="brand">
-          <img class="brand-mark" src="assets/gamehub-logo.svg" alt="GameHub logo" />
+          <img class="brand-mark" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
           <div>
-            <div class="brand-name">GameHub</div>
+            <div class="brand-name">LobbyRush</div>
             <div class="brand-sub">Gaming Community App</div>
           </div>
         </div>
@@ -4381,9 +4381,9 @@
       <main class="main">
         <header class="mobile-header">
           <div class="mobile-brand">
-            <img class="mobile-logo" src="assets/gamehub-logo.svg" alt="GameHub logo" />
+            <img class="mobile-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush logo" />
             <div>
-              <div class="mobile-title">GameHub</div>
+              <div class="mobile-title">LobbyRush</div>
               <div class="mobile-subtitle">Queue your squad</div>
             </div>
           </div>
@@ -4424,8 +4424,8 @@
             <div class="grid">
               <div class="hero">
                 <div class="hero-copy">
-                  <img class="hero-logo" src="assets/gamehub-logo.svg" alt="GameHub" />
-                  <div class="eyebrow">GameHub Community</div>
+                  <img class="hero-logo" src="assets/lobbyrush-logo.svg" alt="LobbyRush" />
+                  <div class="eyebrow">LobbyRush Community</div>
                   <h1>Connect. Play. Win Together.</h1>
                   <p class="hero-subtitle">Find squads, join communities, and keep your gamer circle moving across FIFA, GTA, and Warzone.</p>
                   <div class="hero-actions">
@@ -6051,7 +6051,7 @@
         state.notifications = state.notifications.slice(0, 80);
         save("lobbyrush-notifications", state.notifications);
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification(`GameHub: ${title}`, { body });
+          new Notification(`LobbyRush: ${title}`, { body });
         }
 
         if (firebaseState.usingCloud && currentUser) {
@@ -6315,7 +6315,7 @@
 
         if (isOffline) {
           title.textContent = "You are offline";
-          message.textContent = "GameHub is showing cached content. New posts, chat, and account actions will need a connection.";
+          message.textContent = "LobbyRush is showing cached content. New posts, chat, and account actions will need a connection.";
           return;
         }
 

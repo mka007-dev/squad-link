@@ -56,5 +56,5 @@ http
     });
   })
   .listen(port, "127.0.0.1", () => {
-    console.log(`GameHub preview running at http://localhost:${port}`);
+    console.log(`LobbyRush preview running at http://localhost:${port}`);
   });
